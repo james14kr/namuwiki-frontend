@@ -1,0 +1,35 @@
+{
+  "join": {
+    "pw": "비밀번호",
+    "confirmPw": "비밀번호 확인",
+    "check": "중복 체크",
+    "submit": "제출"
+  },
+  "common": {
+    "won": "₩",
+    "search": "검색",
+    "loading": "로딩 중...",
+    "email": "이메일",
+    "name": "이름",
+    "tel": "전화번호",
+    "address": "주소",
+    "delete": "삭제",
+    "selectDelete": "선택 삭제",
+    "successDelete": "삭제 성공",
+    "noData": "데이터가 없습니다.",
+    "pleaseCheckInputValue": "입력한 값을 다시 확인해주세요."
+  },
+  "login": {
+    "inputEmail": "이메일을 입력해주세요.",
+    "inputPw": "비밀번호를 입력해주세요.",
+    "login": "로그인",
+    "unUsableEmail": "사용 가능한 이메일 형식이 아닙니다.",
+    "availableEmail": "사용 가능한 이메일 입니다.",
+    "duplicateEmail": "이미 사용 중인 이메일입니다.",
+    "unConfirmedPw": "비밀번호를 다시 확인해주세요.",
+    "passwordMatch": "비밀번호가 일치합니다.",
+    "unUsableTel": "전화번호를 다시 확인해주세요.",
+    "unFillAllField": "모든 필드를 입력해주세요.",
+    "pleaseCheckDupleEmail": "이메일 중복 확인을 해주세요."
+  }
+}

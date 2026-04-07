@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 960 960" role="img" aria-label="BOOK STORE logo">
+  <defs>
+    <style>
+      .font {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+        font-weight: 700;
+      }
+      .sub {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+      }
+    </style>
+  </defs>
+
+  <!-- background (transparent) -->
+
+  <!-- ===== ICON: open book ===== -->
+  <!-- ===== WORDMARK ===== -->
+  <g class="font" text-anchor="middle">
+    <!-- BOOK (Google-like colors) -->
+    <text x="480" y="480" font-size="160">
+      <tspan fill="#1A73E8">B</tspan>
+      <tspan fill="#EA4335">O</tspan>
+      <tspan fill="#FBBC05">O</tspan>
+      <tspan fill="#34A853">K</tspan>
+    </text>
+  </g>
+</svg>

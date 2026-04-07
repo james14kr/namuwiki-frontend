@@ -1,0 +1,35 @@
+{
+  "join": {
+    "pw": "Password",
+    "confirmPw": "Confirm Password",
+    "check": "Duplicate check",
+    "submit": "Submit"
+  },
+  "common": {
+    "won": "$",
+    "search": "Search",
+    "loading": "Loading...",
+    "email": "Email",
+    "name": "Name",
+    "tel": "Tel",
+    "address": "Address",
+    "delete": "Delete",
+    "selectDelete": "Select delete",
+    "successDelete": "Delete successful",
+    "noData": "There is no data.",
+    "pleaseCheckInputValue": "Please check the values ​​you entered again."
+  },
+  "login": {
+    "inputEmail": "Please input your email.",
+    "inputPw": "Please input your password.",
+    "login": "Login",
+    "unUsableEmail": "This is not an acceptable email format.",
+    "availableEmail": "This is an available email.",
+    "duplicateEmail": "This email address is already in use.",
+    "unConfirmedPw": "Please confirm your password again.",
+    "passwordMatch": "The passwords match.",
+    "unUsableTel": "Please check your phone number again.",
+    "unFillAllField": "Please fill in all fields.",
+    "pleaseCheckDupleEmail": "Please check for duplicate emails."
+  }
+}
