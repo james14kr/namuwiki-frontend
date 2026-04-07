@@ -19,3 +19,9 @@ export interface loginData {
 export interface memEmail {
   memEmail: string;
 }
+
+export interface authCode {
+  authCode : string;
+  farmerName: string;
+  farmerTel: string;
+}

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { postEmail, postJoinData, postLogin, postNickname } from "@/api/member.api";
+import { postAuthCode, postEmail, postJoinData, postLogin, postNickname } from "@/api/member.api";
 import type { joinData, loginData } from "@/types/memberType";
 
 // export const useGetPosts = () => {
@@ -39,3 +39,9 @@ export const usePostLogin = () => {
   });
 };
 
+// 인증번호 생성
+export const usePostAuthCode = () => {
+  return useMutation({
+    mutationFn: (param: object) => postAuthCode(param)
+  });
+};
