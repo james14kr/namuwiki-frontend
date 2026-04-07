@@ -46,6 +46,12 @@ const LoginForm = () => {
 
           // 토큰 LocalStorage에 저장
           localStorage.setItem("token", param.headers.authorization);
+          
+          //JWT 디코딩으로 role 꺼내기
+          const token = param.headers.authorization;
+          const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+          const payload = JSON.parse(atob(base64));
+          localStorage.setItem("role", payload.role);
 
           // 로그인 성공 시 메인페이지로 이동
           nav("/");
