@@ -32,7 +32,7 @@ interface SignUpStoreStateType {
   memAdd: string;
   addDetail: string;
   memRole: string;
-  farmName: string;
+  farmerName: string;
   authCode: string;
 }
 
@@ -49,7 +49,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     memAdd: "",
     addDetail: "",
     memRole: "USER",
-    farmName: "",
+    farmerName: "",
     authCode: "",
   });
 
@@ -554,13 +554,13 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
               <Input 
                 className="rounded-xl border-green-300 bg-green-50/40 text-sm text-gray-800 transition-all duration-200 focus-visible:border-green-500 focus-visible:ring-green-500"
                 placeholder="농장명을 입력하세요."
-                name="farmName"
-                value={joinData.farmName}
+                name="farmerName"
+                value={joinData.farmerName}
                 onChange={e => {handleChange(e)}}
               />
-              {errorMsg.farmName && (
+              {errorMsg.farmerName && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
-                  {errorMsg.farmName}
+                  {errorMsg.farmerName}
                 </p>
               )}
             </div>

@@ -7,7 +7,7 @@ export interface joinData {
   memAdd: string;
   addDetail: string;
   memRole: string;
-  farmName: string;
+  farmerName: string;
   authCode: string;
 }
 
