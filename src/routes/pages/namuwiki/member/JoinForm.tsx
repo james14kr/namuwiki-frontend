@@ -150,7 +150,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     memAdd: z.string().min(1, "주소를 입력해주세요."),
 
     //8. 권한이 농장주 일 경우 실행할 유효성 검사 - 농장명 유효성 검사
-    farmName:
+    farmerName:
       userType === "FAMER"
         ? z.string().min(1, "농장명을 입력해주세요.")
         : z.string().optional(), //undefined가 되어도 통과, null만 통과 X => 타입이 user일 때도 사용하기 위해서
