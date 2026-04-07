@@ -54,10 +54,6 @@ const Practice = dynamic(
   () => import("../routes/pages/namuwiki/practice/Practice")
 );
 
-const Login = dynamic(
-  () => import("../routes/pages/namuwiki/member/LoginPage")
-);
-
 
 export const router = createBrowserRouter([
   {
@@ -123,10 +119,6 @@ export const router = createBrowserRouter([
                 Component: OpenAiControlTestPage,
               },
               {
-                path: "login",
-                Component: LoginPage
-              },
-              {
                 path: "post-register",
                 Component: PostRegisterPage,
               },
@@ -155,10 +147,6 @@ export const router = createBrowserRouter([
               {
                 path: "practice",
                 Component: Practice,
-              },
-              {
-                path: "Login",
-                Component: Login,
               },
               {
                 path: "DeviceReg",
