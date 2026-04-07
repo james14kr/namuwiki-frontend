@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Home, SquareTerminal, ActivitySquareIcon } from "lucide-react";
 import type { SidebarData } from "@/types/sidebarType";
 import PlantCommunityLogo from "./Logo";
+import { Item } from "@radix-ui/react-select";
 
 const data: SidebarData = {
   teams: [
@@ -28,76 +29,78 @@ const data: SidebarData = {
       isActive: true,
     },
     {
-      title: "판매관리",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "차량관리",
-          url: "/sales/car-management",
-        },
-        {
-          title: "판매정보등록",
-          url: "/sales/sale-records",
-        },
-        {
-          title: "판매목록조회",
-          url: "/sales/sales-info",
-        },
-      ],
-    },
-    {
-      title: "나무위키 샘플",
+      title: "게시판",
       url: "#",
       icon: ActivitySquareIcon,
       isActive: true,
       items: [
-        {
-          title: "메인 피드",
-          url: "/namu/main-feed",
-        },
-        {
-          title: "농장 대시보드",
-          url: "/namu/dashboard",
-        },
-        {
-          title: "작물별 AI 제어",
-          url: "/namu/ai-control",
-        },
-        {
-          title: "커뮤니티",
-          url: "/namu/community",
-        },
-        {
-          title: "마이페이지",
-          url: "/namu/my-farm",
-        },
-        {
-          title: "테스트",
-          url: "/namu/plant-identify",
-        },
-        {
-          title: "OpenAI테스트",
-          url: "/namu/openai-test",
-        },
-        {
-          title: "게시물 목록",
-          url: "/namu/post-list",
-        },
-        {
-          title: "KJK테스트",
-          url: "/namu/kjk",
-        },
-        {
-          title: "로그인",
-          url: "/namu/login",
-        },
-        {
-          title: "기기 등록 확인",
-          url: "/namu/deviceReg",
-        },
+        // {
+        //   title: "메인 피드",
+        //   url: "/namu/main-feed",
+        // },
+        // {
+        //   title: "농장 대시보드",
+        //   url: "/namu/dashboard",
+        // },
+        // {
+        //   title: "작물별 AI 제어",
+        //   url: "/namu/ai-control",
+        // },
+        // {
+        //   title: "커뮤니티",
+        //   url: "/namu/community",
+        // },
+        // {
+        //   title: "마이페이지",
+        //   url: "/namu/my-farm",
+        // },
+        // {
+        //   title: "테스트",
+        //   url: "/namu/plant-identify",
+        // },
+        // {
+        //   title: "OpenAI테스트",
+        //   url: "/namu/openai-test",
+        // },
+        // {
+        //   title: "게시물 목록",
+        //   url: "/namu/post-list",
+        // },
+        // {
+        //   title: "KJK테스트",
+        //   url: "/namu/kjk",
+        // },
+        // {
+        //   title: "로그인",
+        //   url: "/namu/login",
+        // },
+        // {
+        //   title: "기기 등록 확인",
+        //   url: "/namu/deviceReg",
+        // },
       ],
+    },
+    {
+      title : "마이페이지",
+      url : "/namu/my_farm",
+      icon : ActivitySquareIcon,
+      items : [
+        {
+          title: "내 정보 수정",
+          url : "/namu/mypage"
+        }
+      ]
+    },
+    {
+      title : "농장 목록",
+      url : "/namu/farmList",
+      icon : ActivitySquareIcon,
+      items : [
+        {
+          title: "팔로우 농장 목록",
+          url : "/namu/fallowFarmList"
+        }
+      ]
     },
   ],
 };
