@@ -42,6 +42,10 @@ const BasicHeader = ({ navMain }: Props) => {
 
   return (
     <SidebarInset className="sticky top-0 z-10">
+      <div
+        className="h-32 bg-cover bg-center"
+        style={{ backgroundImage: "url('/banner.gif')" }}
+      />
       <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 bg-sidebar">
         <SidebarTrigger className="-ml-1" />
         <Separator

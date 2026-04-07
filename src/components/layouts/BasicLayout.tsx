@@ -5,104 +5,121 @@ import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "../sidebar/AppSidebar";
 import { Toaster } from "@/components/ui/sonner";
 
-import { Home, SquareTerminal, ActivitySquareIcon } from "lucide-react";
+import { Home, SquareTerminal, ActivitySquareIcon, Users , AppWindow, UserPlus, Sprout, MonitorCog  } from "lucide-react";
 import type { SidebarData } from "@/types/sidebarType";
 import PlantCommunityLogo from "./Logo";
 
-const data: SidebarData = {
-  teams: [
-    {
-      name: "나무위키",
-      logo: PlantCommunityLogo,
-    },
-  ],
-  user: {
-    name: "김우연",
-    email: "rladndus321@gmail.com",
+const userNavMain = [
+  {title: "홈", url : "/namu/post-list", icon: Home},
+  { 
+    title: "게시판", 
+    url: "post-list", 
+    icon: AppWindow},
+  {
+    title : "마이페이지",
+    url : "/namu/my_farm",
+    icon : Users,
+    items : [
+      {
+        title: "내 정보 수정",
+        url : "/namu/my-farm"
+      }
+    ]
   },
-  navMain: [
-    {
-      title: "홈",
-      url: "/",
-      icon: Home,
-      isActive: true,
-    },
-    {
-      title: "판매관리",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "차량관리",
-          url: "/sales/car-management",
-        },
-        {
-          title: "판매정보등록",
-          url: "/sales/sale-records",
-        },
-        {
-          title: "판매목록조회",
-          url: "/sales/sales-info",
-        },
-      ],
-    },
-    {
-      title: "나무위키 샘플",
-      url: "#",
-      icon: ActivitySquareIcon,
-      isActive: true,
-      items: [
-        {
-          title: "메인 피드",
-          url: "/namu/main-feed",
-        },
-        {
-          title: "농장 대시보드",
-          url: "/namu/dashboard",
-        },
-        {
-          title: "작물별 AI 제어",
-          url: "/namu/ai-control",
-        },
-        {
-          title: "커뮤니티",
-          url: "/namu/community",
-        },
-        {
-          title: "마이페이지",
-          url: "/namu/my-farm",
-        },
-        {
-          title: "테스트",
-          url: "/namu/plant-identify",
-        },
-        {
-          title: "OpenAI테스트",
-          url: "/namu/openai-test",
-        },
-        {
-          title: "게시물 목록",
-          url: "/namu/post-list",
-        },
-        {
-          title: "KJK테스트",
-          url: "/namu/kjk",
-        },
-        {
-          title: "로그인",
-          url: "/namu/login",
-        },
-        {
-          title: "기기 등록 확인",
-          url: "/namu/deviceReg",
-        },
-      ],
-    },
-  ],
-};
+  {
+    title : "농장 목록",
+    url : "/namu/farmList",
+    icon : Sprout,
+    items : [
+      {
+        title: "팔로우 농장 목록",
+        url : "/namu/fallowFarmList"
+      }
+    ]
+  },
+]
+
+const farmerNavMain = [
+  { 
+    title: "홈", 
+    url: "/namu/post-list", 
+    icon: Home 
+  },
+  { 
+    title: "게시판", 
+    url: "/namu/post-list", 
+    icon: AppWindow,
+    items : [
+      {
+        title: "나의 게시글",
+        url : "/namu/post-list"
+      }
+    ]
+  },
+  { 
+    title: "마이페이지", 
+    url: "/namu/my-farm", 
+    icon: Users ,
+    items : [
+      {
+        title: "내 정보 수정",
+        url : "/namu/my-farm"
+      }
+    ]
+  },
+  { 
+    title: "팔로워 목록", 
+    url: "#", 
+    icon: UserPlus 
+  }, 
+  { 
+    title: "내 농장 관리", 
+    url: "/namu/dashboard", 
+    icon: Sprout ,
+    items : [
+      {
+        title: "나의 농장 목록",
+        url : "#"
+      },
+      {
+        title: "농장 등록 하기",
+        url : "#"
+      },
+    ]
+  }, 
+  { 
+    title: "기기 등록", 
+    url: "#", 
+    icon: MonitorCog ,
+    items : [
+      {
+        title: "나의 기기 목록",
+        url : "#"
+      },
+      {
+        title: "기기 등록 하기",
+        url : "#"
+      },
+    ]
+  },               
+];
 
 const BasicLayout = () => {
+  const role = localStorage.getItem("role");
+
+    const data: SidebarData = {
+      teams: [
+        {
+          name: "나무위키",
+          logo: PlantCommunityLogo,
+        },
+      ],
+      user: {
+        name: "김우연",
+        email: "rladndus321@gmail.com",
+      },
+      navMain: role === "FARMER" ? farmerNavMain : userNavMain
+  };
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <SidebarProvider>
@@ -206,3 +223,77 @@ const BasicLayout = () => {
 };
 
 export default BasicLayout;
+
+
+// [
+//         {
+//           title: "홈",
+//           url: "/namu/post-list",
+//           icon: Home,
+//           isActive: true,
+//         },
+//         {
+//           title: "게시판",
+//           url: "#",
+//           icon: ActivitySquareIcon,
+//           isActive: true,
+//           items: [
+//             // {
+//             //   title: "메인 피드",
+//             //   url: "/namu/main-feed",
+//             // },
+//             // {
+//             //   title: "농장 대시보드",
+//             //   url: "/namu/dashboard",
+//             // },
+//             // {
+//             //   title: "작물별 AI 제어",
+//             //   url: "/namu/ai-control",
+//             // },
+//             // {
+//             //   title: "커뮤니티",
+//             //   url: "/namu/community",
+//             // },
+//             // {
+//             //   title: "마이페이지",
+//             //   url: "/namu/my-farm",
+//             // },
+//             // {
+//             //   title: "테스트",
+//             //   url: "/namu/plant-identify",
+//             // },
+//             // {
+//             //   title: "OpenAI테스트",
+//             //   url: "/namu/openai-test",
+//             // },
+//             // {
+//             //   title: "게시물 목록",
+//             //   url: "/namu/post-list",
+//             // },
+//             // {
+//             //   title: "KJK테스트",
+//             //   url: "/namu/kjk",
+//             // },
+//             // {
+//             //   title: "로그인",
+//             //   url: "/namu/login",
+//             // },
+//             // {
+//             //   title: "기기 등록 확인",
+//             //   url: "/namu/deviceReg",
+//             // },
+//           ],
+//         },
+//         {
+//           title : "마이페이지",
+//           url : "/namu/my_farm",
+//           icon : ActivitySquareIcon,
+//           items : [
+//             {
+//               title: "내 정보 수정",
+//               url : "/namu/my-farm"
+//             }
+//           ]
+//         },
+      
+//       ],
