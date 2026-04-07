@@ -2,6 +2,8 @@
 
 // JWT 토큰 디코딩
 // header.payload.signature 3구분
+
+
 // 유저정보는 payload
 export const decodeToken = (token:string)=>{
   try{
@@ -33,5 +35,13 @@ export const getUserRole = (): string|null => {
 // 관리자면 true, 아니면 false
 export const isAdmin = ():boolean =>{
   return getUserRole() === "ADMIN";
+};
+
+// 현재 로그인 유저 이메일
+export const getUserEmail = (): string | null=>{
+  const token = localStorage.getItem("token");
+  if(!token) return null;
+  const decoded = decodeToken(token.replace("Bearer ", ""));
+  return decoded?.sub ?? null;
 };
 

@@ -24,7 +24,7 @@ import { ArrowLeft, Calendar, Clock, Edit, Trash2 } from "lucide-react";
 import { postApi } from "@/api/post.api";
 import { errorToast, successToast } from "@/lib/toast";
 import { AlertDialog } from "@/components/ui/alert-dialog";
-import { isAdmin } from "@/utils/auth";
+import { isAdmin, getUserEmail } from "@/utils/auth";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -160,6 +160,13 @@ const PostDetail = () => {
   // 관리자일때 수정 삭제 가능
   const admin = isAdmin();
 
+  // 본인 or 관리자일때 수정 삭제 버튼 표시
+  
+  const currentUserEmail = getUserEmail();
+  const canEditDelete = admin || currentUserEmail === post.memEmail;
+
+
+
   return (
     <>
       <div className="mx-auto max-w-4xl space-y-6">
@@ -193,7 +200,10 @@ const PostDetail = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">작성자</span>
+                  <span className="text-sm font-medium">
+                    {/* 닉네임 표시*/}
+                    {post.memNickname ?? "알수없음"}
+                  </span>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     <span>{formatDate(post.createdAt)}</span>
@@ -206,7 +216,7 @@ const PostDetail = () => {
 
               {/* 액션 버튼 */}
               
-              {admin
+              {canEditDelete
               &&
               (
                 <div className="flex items-center gap-2">

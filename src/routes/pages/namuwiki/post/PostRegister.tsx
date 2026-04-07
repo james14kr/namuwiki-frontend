@@ -10,6 +10,7 @@ import type { JSONContent } from "@tiptap/core";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, FileEdit } from "lucide-react";
+import { decodeToken } from "@/utils/auth";
 
 const PostRegister = () => {
   const [title, setTitle] = useState<string>("");
@@ -17,10 +18,15 @@ const PostRegister = () => {
   const createPostMutation = useCreatePost();
 
   const onSaveClick = (json: JSONContent) => {
+    const token = localStorage.getItem("token");
+    const decoded = token ? decodeToken(token.replace("Bearer ","")) : null;
+    const memEmail = decoded?.sub ?? null;
+
     toastMutation(createPostMutation.mutateAsync, 
       {
         title: title,
         content: JSON.stringify(json),
+        memEmail : memEmail,
       },
       "등록중..."
       , "등록되었습니다."

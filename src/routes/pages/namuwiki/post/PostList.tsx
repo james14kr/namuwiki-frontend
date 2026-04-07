@@ -24,7 +24,7 @@ const PostList = () => {
     },
     {
       field: "title",
-      headerName: "title",
+      headerName: "제목",
       flex: 1,
       onCellClicked: (e) => {
         if (!e.data) {
@@ -33,6 +33,11 @@ const PostList = () => {
         }
         nav(`/namu/post-list/${e.data.id}`);
       }
+    },
+    {
+      field: "memNickname",
+      headerName: "닉네임",
+      flex: 1,
     },
     {
       field: "updatedAt",
