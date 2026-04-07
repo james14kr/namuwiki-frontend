@@ -24,6 +24,7 @@ import { ArrowLeft, Calendar, Clock, Edit, Trash2 } from "lucide-react";
 import { postApi } from "@/api/post.api";
 import { errorToast, successToast } from "@/lib/toast";
 import { AlertDialog } from "@/components/ui/alert-dialog";
+import { isAdmin } from "@/utils/auth";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -40,6 +41,15 @@ const formatTime = (dateStr: string) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+// 안전하게 파싱하는 헬퍼 함수 추가 (컴포넌트 밖에)
+const safeParseContent = (content: string) => {
+  try {
+    return JSON.parse(content);
+  } catch {
+    return content; // JSON 아니면 그냥 문자열로 반환
+  }
 };
 
 const PostDetailSkeleton = () => (
@@ -98,12 +108,13 @@ const PostDetail = () => {
       Subscript,
       Selection,
     ],
-    content: post?.content ? JSON.parse(post.content) : "",
+
+    content: post?.content ? safeParseContent(post.content) : "",
   });
 
   useEffect(() => {
     if (editor && post?.content) {
-      editor.commands.setContent(JSON.parse(post.content));
+      editor.commands.setContent(safeParseContent(post.content));
     }
   }, [editor, post?.content]);
 
@@ -145,6 +156,9 @@ const PostDetail = () => {
       },
     });
   };
+
+  // 관리자일때 수정 삭제 가능
+  const admin = isAdmin();
 
   return (
     <>
@@ -191,23 +205,35 @@ const PostDetail = () => {
               </div>
 
               {/* 액션 버튼 */}
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-1">
-                  <Edit className="h-3.5 w-3.5" />
-                  수정
-                </Button>
+              
+              {admin
+              &&
+              (
+                <div className="flex items-center gap-2">
+                  {/* 상세보기 수정 버튼 */}
+                  <Button
+                    onClick={() => navigate(`/namu/post-edit/${post.id}`)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1"
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                    수정
+                  </Button>
 
-                {/* 상세보기 삭제 버튼 */}
-                <Button
-                  onClick={() => setOpen(true)}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 text-danger hover:bg-danger/10 hover:text-danger"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  삭제
-                </Button>
-              </div>
+                  {/* 상세보기 삭제 버튼 */}
+                  <Button
+                    onClick={() => setOpen(true)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 text-danger hover:bg-danger/10 hover:text-danger"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    삭제
+                  </Button>
+                </div>
+              )}
+              
             </div>
           </CardHeader>
 

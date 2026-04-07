@@ -10,3 +10,9 @@ export interface PostResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PostUpdateRequest {
+  id: number;
+  title: string;
+  content: string;
+}

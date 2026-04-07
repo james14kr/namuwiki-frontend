@@ -1,4 +1,4 @@
-import type { PostRequest, PostResponse } from "@/types/postType";
+import type { PostRequest, PostResponse, PostUpdateRequest } from "@/types/postType";
 import { api } from "@/utils";
 
 export const postApi = {
@@ -19,5 +19,10 @@ export const postApi = {
   // 상세보기 삭제 axios
   deleteDetail1: async (id: number) => {
     await api.delete(`/posts/${id}`);
+  },
+  // 상세보기 수정 axios
+  update: async (dto: PostUpdateRequest) => {
+    const { data } = await api.put(`/posts/${dto.id}`, dto);
+    return data;
   },
 };

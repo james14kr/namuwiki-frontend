@@ -5,27 +5,44 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toastMutation } from "@/lib/toast";
-import { useCreatePost } from "@/queries/post.queries";
+import { useGetPost, useUpdatePost } from "@/queries/post.queries";
 import type { JSONContent } from "@tiptap/core";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, FileEdit } from "lucide-react";
 
-const PostRegister = () => {
+const safeParseContent = (content: string) => {
+  try {
+    return JSON.parse(content);
+  } catch {
+    return content;
+  }
+};
+
+const PostEdit = () => {
+  const { postId } = useParams<{ postId: string }>();
+  const { data: post } = useGetPost(postId ?? "");
   const [title, setTitle] = useState<string>("");
   const navigate = useNavigate();
-  const createPostMutation = useCreatePost();
+  const updatePostMutation = useUpdatePost();
+
+  // 기존 title
+  useEffect(() => {
+    if (post?.title) {
+      setTitle(post.title);
+    }
+  }, [post]);
 
   const onSaveClick = (json: JSONContent) => {
-    toastMutation(createPostMutation.mutateAsync, 
-      {
-        title: title,
-        content: JSON.stringify(json),
+    toastMutation(updatePostMutation.mutateAsync, {
+      id : Number(postId)
+      , title: title
+      , content: JSON.stringify(json),
       },
-      "등록중..."
-      , "등록되었습니다."
-      , "등록에 실패하였습니다.",
-      {
+      "수정 중~"
+      , "수정되었습니다."
+      , "수정에 실패하였습니다."
+      ,{
         onSuccess: () => navigate("/namu/post-list"),
       }
     );
@@ -47,13 +64,13 @@ const PostRegister = () => {
         <CardHeader className="space-y-1 pb-4">
           <div className="flex items-center gap-2">
             <FileEdit className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-bold tracking-tight">새 게시글 작성</h1>
+            <h1 className="text-xl font-bold tracking-tight">게시글 수정</h1>
             <Badge variant="success" className="ml-auto">
-              새 글
+              수정
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            제목과 본문을 입력하여 게시글을 작성하세요.
+            제목과 본문을 입력하여 수정하세요.
           </p>
         </CardHeader>
 
@@ -76,7 +93,15 @@ const PostRegister = () => {
           <div className="">
             <FieldLabel className="text-sm font-medium">본문</FieldLabel>
             <div className="h-[600px]">
-              <SimpleEditor onSave={onSaveClick} />
+              {post ? (
+                <SimpleEditor 
+                  onSave={onSaveClick} 
+                  initialContent={safeParseContent(post.content)}
+                  saveLabel="게시글 수정"
+                />
+              ) : (
+                <div>로딩중...</div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -85,4 +110,4 @@ const PostRegister = () => {
   );
 };
 
-export default PostRegister;
+export default PostEdit;

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import RouteError from "./pages/RouteError";
 import { dynamic } from "@/utils/dynamic";
-import DeviceRegistration from "./pages/namuwiki/admin/DeviceRegistration";
 
 
 // lazy pages
@@ -40,6 +39,9 @@ const LoginPage = dynamic(
 );
 const PostRegisterPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostRegister")
+);
+const PostEditPage = dynamic(
+  () => import("../routes/pages/namuwiki/post/PostEdit")
 );
 const PostListPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostList")
@@ -132,6 +134,10 @@ export const router = createBrowserRouter([
             Component: PostRegisterPage,
           },
           {
+            path: "post-edit/:postId",
+            Component: PostEditPage,
+          },
+          {
             path: "post-list",
             Component: PostListPage,
           },
@@ -160,10 +166,6 @@ export const router = createBrowserRouter([
           {
             path: "Login",
             Component: Login,
-          },
-          {
-            path: "DeviceReg",
-            Component: DeviceRegistration,
           },
         ],
       },
