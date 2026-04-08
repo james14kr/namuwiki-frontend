@@ -7,7 +7,7 @@ import {
   postLogin,
   postNickname,
 } from "@/api/member.api";
-import type { authCode, joinData, loginData } from "@/types/memberType";
+import type { joinData, loginData } from "@/types/memberType";
 
 // export const useGetPosts = () => {
 //   return useQuery({

@@ -22,6 +22,6 @@ export interface memEmail {
 
 export interface authCode {
   authCode : string;
-  farmerName: string;
-  farmerTel: string;
+  memName: string;
+  memTel: string;
 }

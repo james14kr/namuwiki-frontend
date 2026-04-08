@@ -288,7 +288,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     const response = await useVerifyFarmerMutate.mutateAsync({
       authCode: joinData.authCode,
       memName: joinData.memName,
-      farmerTel: joinData.memTel,
+      memTel: joinData.memTel,
     });
 
     if (response.data !== 0) {
