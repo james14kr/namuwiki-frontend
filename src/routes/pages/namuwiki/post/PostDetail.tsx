@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useDeleteDetail1, useGetPost } from "@/queries/post.queries";
-import { AppAlertDialog, Button } from "@/components";
+import { AppAlertDialog, Button, Input } from "@/components";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -30,6 +30,7 @@ import { decodeToken } from "@/utils/auth";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
+  date.setHours(date.getHours() + 9);
   return date.toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "long",
@@ -39,6 +40,7 @@ const formatDate = (dateStr: string) => {
 
 const formatTime = (dateStr: string) => {
   const date = new Date(dateStr);
+  date.setHours(date.getHours() + 9);
   return date.toLocaleTimeString("ko-KR", {
     hour: "2-digit",
     minute: "2-digit",
@@ -88,6 +90,10 @@ const PostDetail = () => {
   const { postId } = useParams<{ postId: string }>();
   const { data: post, isLoading } = useGetPost(postId ?? "");
   const [open, setOpen] = useState<boolean>(false);
+  // 댓글 관련
+  const [commentContent, setCommentContent] = useState<string>("");
+  const {data : comments} = useGetComments(Number(postId));
+  const insertCommentMutate = useInsertComment(Number(postId));
 
   const editor = useEditor({
     editable: false,
@@ -169,10 +175,28 @@ const PostDetail = () => {
 
 
   // 댓글 기능
+  const onCommentSubmit = ()=>{
+    if (!commentContent.trim()) return;
+    const token = localStorage.getItem("token");
+    const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
+    const memEmail = decoded?.sub ?? null;
 
-  const [commentContent, setCommentContent] = useState<string>("");
-  const {data : commnets} = useGetComments(Number(postId));
+    insertCommentMutate.mutate(
+      {postId : Number(postId), memEmail, content : commentContent},
+      {
+        onSuccess:()=>{
+          setCommentContent("");
+          successToast("댓글이 등록되었습니다.");
 
+        },
+        onError:()=>{
+          errorToast("댓글 등록에 실패하였습니다.");
+        },
+      }
+    );
+
+
+  };
 
 
 
@@ -293,6 +317,37 @@ const PostDetail = () => {
         onOpenChange={(state: boolean) => setOpen(state)}
         onConfirm={() => onConfirmHandler(post.id)}
       />
+
+
+
+      {/* 댓글 */}
+      <div>
+        <p>댓글 {comments?.length}개</p>
+
+        {/* 댓글 목록 */}
+        {comments?.map((comment) => (
+          <div key={comment.id}>
+            <span>{comment.memNickname}</span>
+            <span>{comment.content}</span>
+            <span>
+              {formatDate(comment.createdAt)}&nbsp;&nbsp;
+              {formatTime(comment.createdAt)}
+            </span>
+          </div>
+        ))}
+
+        {/* 댓글 입력 */}
+        {
+          <div>
+            <Input
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              placeholder="댓글을 입력하세요"
+            />
+            <button onClick={onCommentSubmit}>등록</button>
+          </div>
+        }
+      </div>
     </>
   );
 };

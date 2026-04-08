@@ -1,5 +1,5 @@
 
-import { CommentResponse, type CommentRequest } from "@/types/commentType";
+import type { CommentResponse, CommentRequest } from "@/types/commentType";
 import { api } from "@/utils";
 
 export const commentApi = {
