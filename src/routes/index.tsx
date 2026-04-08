@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import RouteError from "./pages/RouteError";
 import { dynamic } from "@/utils/dynamic";
 import DeviceRegistration from "./pages/namuwiki/admin/DeviceRegistration";
+import ProtectedRoute from "./ProtectedRoute";
+import LoginLayout from "@/components/layouts/LoginLayout";
 
 
 // lazy pages
@@ -52,121 +54,108 @@ const Practice = dynamic(
   () => import("../routes/pages/namuwiki/practice/Practice")
 );
 
-const Login = dynamic(
-  () => import("../routes/pages/namuwiki/member/LoginPage")
-);
-
 
 export const router = createBrowserRouter([
   {
+    path : "/namu/login",
+    Component : LoginLayout,
+    errorElement : <RouteError/>,
+    children: [
+      {
+        index : true,
+        Component : LoginPage
+      }
+    ]
+  },
+  {
     path: "/",
-    Component: BasicLayout,
+    Component: ProtectedRoute,
     errorElement: <RouteError />,
     children: [
       {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "sales",
-        children: [
+        Component : BasicLayout,
+        children : [
           {
-            path: "car-management",
-            Component: CarManagementPage,
+            index: true,
+            Component: Home,
           },
           {
-            path: "sale-records",
-            Component: RegisterSalesPage,
+            path: "namu",
+            children: [
+              {
+                path: "main-feed",
+                Component: MainFeedPage,
+              },
+              {
+                path: "dashboard",
+                Component: DashboardPage,
+              },
+              {
+                path: "ai-control",
+                Component: AiControlPage,
+              },
+              {
+                path: "community",
+                Component: CommunityPage,
+              },
+              {
+                path: "my-farm",
+                Component: MyFarmPage,
+              },
+              {
+                path: "plant-identify",
+                Component: PlantIdentifyPage,
+              },
+              {
+                path: "sale-records",
+                Component: RegisterSalesPage,
+              },
+              {
+                path: "sales-info",
+                Component: SelectSalseInfoPage,
+              },
+              {
+                path: "openai-test",
+                Component: OpenAiControlTestPage,
+              },
+              {
+                path: "post-register",
+                Component: PostRegisterPage,
+              },
+              {
+                path: "post-list",
+                Component: PostListPage,
+              },
+              {
+                path: "post-list/:postId",
+                Component: PostDetailPage,
+              },
+              // {
+              //   path: "post",
+              //   Component: <User />,
+              //   children: [
+              //     {
+              //       path: ":postId",
+              //       Component: <User />,
+              //     },
+              //   ],
+              // },
+              {
+                path: "kjk",
+                Component: KjkPage,
+              },
+              {
+                path: "practice",
+                Component: Practice,
+              },
+              {
+                path: "DeviceReg",
+                Component: DeviceRegistration,
+              },
+            ],
           },
-          {
-            path: "sales-info",
-            Component: SelectSalseInfoPage,
-          },
-        ],
-      },
-      {
-        path: "namu",
-        children: [
-          {
-            path: "main-feed",
-            Component: MainFeedPage,
-          },
-          {
-            path: "dashboard",
-            Component: DashboardPage,
-          },
-          {
-            path: "ai-control",
-            Component: AiControlPage,
-          },
-          {
-            path: "community",
-            Component: CommunityPage,
-          },
-          {
-            path: "my-farm",
-            Component: MyFarmPage,
-          },
-          {
-            path: "plant-identify",
-            Component: PlantIdentifyPage,
-          },
-          {
-            path: "sale-records",
-            Component: RegisterSalesPage,
-          },
-          {
-            path: "sales-info",
-            Component: SelectSalseInfoPage,
-          },
-          {
-            path: "openai-test",
-            Component: OpenAiControlTestPage,
-          },
-          {
-            path: "login",
-            Component: LoginPage
-          },
-          {
-            path: "post-register",
-            Component: PostRegisterPage,
-          },
-          {
-            path: "post-list",
-            Component: PostListPage,
-          },
-          {
-            path: "post-list/:postId",
-            Component: PostDetailPage,
-          },
-          // {
-          //   path: "post",
-          //   Component: <User />,
-          //   children: [
-          //     {
-          //       path: ":postId",
-          //       Component: <User />,
-          //     },
-          //   ],
-          // },
-          {
-            path: "kjk",
-            Component: KjkPage,
-          },
-          {
-            path: "practice",
-            Component: Practice,
-          },
-          {
-            path: "Login",
-            Component: Login,
-          },
-          {
-            path: "DeviceReg",
-            Component: DeviceRegistration,
-          },
-        ],
-      },
+        ]
+      }
     ],
   },
 ]);
