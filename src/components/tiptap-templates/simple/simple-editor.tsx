@@ -63,11 +63,13 @@ import { Button as AppButton } from "@/components/ui/button";
 const MainToolbarContent = ({
   onSaveClick,
   isMobile,
+  saveLabel,
 }: {
   onHighlighterClick: () => void;
   onLinkClick: () => void;
   onSaveClick: () => void;
   isMobile: boolean;
+  saveLabel?: string;
 }) => {
   return (
     <>
@@ -122,16 +124,22 @@ const MainToolbarContent = ({
 
       {isMobile && <ToolbarSeparator />}
 
-      <AppButton onClick={onSaveClick}>게시글 등록</AppButton>
+      <AppButton onClick={onSaveClick}>{saveLabel ?? "게시글 등록"}</AppButton>
     </>
   );
 };
 
 interface SimpleEditorProps {
   onSave: (json: JSONContent) => void;
+  initialContent?: JSONContent | string;
+  saveLabel?: string;
 }
 
-export function SimpleEditor({ onSave }: SimpleEditorProps) {
+export function SimpleEditor({
+  onSave,
+  initialContent,
+  saveLabel,
+}: SimpleEditorProps) {
   const isMobile = useIsBreakpoint();
   const editorRef = useRef<HTMLDivElement>(null);
 
@@ -172,7 +180,7 @@ export function SimpleEditor({ onSave }: SimpleEditorProps) {
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: initialContent ?? content,
   });
 
   const onSaveClick = () => {
@@ -190,6 +198,7 @@ export function SimpleEditor({ onSave }: SimpleEditorProps) {
             onLinkClick={() => {}}
             onSaveClick={onSaveClick}
             isMobile={isMobile}
+            saveLabel={saveLabel}
           />
         </Toolbar>
 

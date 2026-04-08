@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { postApi } from "@/api/post.api";
-import type { PostRequest } from "@/types/postType";
+import type { PostRequest, PostUpdateRequest } from "@/types/postType";
 import { queryKeys } from "@/queryKeys";
 
 // Get은 useQuery, 나머지는 useMutation
@@ -28,6 +28,20 @@ export const useCreatePost = () => {
   });
 };
 
+// 게시글 수정
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: PostUpdateRequest) => postApi.update(dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.post.all });
+    },
+    onError: (e) => {
+      console.log(e.message);
+    },
+  });
+};
+
 export const useDeleteDetail1 = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -37,6 +51,6 @@ export const useDeleteDetail1 = () => {
     },
     onError: (e) => {
       console.log(e.message);
-    }
+    },
   });
 };

@@ -10,9 +10,7 @@ import LoginLayout from "@/components/layouts/LoginLayout";
 // Code Splitting
 const BasicLayout = dynamic(() => import("../components/layouts/BasicLayout"));
 const Home = dynamic(() => import("../routes/pages/Home"));
-const CarManagementPage = dynamic(
-  () => import("../routes/pages/sales/CarManagement")
-);
+
 const RegisterSalesPage = dynamic(
   () => import("../routes/pages/sale-records/RegisterSales")
 );
@@ -42,6 +40,9 @@ const LoginPage = dynamic(
 );
 const PostRegisterPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostRegister")
+);
+const PostEditPage = dynamic(
+  () => import("../routes/pages/namuwiki/post/PostEdit")
 );
 const PostListPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostList")
@@ -154,8 +155,95 @@ export const router = createBrowserRouter([
               },
             ],
           },
-        ]
-      }
+          {
+            path: "sales-info",
+            Component: SelectSalseInfoPage,
+          },
+        ],
+      },
+      {
+        path: "namu",
+        children: [
+          {
+            path: "main-feed",
+            Component: MainFeedPage,
+          },
+          {
+            path: "dashboard",
+            Component: DashboardPage,
+          },
+          {
+            path: "ai-control",
+            Component: AiControlPage,
+          },
+          {
+            path: "community",
+            Component: CommunityPage,
+          },
+          {
+            path: "my-farm",
+            Component: MyFarmPage,
+          },
+          {
+            path: "plant-identify",
+            Component: PlantIdentifyPage,
+          },
+          {
+            path: "sale-records",
+            Component: RegisterSalesPage,
+          },
+          {
+            path: "sales-info",
+            Component: SelectSalseInfoPage,
+          },
+          {
+            path: "openai-test",
+            Component: OpenAiControlTestPage,
+          },
+          {
+            path: "login",
+            Component: LoginPage
+          },
+          {
+            path: "post-register",
+            Component: PostRegisterPage,
+          },
+          {
+            path: "post-edit/:postId",
+            Component: PostEditPage,
+          },
+          {
+            path: "post-list",
+            Component: PostListPage,
+          },
+          {
+            path: "post-list/:postId",
+            Component: PostDetailPage,
+          },
+          // {
+          //   path: "post",
+          //   Component: <User />,
+          //   children: [
+          //     {
+          //       path: ":postId",
+          //       Component: <User />,
+          //     },
+          //   ],
+          // },
+          {
+            path: "kjk",
+            Component: KjkPage,
+          },
+          {
+            path: "practice",
+            Component: Practice,
+          },
+          // {
+          //   path: "Login",
+          //   Component: Login,
+          // },
+        ],
+      },
     ],
   },
 ]);
