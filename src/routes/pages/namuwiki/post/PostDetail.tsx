@@ -25,8 +25,8 @@ import { postApi } from "@/api/post.api";
 import { errorToast, successToast } from "@/lib/toast";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { isAdmin, getUserEmail } from "@/utils/auth";
-import { useGetComments, useInsertComment } from "@/queries/comment.queries";
 import { decodeToken } from "@/utils/auth";
+import { useGetComments, useInsertComment, useUpdateComment, useDeleteComment } from "@/queries/comment.queries";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -94,6 +94,10 @@ const PostDetail = () => {
   const [commentContent, setCommentContent] = useState<string>("");
   const {data : comments} = useGetComments(Number(postId));
   const insertCommentMutate = useInsertComment(Number(postId));
+  const [editCommentId, setEditCommentId] = useState<number | null>(null);
+  const [editCommContent, setEditCommContent] = useState<string>("");
+  const updateCommentMutate = useUpdateComment(Number(postId));
+  const deleteCommentMutate = useDeleteComment(Number(postId));
 
   const editor = useEditor({
     editable: false,
@@ -321,33 +325,153 @@ const PostDetail = () => {
 
 
       {/* 댓글 */}
-      <div>
-        <p>댓글 {comments?.length}개</p>
+      
+      <Card className="overflow-hidden">
+        <CardHeader className="pb-4">
+          <h2 className="text-base font-semibold">
+            댓글 {comments?.length ?? 0}개
+          </h2>
+        </CardHeader>
 
-        {/* 댓글 목록 */}
-        {comments?.map((comment) => (
-          <div key={comment.id}>
-            <span>{comment.memNickname}</span>
-            <span>{comment.content}</span>
-            <span>
-              {formatDate(comment.createdAt)}&nbsp;&nbsp;
-              {formatTime(comment.createdAt)}
-            </span>
-          </div>
-        ))}
+        <Separator />
 
-        {/* 댓글 입력 */}
-        {
-          <div>
-            <Input
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              placeholder="댓글을 입력하세요"
-            />
-            <button onClick={onCommentSubmit}>등록</button>
-          </div>
-        }
-      </div>
+        <CardContent className="space-y-4 py-4">
+          {/* 댓글 목록 */}
+          {comments && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="flex items-start gap-3">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+                    {comment.memNickname?.[0] ?? "U"}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex flex-1 flex-col gap-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">{comment.memNickname}</span>
+                      {/* 댓글 등록 날짜 + 시간 */}
+                      <span className="text-xs text-muted-foreground">
+                        {comment.createdAt !== comment.updatedAt ? (
+                          <>
+                            {formatDate(comment.updatedAt)}&nbsp;{formatTime(comment.updatedAt)}
+                            {/* created updated 다르면 수정됨이라는 글자 표시 */}
+                            {comment.createdAt !== comment.updatedAt && (
+                              <span className="ml-1 text-xs text-muted-foreground">(수정됨)</span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {formatDate(comment.createdAt)}&nbsp;{formatTime(comment.createdAt)}
+                          </>
+                        )}
+                      </span>
+                    </div>
+
+                    {/* 본인 or 관리자만 버튼 표시 */}
+                    {(admin || currentUserEmail === comment.memEmail) && (
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs"
+                          onClick={() => {
+                            setEditCommentId(comment.id);
+                            setEditCommContent(comment.content);
+                          }}
+                        >
+                          수정
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs text-danger hover:text-danger"
+                          onClick={() => {
+                            deleteCommentMutate.mutate(comment.id, {
+                              onSuccess: () => successToast("댓글이 삭제되었습니다."),
+                              onError: () => errorToast("댓글 삭제에 실패하였습니다."),
+                            });
+                          }}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 수정 중이면 input, 아니면 내용 표시 */}
+                  {editCommentId === comment.id ? (
+                    <div className="flex gap-2">
+                      <Input
+                        value={editCommContent}
+                        onChange={(e) => setEditCommContent(e.target.value)}
+                        className="flex-1 h-8 text-sm"
+                      />
+                      <Button
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={() => {
+                          updateCommentMutate.mutate({
+                            id: comment.id
+                            , postId: Number(postId)
+                            , memEmail: currentUserEmail
+                            , content: editCommContent 
+                          },
+                          {
+                            onSuccess: () => {
+                              setEditCommentId(null);
+                              successToast("댓글이 수정되었습니다.");
+                            },
+                            onError: () => errorToast("댓글 수정에 실패하였습니다."),
+                          });
+                        }}
+                      >
+                        완료
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={() => setEditCommentId(null)}
+                      >
+                        취소
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm">{comment.content}</p>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-sm text-muted-foreground py-4">
+              첫 댓글을 작성해보세요!
+            </p>
+          )}
+          <Separator />
+
+          {/* 댓글 입력 */}
+          {currentUserEmail ? (
+            <div className="flex gap-2">
+              <Input
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+                placeholder="댓글을 입력하세요"
+                className="flex-1"
+              />
+              <Button onClick={onCommentSubmit} size="sm">
+                등록
+              </Button>
+            </div>
+          ) : (
+            <p className="text-center text-sm text-muted-foreground py-2">
+              로그인 후 댓글을 작성할 수 있습니다.
+            </p>
+          )}
+
+
+        </CardContent>
+      </Card>
     </>
   );
 };
