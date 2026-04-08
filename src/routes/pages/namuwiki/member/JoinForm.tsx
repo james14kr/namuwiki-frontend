@@ -74,7 +74,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
   const [errorMsg, setErrorMsg] = useState<Partial<SignUpStoreStateType>>({});
 
   //권한 타입 저장 할 state 변수
-  const [userType, setUserType] = useState<"FAMER" | "USER">("USER");
+  const [userType, setUserType] = useState<"FARMER" | "USER">("USER");
 
   //유효성 검사 실시할 함수
   const validateForm = (data: typeof joinData) => {
@@ -151,13 +151,13 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
 
     //8. 권한이 농장주 일 경우 실행할 유효성 검사 - 농장명 유효성 검사
     farmerName:
-      userType === "FAMER"
+      userType === "FARMER"
         ? z.string().min(1, "농장명을 입력해주세요.")
         : z.string().optional(), //undefined가 되어도 통과, null만 통과 X => 타입이 user일 때도 사용하기 위해서
 
     //9. 권한이 농장주 일 경우 실행할 유효성 검사 - 인증번호 유효성 검사
     authCode:
-      userType === "FAMER"
+      userType === "FARMER"
         ? z.string().min(1, "인증번호를 입력해주세요.")
         : z.string().optional(),
   });
@@ -338,11 +338,11 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
         <div className="mb-4 flex justify-center gap-3">
           <div
             onClick={() => {
-              setUserType("FAMER");
-              setJoinData((prev) => ({ ...prev, memRole: "FAMER" }));
+              setUserType("FARMER");
+              setJoinData((prev) => ({ ...prev, memRole: "FARMER" }));
             }}
             className={`flex-1 cursor-pointer rounded-xl border-2 p-3 text-center transition-all ${
-              userType === "FAMER"
+              userType === "FARMER"
                 ? "border-green-500 bg-green-50"
                 : "border-gray-200"
             }`}
@@ -545,7 +545,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
         </div>
 
         {/* 농장주 전용 필드 - 농장명, 인증번호 */}
-        {userType === "FAMER" && (
+        {userType === "FARMER" && (
           <>
             <div>
               <Label className="mb-1.5 block text-sm font-semibold text-green-900">
@@ -556,7 +556,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
                 placeholder="농장명을 입력하세요."
                 name="farmerName"
                 value={joinData.farmerName}
-                onChange={e => {handleChange(e)}}
+                onChange={e => {handleChange(e);}}
               />
               {errorMsg.farmerName && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
@@ -574,7 +574,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
                 placeholder="인증번호를 입력하세요."
                 name="authCode"
                 value={joinData.authCode}
-                onChange={e => {handleChange(e)}}
+                onChange={e => {handleChange(e);}}
               />
               {errorMsg.authCode && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
