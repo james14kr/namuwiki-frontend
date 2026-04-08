@@ -61,4 +61,18 @@ export const postLogin = async (loginData: object) => {
   }
 };
 
+/**
+ * 
+ * @param authCode 인증번호
+ * @returns 
+ */
+export const postAuthCode = async (authCode: object) => {
+  try{
+    const response = await api.post("/authes/authCode", authCode);
+    return response;
+  }catch(e){
+    console.log("인증번호 생성 중 오류 발생", e);
+    throw e;
+  }
+};
 

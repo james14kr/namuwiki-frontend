@@ -32,7 +32,7 @@ interface SignUpStoreStateType {
   memAdd: string;
   addDetail: string;
   memRole: string;
-  farmName: string;
+  farmerName: string;
   authCode: string;
 }
 
@@ -49,7 +49,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     memAdd: "",
     addDetail: "",
     memRole: "USER",
-    farmName: "",
+    farmerName: "",
     authCode: "",
   });
 
@@ -150,7 +150,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     memAdd: z.string().min(1, "주소를 입력해주세요."),
 
     //8. 권한이 농장주 일 경우 실행할 유효성 검사 - 농장명 유효성 검사
-    farmName:
+    farmerName:
       userType === "FAMER"
         ? z.string().min(1, "농장명을 입력해주세요.")
         : z.string().optional(), //undefined가 되어도 통과, null만 통과 X => 타입이 user일 때도 사용하기 위해서
@@ -554,13 +554,13 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
               <Input 
                 className="rounded-xl border-green-300 bg-green-50/40 text-sm text-gray-800 transition-all duration-200 focus-visible:border-green-500 focus-visible:ring-green-500"
                 placeholder="농장명을 입력하세요."
-                name="farmName"
-                value={joinData.farmName}
+                name="farmerName"
+                value={joinData.farmerName}
                 onChange={e => {handleChange(e)}}
               />
-              {errorMsg.farmName && (
+              {errorMsg.farmerName && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
-                  {errorMsg.farmName}
+                  {errorMsg.farmerName}
                 </p>
               )}
             </div>

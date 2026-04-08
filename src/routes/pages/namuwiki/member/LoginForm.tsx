@@ -8,6 +8,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { usePostLogin } from "@/queries/member.queries";
 import { toastMutation } from "@/lib/toast";
+import { tokenToString } from "typescript";
 
 const LoginForm = () => {
   const nav = useNavigate();
@@ -69,6 +70,12 @@ const LoginForm = () => {
         return "아이디나 비밀번호 오류입니다.";
       }
     );
+  };
+
+  /* 임시- 로그아웃 실행 함수 */
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    nav("/login");
   };
 
   return (

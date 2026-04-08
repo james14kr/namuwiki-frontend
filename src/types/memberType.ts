@@ -7,7 +7,7 @@ export interface joinData {
   memAdd: string;
   addDetail: string;
   memRole: string;
-  farmName: string;
+  farmerName: string;
   authCode: string;
 }
 
@@ -18,4 +18,10 @@ export interface loginData {
 
 export interface memEmail {
   memEmail: string;
+}
+
+export interface authCode {
+  authCode : string;
+  farmerName: string;
+  farmerTel: string;
 }
