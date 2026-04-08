@@ -43,7 +43,7 @@ const LoginForm = () => {
         // 로그인 검증 성공시
         if (param.status === 200) {
           // 토큰 정보
-          console.log(param.headers.authorization);
+          //console.log(param.headers.authorization);
 
           // 토큰 LocalStorage에 저장
           localStorage.setItem("token", param.headers.authorization);
