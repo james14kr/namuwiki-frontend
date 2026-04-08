@@ -56,6 +56,10 @@ const FarmRegisterPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FarmRegister")
 )
 
+const FarmListPage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/FarmList")
+)
+
 // 관리자 페이지
 const DeviceRegistration = dynamic(
   () => import("./pages/namuwiki/admin/DeviceRegistration")
@@ -111,6 +115,7 @@ export const router = createBrowserRouter([
               { path: "kjk",           Component: KjkPage },
               { path: "practice",      Component: Practice },
               { path: "farm-register", Component: FarmRegisterPage},
+              { path: "farm-list", Component: FarmListPage},
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
               { path: "admin/MemberManagement",   Component: MemberManagement },
