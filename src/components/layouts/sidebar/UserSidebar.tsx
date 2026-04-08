@@ -1,14 +1,26 @@
+import { Button } from "@/components/ui/button";
 import React from 'react'
+import { useNavigate } from "react-router-dom";
 
 const UserSidebar = () => {
+  const nav = useNavigate();
   // JWT에서 꺼낸 정보 (LoginForm에서 저장한 값 활용 가능)
   const name = localStorage.getItem("name") ?? "사용자";
   const email = localStorage.getItem("email") ?? "";
 
+  // 로그아웃 실행 함수
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    nav("/namu/login");
+  };
+  
+
   return (
     <div className="sticky top-0 flex h-svh w-80 flex-col gap-3 overflow-y-auto border-l bg-sidebar px-3 py-4">
-      <div className="font-bold">내 정보</div>
-
+      <div className="flex gap-16">
+        <div className="font-bold w-40 mt-1">내 정보</div>
+        <Button className="w-30" onClick={() => handleLogout()}>로그아웃</Button>
+      </div>
       {/* 프로필 카드 */}
       <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <div className="text-sm font-bold">{name}</div>
