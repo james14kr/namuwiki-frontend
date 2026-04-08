@@ -33,3 +33,34 @@ export const useGetComments = (postId:number)=>{
     queryFn : ()=>commentApi.selectComment(postId),
   });
 };
+
+
+
+// 댓글 수정
+export const useUpdateComment = (postId:number)=>{
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn : (dto: CommentRequest & {id:number})=>commentApi.updateComment(dto),
+    onSuccess : ()=>{
+      queryClient.invalidateQueries({queryKey : commentKeys.byPostId(postId)});
+    },
+    onError : (e)=>{
+      console.log(e.message);
+    },
+
+  });
+};
+
+// 댓글 삭제
+export const useDeleteComment = (postId:number)=>{
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id:number)=>commentApi.deleteComment(id),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({queryKey:commentKeys.byPostId(postId)});
+    },
+    onError:(e)=>{
+      console.log(e.message);
+    }
+  })
+}
