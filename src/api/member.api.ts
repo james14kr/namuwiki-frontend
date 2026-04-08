@@ -89,3 +89,18 @@ export const postCheckFarmerAuth = async (authCode: object) => {
     throw e;
   }
 };
+
+/**
+ * 사용자추가 버튼 클릭 시 관리자 추가
+ * @param addAdmin 사용자 추가 할 관리자 데이터
+ * @returns 
+ */
+export const postAddAdmin = async (addAdmin: addAdminParam) => {
+  try{
+    const response = await api.post("/admin/member/add", addAdmin);
+    return response
+  }catch(e){
+    console.log("관리자 추가 시 오류 발생", e)
+    throw e
+  }
+}

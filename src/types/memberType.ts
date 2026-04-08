@@ -25,3 +25,8 @@ export interface authCode {
   memName: string;
   memTel: string;
 }
+
+export interface addAdminParam{
+  memEmail: string;
+  memPw: string;
+}

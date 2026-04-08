@@ -59,3 +59,10 @@ export const usePostCheckFarmerAuth = () => {
     mutationFn: (param: object) => postCheckFarmerAuth(param),
   });
 };
+
+// 사용자 추가버큰 클릭 시 관리자 추가
+export const usePostAddAdmin = () => {
+  return useMutation({
+    mutationFn: (param: addAdminParam) => postAddAdmin(param)
+  });
+};
