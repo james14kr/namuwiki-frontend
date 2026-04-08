@@ -52,10 +52,12 @@ const LoginForm = () => {
           try{
             const token = param.headers.authorization;
             const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-            const payload = JSON.parse(atob(base64));
+            const jsonStr = new TextDecoder().decode(
+              Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))
+            );
+            const payload = JSON.parse(jsonStr);
             localStorage.setItem("role", payload.role);
-            localStorage.setItem("name", payload.name);
-            localStorage.setItem("email", payload.email); 
+            localStorage.setItem("nickname", payload.memNickname);
           }catch(e){
             console.error("JWT 디코딩 실패", e)
           }

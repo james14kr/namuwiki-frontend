@@ -1,9 +1,14 @@
 import React from 'react'
 
 const FarmSidebar = () => {
+  const nickname = localStorage.getItem("nickname");
+
   return (
     <div className="sticky top-0 flex h-svh w-80 flex-col gap-3 overflow-y-auto border-l bg-sidebar px-3 py-4">
       <div className="font-bold">내 농장 현황</div>
+      <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
+        <div className="text-sm font-bold">{nickname}님 환영합니다!</div>
+      </div>
       <div>
         <div className="flex gap-3">
           <div className="h-20 flex-1 rounded-md bg-primary-foreground p-3 shadow-md">
