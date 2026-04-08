@@ -86,7 +86,7 @@ const farmerNavMain = [
       },
       {
         title: "농장 등록 하기",
-        url : "#"
+        url : "/namu/farm-register"
       },
     ]
   }, 
