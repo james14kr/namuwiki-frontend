@@ -25,6 +25,8 @@ import { postApi } from "@/api/post.api";
 import { errorToast, successToast } from "@/lib/toast";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { isAdmin, getUserEmail } from "@/utils/auth";
+import { useGetComments, useInsertComment } from "@/queries/comment.queries";
+import { decodeToken } from "@/utils/auth";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -164,6 +166,22 @@ const PostDetail = () => {
   
   const currentUserEmail = getUserEmail();
   const canEditDelete = admin || currentUserEmail === post.memEmail;
+
+
+  // 댓글 기능
+
+  const [commentContent, setCommentContent] = useState<string>("");
+  const {data : commnets} = useGetComments(Number(postId));
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -15,7 +15,7 @@ const userNavMain = [
   {title: "홈", url : "/namu/post-list", icon: Home},
   { 
     title: "게시판", 
-    url: "post-list", 
+    url: "/namu/post-list", 
     icon: AppWindow},
   {
     title : "마이페이지",
