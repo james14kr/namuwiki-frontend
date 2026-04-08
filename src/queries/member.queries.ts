@@ -1,5 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { postAuthCode, postEmail, postJoinData, postLogin, postNickname } from "@/api/member.api";
+import {
+  postAuthCode,
+  postCheckFarmerAuth,
+  postEmail,
+  postJoinData,
+  postLogin,
+  postNickname,
+} from "@/api/member.api";
 import type { joinData, loginData } from "@/types/memberType";
 
 // export const useGetPosts = () => {
@@ -20,7 +27,7 @@ export const usePostJoinData = () => {
 export const usePostEmail = () => {
   return useMutation({
     // 이메일을 전달
-    mutationFn: (param : string) => postEmail(param),
+    mutationFn: (param: string) => postEmail(param),
   });
 };
 
@@ -28,7 +35,7 @@ export const usePostEmail = () => {
 export const usePostNickname = () => {
   return useMutation({
     // 닉네임 전달
-    mutationFn: (param : string) => postNickname(param)
+    mutationFn: (param: string) => postNickname(param),
   });
 };
 
@@ -42,6 +49,13 @@ export const usePostLogin = () => {
 // 인증번호 생성
 export const usePostAuthCode = () => {
   return useMutation({
-    mutationFn: (param: object) => postAuthCode(param)
+    mutationFn: (param: object) => postAuthCode(param),
+  });
+};
+
+// 인증번호 유효성검사
+export const usePostCheckFarmerAuth = () => {
+  return useMutation({
+    mutationFn: (param: object) => postCheckFarmerAuth(param),
   });
 };

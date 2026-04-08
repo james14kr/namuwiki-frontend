@@ -9,6 +9,7 @@ import type { PostInfo } from "@/components/postcode/Postcode";
 import { errorToast, successToast, toastMutation } from "@/lib/toast";
 import type { joinData } from "@/types/memberType";
 import {
+  usePostCheckFarmerAuth,
   usePostEmail,
   usePostJoinData,
   usePostNickname,
@@ -38,6 +39,7 @@ interface SignUpStoreStateType {
 
 const JoinForm = ({ successJoin }: JoinFormProps) => {
   const usePostJoinDataMutate = usePostJoinData();
+  const useVerifyFarmerMutate = usePostCheckFarmerAuth();
 
   /* input에서 입력받은 값 저장할 state 변수 */
   const [joinData, setJoinData] = useState<joinData>({
@@ -75,6 +77,9 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
 
   //권한 타입 저장 할 state 변수
   const [userType, setUserType] = useState<"FARMER" | "USER">("USER");
+
+  //
+  const [isAuthVerified, setIsAuthVerified] = useState(false);
 
   //유효성 검사 실시할 함수
   const validateForm = (data: typeof joinData) => {
@@ -158,7 +163,10 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
     //9. 권한이 농장주 일 경우 실행할 유효성 검사 - 인증번호 유효성 검사
     authCode:
       userType === "FARMER"
-        ? z.string().min(1, "인증번호를 입력해주세요.")
+        ? z
+            .string()
+            .min(1, "인증번호를 입력해주세요.")
+            .length(6, "인증번호는 6자이어야 합니다.")
         : z.string().optional(),
   });
 
@@ -276,6 +284,24 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
 
   console.log(joinData);
 
+  const checkFarmerAuth = async () => {
+    const response = await useVerifyFarmerMutate.mutateAsync({
+      authCode: joinData.authCode,
+      memName: joinData.memName,
+      memTel: joinData.memTel,
+    });
+
+    if (response.data !== 0) {
+      successToast("농업인 인증에 성공했습니다.");
+      setIsAuthVerified(true);
+    } else {
+      errorToast("농업인 인증에 실패했습니다.");
+      setIsAuthVerified(false);
+    }
+    
+    console.log(response.data);
+  };
+
   return (
     <div>
       <style>{`
@@ -351,7 +377,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
             <GrUserWorker />
             <p>농업인</p>
           </div>
-          <div 
+          <div
             onClick={() => {
               setUserType("USER");
               setJoinData((prev) => ({ ...prev, memRole: "USER" }));
@@ -360,7 +386,8 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
               userType === "USER"
                 ? "border-green-500 bg-green-50"
                 : "border-gray-200"
-            }`}>
+            }`}
+          >
             {/* 일반 유저 */}
             <FaRegUser />
             <p>일반 유저</p>
@@ -551,12 +578,14 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
               <Label className="mb-1.5 block text-sm font-semibold text-green-900">
                 농장명
               </Label>
-              <Input 
+              <Input
                 className="rounded-xl border-green-300 bg-green-50/40 text-sm text-gray-800 transition-all duration-200 focus-visible:border-green-500 focus-visible:ring-green-500"
                 placeholder="농장명을 입력하세요."
                 name="farmerName"
                 value={joinData.farmerName}
-                onChange={e => {handleChange(e);}}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
               />
               {errorMsg.farmerName && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
@@ -569,12 +598,25 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
               <Label className="mb-1.5 block text-sm font-semibold text-green-900">
                 인증번호
               </Label>
-              <Input 
+              <Input
                 className="rounded-xl border-green-300 bg-green-50/40 text-sm text-gray-800 transition-all duration-200 focus-visible:border-green-500 focus-visible:ring-green-500"
                 placeholder="인증번호를 입력하세요."
                 name="authCode"
                 value={joinData.authCode}
-                onChange={e => {handleChange(e);}}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+                onBlur={() => {
+                  console.log("onBlur 실행");
+                  console.log(joinData.authCode, joinData. memName, joinData.memTel);
+                  if (
+                    joinData.authCode &&
+                    joinData.memName &&
+                    joinData.memTel
+                  ) {
+                    checkFarmerAuth();
+                  }
+                }}
               />
               {errorMsg.authCode && (
                 <p className="err-msg mt-1 pl-1 text-xs text-red-500">
@@ -584,7 +626,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
             </div>
           </>
         )}
-        
+
         {/* ── 구분선 ── */}
         <div className="section-divider jf-7">
           <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-widest text-green-600">
