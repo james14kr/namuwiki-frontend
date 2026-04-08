@@ -1,12 +1,21 @@
 import React from 'react'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const FarmSidebar = () => {
+  const nav = useNavigate();
   const nickname = localStorage.getItem("nickname");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    nav("/namu/login");
+  }
 
   return (
     <div className="sticky top-0 flex h-svh w-80 flex-col gap-3 overflow-y-auto border-l bg-sidebar px-3 py-4">
       <div className="font-bold">내 농장 현황</div>
+      <Button className='w-30' onClick={() => handleLogout()}>로그아웃</Button>
       <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <div className="text-sm font-bold">{nickname}</div>

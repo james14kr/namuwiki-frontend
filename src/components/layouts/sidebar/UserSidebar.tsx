@@ -18,10 +18,9 @@ const UserSidebar = () => {
 
   return (
     <div className="sticky top-0 flex h-svh w-80 flex-col gap-3 overflow-y-auto border-l bg-sidebar px-3 py-4">
-      <div className="flex gap-16">
-        <div className="font-bold w-40 mt-1">내 정보</div>
         <Button className="w-30" onClick={() => handleLogout()}>로그아웃</Button>
-      </div>
+
+        <div className="font-bold w-40 mt-1">내 정보</div>
       {/* 프로필 카드 */}
       <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <div className="flex items-center gap-2">
@@ -31,7 +30,7 @@ const UserSidebar = () => {
       </div>
 
       {/* 팔로우 중인 농장 */}
-      <div>
+      <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <span className="font-bold">팔로우 중인 농장</span>
         <div className="mt-4 flex flex-col gap-4">
           <div className="flex gap-2">
