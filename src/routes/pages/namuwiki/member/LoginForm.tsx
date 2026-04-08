@@ -1,5 +1,5 @@
 import { Button, Input } from "@/components";
-import React, { useState } from "react";
+import React, { useState, type KeyboardEvent } from "react";
 import { CiMail } from "react-icons/ci";
 import { IoMdLock } from "react-icons/io";
 import { IoMdEye } from "react-icons/io";
@@ -47,19 +47,22 @@ const LoginForm = () => {
 
           // 토큰 LocalStorage에 저장
           localStorage.setItem("token", param.headers.authorization);
-          
+
           //JWT 디코딩으로 role, name, email 꺼내기
-          try{
+          try {
             const token = param.headers.authorization;
-            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            const base64 = token
+              .split(".")[1]
+              .replace(/-/g, "+")
+              .replace(/_/g, "/");
             const jsonStr = new TextDecoder().decode(
               Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))
             );
             const payload = JSON.parse(jsonStr);
             localStorage.setItem("role", payload.role);
             localStorage.setItem("nickname", payload.memNickname);
-          }catch(e){
-            console.error("JWT 디코딩 실패", e)
+          } catch (e) {
+            console.error("JWT 디코딩 실패", e);
           }
 
           // 로그인 성공 시 메인페이지로 이동
@@ -72,6 +75,13 @@ const LoginForm = () => {
         return "아이디나 비밀번호 오류입니다.";
       }
     );
+  };
+
+  // enter치면 로그인
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      login();
+    }
   };
 
   return (
@@ -151,6 +161,7 @@ const LoginForm = () => {
             value={loginData.memPw}
             onChange={(e) => handleLoginData(e)}
             type={showPw ? "text" : "password"}
+            onKeyDown={handleKeyPress}
           />
           <Button
             variant="link"
@@ -179,7 +190,9 @@ const LoginForm = () => {
 
       {/* 이메일, 비밀번호 찾기 */}
       <div className="field-4 mt-5 flex cursor-pointer items-center justify-center gap-1 text-sm text-green-600 transition-colors duration-150 hover:text-green-800">
-        <p className="find-pw" onClick={() => {}}>이메일 찾기</p>
+        <p className="find-pw" onClick={() => {}}>
+          이메일 찾기
+        </p>
         <FaAngleRight className="text-xs" />
         <p className="find-pw">비밀번호 찾기</p>
         <FaAngleRight className="text-xs" />
