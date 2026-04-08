@@ -72,12 +72,6 @@ const LoginForm = () => {
     );
   };
 
-  /* 임시- 로그아웃 실행 함수 */
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    nav("/login");
-  };
-
   return (
     <div>
       <style>{`
