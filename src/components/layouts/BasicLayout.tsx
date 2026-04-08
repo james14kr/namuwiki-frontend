@@ -7,9 +7,10 @@ import { Toaster } from "@/components/ui/sonner";
 import FarmSidebar from "./sidebar/FarmSidebar";
 import UserSidebar from "./sidebar/UserSidebar";
 
-import { Home, SquareTerminal, ActivitySquareIcon, Users , AppWindow, UserPlus, Sprout, MonitorCog  } from "lucide-react";
+import { Home, SquareTerminal, ActivitySquareIcon, Users , AppWindow, UserPlus, Sprout, MonitorCog, User, Settings} from "lucide-react";
 import type { SidebarData } from "@/types/sidebarType";
 import PlantCommunityLogo from "./Logo";
+import ManagerSidebar from "./sidebar/ManagerSidebar";
 
 const userNavMain = [
   {title: "홈", url : "/namu/post-list", icon: Home},
@@ -106,6 +107,29 @@ const farmerNavMain = [
   },               
 ];
 
+const adminNavMain = [
+  {
+    title : "홈",
+    url : "/",
+    icon : Home
+  },
+  {
+    title : "회원 관리",
+    url : "/namu/admin/MemberManagement",
+    icon : User
+  },
+  {
+    title : "기기 관리",
+    url : "/namu/admin/DeviceRegistration",
+    icon : Settings 
+  },
+  {
+    title : "게시글 관리",
+    url : "/namu/admin/PostManagement",
+    icon : AppWindow
+  }
+]
+
 const BasicLayout = () => {
   const role = localStorage.getItem("role");
 
@@ -120,7 +144,7 @@ const BasicLayout = () => {
         name: "김우연",
         email: "rladndus321@gmail.com",
       },
-      navMain: role === "FARMER" ? farmerNavMain : userNavMain
+      navMain: role === "FARMER" ? farmerNavMain : role === "ADMIN" ? adminNavMain : userNavMain
   };
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
@@ -133,7 +157,7 @@ const BasicLayout = () => {
               <Outlet />
             </div>
           </div>
-          {role === "FARMER" ? <FarmSidebar/> : <UserSidebar/> }
+          {role === "FARMER" ? <FarmSidebar/> : role === "ADMIN" ? <ManagerSidebar/> : <UserSidebar/>}
   
         </main>
         <Toaster
