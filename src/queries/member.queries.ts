@@ -9,6 +9,7 @@ import {
   postLogin,
   postNickname,
   selectMemberList,
+  updateRole,
 } from "@/api/member.api";
 import type {
   addAdminParam,
@@ -88,5 +89,12 @@ export const usePostAddAdmin = () => {
 export const useDeleteMember = () => {
   return useMutation({
     mutationFn: (param: string) => delMember(param),
+  });
+};
+
+// 권한 변경
+export const useUpdateRole = () => {
+  return useMutation({
+    mutationFn: (param: object) => updateRole(param),
   });
 };

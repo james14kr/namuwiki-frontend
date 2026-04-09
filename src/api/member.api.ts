@@ -124,11 +124,13 @@ export const postAddAdmin = async (addAdmin: addAdminParam) => {
 /**
  * 회원 삭제
  * @param memEmail 이메일
- * @returns 
+ * @returns
  */
 export const delMember = async (memEmail: string) => {
   try {
-    const response = await api.delete("/members/delete-member", {params : {memEmail}});
+    const response = await api.delete("/members/delete-member", {
+      params: { memEmail },
+    });
     return response;
   } catch (e) {
     console.log("회원 삭제 api 실행 중 오류 발생", e);
@@ -136,12 +138,12 @@ export const delMember = async (memEmail: string) => {
   }
 };
 
-
-export const updateRole = async () => {
-  try{
-    const response = await api.put("/members/update-role", )
-  }catch(e){
-    console.log("권한 변경 api 실행 중 오류 발생", e)
-    throw e
+export const updateRole = async (updateRole : object) => {
+  try {
+    const response = await api.put("/members/update-role", updateRole);
+    return response;
+  } catch (e) {
+    console.log("권한 변경 api 실행 중 오류 발생", e);
+    throw e;
   }
-}
+};
