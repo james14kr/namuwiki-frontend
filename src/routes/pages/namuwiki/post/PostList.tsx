@@ -8,8 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Heart, MessageCircle } from "lucide-react";
+import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
+import { getUserEmail } from "@/utils/auth";
+import PostFeedCard from "@/components/PostFeedCard";
 
-interface PostInfo {
+
+export interface PostInfo {
   id: number;
   title: string;
   updatedAt: string;
@@ -17,6 +22,7 @@ interface PostInfo {
   memProfileImg: string;
   content: string;
   viewCount : number;
+  commentCount: number;
 }
 
 const formatDate = (dateStr: string) => {
@@ -171,83 +177,13 @@ const PostList = () => {
       {/* 피드 목록 */}
       <div className="mx-auto max-w-2xl space-y-4">
         {result.map((post) => (
-          <Card
+          <PostFeedCard
             key={post.id}
-            className="cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
+            post={post}
             onClick={() => nav(`/namu/post-list/${post.id}`)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  {post.memProfileImg ? (
-                    <AvatarImage src={post.memProfileImg} />
-                  ) : (
-                    <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                      {post.memNickname?.[0] ?? "U"}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {post.memNickname ?? "알수없음"}
-                  </span>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    <span>{formatDate(post.updatedAt)}</span>
-                  </div>
-                </div>
-                <span className="ml-auto text-xs text-muted-foreground">
-                  조회수 {post.viewCount ?? 0}회
-                </span>
-              </div>
-            </CardHeader>
+          />
+          
 
-            <Separator />
-
-            <CardContent className="pt-3">
-              <h2 className="mb-2 text-base font-semibold">{post.title}</h2>
-              <div className="max-h-72 overflow-hidden text-sm text-muted-foreground">
-                {post.content ? (
-                  (() => {
-                    try {
-                      const json = JSON.parse(post.content);
-                      // 이미지 찾기
-                      const firstImage = json.content?.find(
-                        (node: any) => node.type === "image" ||
-                        node.content?.some((c: any) => c.type === "image")
-                      );
-                      const imgSrc = firstImage?.attrs?.src ?? 
-                        firstImage?.content?.find((c: any) => c.type === "image")?.attrs?.src;
-
-                      // 텍스트 추출
-                      const text = json.content
-                        ?.flatMap((node: any) =>
-                          node.content?.map((c: any) => c.text ?? "") ?? []
-                        )
-                        .join(" ");
-
-                      return (
-                        <>
-                          {imgSrc && (
-                            <img
-                              src={imgSrc}
-                              className="mb-2 h-32 w-full rounded-md object-cover"
-                              style={{width:"50%", height:"auto"}}
-                            />
-                          )}
-                          <p className="line-clamp-3">{text}</p>
-                        </>
-                      );
-                    } catch {
-                      return <p className="line-clamp-4">{post.content}</p>;
-                    }
-                  })()
-                ) : (
-                  <p className="text-muted-foreground/50">내용 없음</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
         ))}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { PostLikeResponse, type PostRequest, type PostResponse, type PostUpdateRequest } from "@/types/postType";
+import { type PostLikeResponse, type PostRequest, type PostResponse, type PostUpdateRequest } from "@/types/postType";
 import { api } from "@/utils";
 
 export const postApi = {
@@ -33,7 +33,7 @@ export const postApi = {
   },
 
   // 좋아요 상태 조회 axios
-  getLikeStatus: async (postId:number, memEmail:string)=>{
+  getLikeStatus: async (postId:number, memEmail:string | null)=>{
     const {data} = await api.get<PostLikeResponse>(`/likes/${postId}`, {params:{memEmail}});
     return data;
   },

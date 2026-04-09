@@ -61,7 +61,7 @@ export const useDeleteDetail1 = () => {
 // 좋아요 상태 조회
 export const useGetLikeStatus = (postId:number, memEmail:string | null)=>{
   return useQuery({
-    queryKey: queryKeys.post.like(postId),
+    queryKey: queryKeys.post.like(postId, memEmail),
     queryFn: ()=>postApi.getLikeStatus(postId,memEmail ?? ""),
     // 로그인 경우일때만
     enabled: !!memEmail, 
@@ -69,13 +69,13 @@ export const useGetLikeStatus = (postId:number, memEmail:string | null)=>{
 };
 
 // 좋아요 토글
-export const useToggleLike = (postId:number)=>{
+export const useToggleLike = (postId:number, memEmail:string | null)=>{
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({postId, memEmail} : {postId:number; memEmail:string})=>
       postApi.toggleLike(postId,memEmail),
     onSuccess:()=>{
-      queryClient.invalidateQueries({queryKey:queryKeys.post.like(postId)});
+      queryClient.invalidateQueries({queryKey:queryKeys.post.like(postId, memEmail)});
     },
   });
 };
