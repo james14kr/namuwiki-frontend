@@ -23,3 +23,9 @@ export const getCheckFollow = async (data : {followerEmail : string; farmerEmail
   const response = await api.get("/follow/check", {params : data})
   return response.data;
 }
+
+//팔로워 목록 조회
+export const getFollowerList = async (farmerEmail : string) => {
+  const response = await api.get("/follow/followers", {params : {farmerEmail}});
+  return response.data;
+}
