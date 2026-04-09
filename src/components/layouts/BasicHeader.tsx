@@ -4,6 +4,8 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import AppBreadcrumb, { type BreadcrumbInfo } from "../breadcrumb/AppBreadcrumb";
 import UserInfo from "./UserInfo";
 import type { NavMainItem } from "@/types/sidebarType";
+import FarmBanner from "./FarmBanner";
+import UserBanner from "./UserBanner";
 
 interface Props {
   navMain: NavMainItem[];
@@ -40,12 +42,24 @@ const BasicHeader = ({ navMain }: Props) => {
   const breadcrumbs = buildBreadcrumbs(navMain, pathname);
   const appName = resolveAppName(navMain, pathname);
 
+  const role = localStorage.getItem("role");
+
   return (
     <SidebarInset className="sticky top-0 z-10">
-      <div
-        className="h-32 bg-cover bg-center"
-        style={{ backgroundImage: "url('/banner.gif')" }}
-      />
+      <div className="relative">
+        <div
+          className="h-32 bg-cover bg-center"
+          style={{ backgroundImage: "url('/banner.gif')" }}
+        />
+        {/* 이미지 위에 배너 띄우기 */}
+        <div className="absolute bottom-0 left-0 right-0">
+          {role === "FARMER" ? (
+            <FarmBanner/>
+          ) : (
+            <UserBanner/>
+          )}
+        </div>
+      </div>
       <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 bg-sidebar">
         <SidebarTrigger className="-ml-1" />
         <Separator

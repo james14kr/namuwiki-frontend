@@ -48,7 +48,7 @@ const farmerNavMain = [
     icon: AppWindow,
     items : [
       {
-        title: "나의 게시글",
+        title: "게시판 목록",
         url : "/namu/post-list"
       }
     ]
@@ -80,7 +80,7 @@ const farmerNavMain = [
       },
       {
         title: "나의 농장 목록",
-        url : "#"
+        url : "/namu/my-farm-list"
       },
       
     ]
