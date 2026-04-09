@@ -81,6 +81,9 @@ const MemberManagement = () => {
 
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
+  // 선택한 권한이 저장되는 state 변수
+  const [selectedRole, setSelectedRole] = useState<string>("");
+
   // 컬럼 정의
   const columnDefs: ColDef[] = [
     {
@@ -422,7 +425,10 @@ const MemberManagement = () => {
           권한
         </span>
         <div className="w-36">
-          <AppSelect id="admin" items={admin} />
+            <AppSelect id="admin" items={admin} onValueChange={(value) => setSelectedRole(value)}/>
+          {data ?.map((member, i) => {
+             return <div key={i}>{member.name}</div>;
+          })}
         </div>
         <div className="flex-1">
           <Input placeholder="이메일 또는 이름 입력" name="farmerName" />
