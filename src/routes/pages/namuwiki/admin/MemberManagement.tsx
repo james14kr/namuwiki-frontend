@@ -57,16 +57,44 @@ const MemberManagement = () => {
   const paginateData =
     data?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE) ?? [];
 
+  // 공통 셀 스타일 (버튼과 높이 맞춤)
+  const centeredCellStyle = {
+    display: "flex",
+    alignItems: "center",
+    height: "100%",
+  };
+
   // 컬럼 정의
   const columnDefs: ColDef[] = [
-    { field: "memEmail", headerName: "이메일", flex: 3 },
-    { field: "memName", headerName: "이름", flex: 1 },
-    { field: "memTel", headerName: "연락처", flex: 3 },
-    { field: "memRole", headerName: "권한", flex: 1 },
+    {
+      field: "memEmail",
+      headerName: "이메일",
+      flex: 3,
+      cellStyle: centeredCellStyle,
+    },
+    {
+      field: "memName",
+      headerName: "이름",
+      flex: 1,
+      cellStyle: centeredCellStyle,
+    },
+    {
+      field: "memTel",
+      headerName: "연락처",
+      flex: 3,
+      cellStyle: centeredCellStyle,
+    },
+    {
+      field: "memRole",
+      headerName: "권한",
+      flex: 1,
+      cellStyle: centeredCellStyle,
+    },
     {
       field: "memJoinDate",
       headerName: "가입 날짜",
       flex: 3,
+      cellStyle: centeredCellStyle,
       // valueFormatter: AgGrid에서 셀에 값을 표시하기 전에 변환해주는 옵션
       valueFormatter: (params) => {
         // 날짜값이 null 이나 undefined면 "-" 표시 => 방어코드, 없으면 undefined 일 때 터질 수 있음
@@ -78,7 +106,7 @@ const MemberManagement = () => {
       headerName: "관리",
       flex: 2,
       cellRenderer: () => (
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "6px", alignItems: "center", height: "100%" }}>
           <Button>권한 변경</Button>
           <Button>삭제</Button>
         </div>
@@ -139,118 +167,157 @@ const MemberManagement = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-full bg-gray-50 p-6">
+      {/* 관리자 추가 모달 */}
       {isOpen && (
         <Modal onClick={() => setIsOpen(false)}>
-          <h3>관리자 추가</h3>
-          <Input
-            name="memEmail"
-            value={addAdmin.memEmail}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="이메일"
-          />
-          <Input
-            type="password"
-            name="memPw"
-            value={addAdmin.memPw}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="비밀번호"
-          />
-          <Input
-            name="memNickname"
-            value={addAdmin.memNickname}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="닉네임"
-          />
-          <Input
-            name="memName"
-            value={addAdmin.memName}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="이름"
-          />
-          <Input
-            name="memTel"
-            value={addAdmin.memTel}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="전화번호"
-          />
-          <Input
-            name="memAdd"
-            value={addAdmin.memAdd}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="주소"
-          />
-          <Postcode onAddressSelect={selectAddress} />
-          <Input
-            name="addDetail"
-            value={addAdmin.addDetail}
-            onChange={(e) => handleAddAdmin(e)}
-            placeholder="상세주소"
-          />
-          <Button onClick={() => insertAddAdmin()}>추가</Button>
+          <div style={{ width: "320px" }}>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "700",
+                color: "#166534",
+                marginBottom: "20px",
+                paddingBottom: "12px",
+                borderBottom: "2px solid #dcfce7",
+              }}
+            >
+              관리자 추가
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <Input
+                name="memEmail"
+                value={addAdmin.memEmail}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="이메일"
+              />
+              <Input
+                type="password"
+                name="memPw"
+                value={addAdmin.memPw}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="비밀번호"
+              />
+              <Input
+                name="memNickname"
+                value={addAdmin.memNickname}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="닉네임"
+              />
+              <Input
+                name="memName"
+                value={addAdmin.memName}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="이름"
+              />
+              <Input
+                name="memTel"
+                value={addAdmin.memTel}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="전화번호"
+              />
+              <Input
+                name="memAdd"
+                value={addAdmin.memAdd}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="주소"
+              />
+              <Postcode onAddressSelect={selectAddress} />
+              <Input
+                name="addDetail"
+                value={addAdmin.addDetail}
+                onChange={(e) => handleAddAdmin(e)}
+                placeholder="상세주소"
+              />
+              <div style={{ marginTop: "8px" }}>
+                <Button onClick={() => insertAddAdmin()}>추가</Button>
+              </div>
+            </div>
+          </div>
         </Modal>
       )}
-      <div>
-        <h2>사용자 관리</h2>
-      </div>
-      <div>
-        <h3>
+
+      {/* 페이지 헤더 */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-green-900">사용자 관리</h2>
+        <p className="mt-1 text-sm text-gray-500">
           나무위키팜 시스템을 사용하는 사용자를 관리하고 그 권한을 설정하세요.
-        </h3>
+        </p>
       </div>
-      <div className="mx-10 grid grid-flow-row grid-flow-col grid-cols-4 gap-5">
-        <div className="flex gap-4 border border-green-600">
-          <p>총 사용자</p>
-          <p>{totalCount}명</p>
+
+      {/* 통계 카드 */}
+      <div className="mb-6 grid grid-cols-4 gap-4">
+        <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">총 사용자</p>
+          <div className="flex items-baseline gap-1">
+            <p className="text-3xl font-bold text-green-800">{totalCount ?? 0}</p>
+            <p className="text-sm text-gray-500">명</p>
+          </div>
         </div>
-        <div className="flex gap-4 border border-green-600">
-          <p>일반 사용자</p>
-          <p>{userCount}명</p>
+        <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">일반 사용자</p>
+          <div className="flex items-baseline gap-1">
+            <p className="text-3xl font-bold text-green-700">{userCount}</p>
+            <p className="text-sm text-gray-500">명</p>
+          </div>
         </div>
-        <div className="flex gap-4 border border-green-600">
-          <p>농장주</p>
-          <p>{farmerCount}명</p>
+        <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">농장주</p>
+          <div className="flex items-baseline gap-1">
+            <p className="text-3xl font-bold text-green-700">{farmerCount}</p>
+            <p className="text-sm text-gray-500">명</p>
+          </div>
         </div>
-        <div className="flex gap-4 border border-green-600">
-          <p>관리자</p>
-          <p>{adminCount}명</p>
+        <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">관리자</p>
+          <div className="flex items-baseline gap-1">
+            <p className="text-3xl font-bold text-green-700">{adminCount}</p>
+            <p className="text-sm text-gray-500">명</p>
+          </div>
         </div>
       </div>
+
       {/* 구분선 */}
-      <div className="my-4 w-full border bg-gray-500"></div>
-      <div className="flex justify-around">
-        <div>권한</div>
-        <div>
+      <div className="mb-5 border-t border-gray-200" />
+
+      {/* 필터 및 검색 바 */}
+      <div className="mb-4 flex items-center gap-3 rounded-xl bg-white px-5 py-4 shadow-sm">
+        <span className="whitespace-nowrap text-sm font-semibold text-gray-600">권한</span>
+        <div className="w-36">
           <AppSelect id="admin" items={admin} />
         </div>
-        <div>
+        <div className="flex-1">
           <Input placeholder="이메일 또는 이름 입력" name="farmerName" />
         </div>
-        <div>
-          <Button onClick={() => {}}>검색</Button>
-        </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}>사용자 추가</Button>
-        </div>
+        <Button onClick={() => {}}>검색</Button>
+        <Button onClick={() => setIsOpen(true)}>사용자 추가</Button>
       </div>
-      <div className="ag-then-alpine h-52">
-        {/* 인증번호 생성된 농장주 정보 list */}
-        {isLoading && <p>로딩 중 입니다.</p>}
-        <AppGrid
-          //rowData에 데이터 넣으면 알아서 렌더링 해줌
-          rowData={paginateData}
-          columnDefs={columnDefs}
-          rowHeight={40}
-          className="h-full"
-        />
-        <AppPagination
-          totalRow={data?.length ?? 0}
-          maxRow={PAGE_SIZE}
-          onPageClick={(page) => {
-            setCurrentPage(page + 1);
-            console.log("클릭페이지", page);
-          }}
-        />
+
+      {/* 데이터 그리드 */}
+      <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+        {isLoading && (
+          <div className="flex h-16 items-center justify-center text-sm text-gray-400">
+            로딩 중 입니다.
+          </div>
+        )}
+        <div className="ag-theme-alpine" style={{ height: "300px", width: "100%" }}>
+          <AppGrid
+            rowData={paginateData}
+            columnDefs={columnDefs}
+            rowHeight={48}
+            className="h-full"
+          />
+        </div>
+        <div className="border-t border-gray-100 px-4 py-3">
+          <AppPagination
+            totalRow={data?.length ?? 0}
+            maxRow={PAGE_SIZE}
+            onPageClick={(page) => {
+              setCurrentPage(page + 1);
+              console.log("클릭페이지", page);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
