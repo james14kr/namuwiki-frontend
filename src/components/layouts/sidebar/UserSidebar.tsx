@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import React from 'react'
 import { Badge } from '@/components/ui/badge'
 import { useNavigate } from "react-router-dom";
+import { decodeToken } from "@/utils/auth";
+import { useGetFollowList } from "@/queries/follow.queries";
 
 
 const UserSidebar = () => {
@@ -14,6 +16,12 @@ const UserSidebar = () => {
     localStorage.removeItem("token");
     nav("/namu/login");
   };
+
+  const token = localStorage.getItem("token");
+  const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
+  const followerEmail = decoded.sub ?? "";
+
+  const {data : followList} = useGetFollowList(followerEmail);
   
 
   return (
@@ -33,20 +41,11 @@ const UserSidebar = () => {
       <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <span className="font-bold">팔로우 중인 농장</span>
         <div className="mt-4 flex flex-col gap-4">
-          <div className="flex gap-2">
-            <div className="font-bold text-gray-400">1</div>
-            <div>
-              <div className="text-sm">나주 딸기 농장</div>
-              <div className="text-sm opacity-50">팔로워 1,204명</div>
+          {(followList ?? []).map((item : {farmerEmail : string; memNickname : string}) => (
+            <div key={item.farmerEmail} className="text-sm">
+              {item.memNickname}농장을 팔로우 중입니다.
             </div>
-          </div>
-          <div className="flex gap-2">
-            <div className="font-bold text-gray-400">2</div>
-            <div>
-              <div className="text-sm">청주 토마토 농장</div>
-              <div className="text-sm opacity-50">팔로워 984명</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
