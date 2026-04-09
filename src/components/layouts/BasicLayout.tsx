@@ -66,7 +66,7 @@ const farmerNavMain = [
   },
   { 
     title: "팔로워 목록", 
-    url: "#", 
+    url: "/namu/follower-list", 
     icon: UserPlus 
   }, 
   { 
