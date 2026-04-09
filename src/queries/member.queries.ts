@@ -1,13 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  postAddAdmin,
   postAuthCode,
   postCheckFarmerAuth,
   postEmail,
   postJoinData,
   postLogin,
   postNickname,
+  selectMemberList,
 } from "@/api/member.api";
-import type { joinData, loginData } from "@/types/memberType";
+import type { addAdminParam, joinData, loginData, MemberData } from "@/types/memberType";
+import { queryKeys } from "@/queryKeys";
 
 // export const useGetPosts = () => {
 //   return useQuery({
@@ -60,9 +63,17 @@ export const usePostCheckFarmerAuth = () => {
   });
 };
 
+// 전체 사용자 조회
+export const useGetMemberList = () => {
+  return useQuery({
+    queryKey: ["members"],
+    queryFn: selectMemberList,
+  });
+};
+
 // 사용자 추가버큰 클릭 시 관리자 추가
 export const usePostAddAdmin = () => {
   return useMutation({
-    mutationFn: (param: addAdminParam) => postAddAdmin(param)
+    mutationFn: (param: addAdminParam) => postAddAdmin(param),
   });
 };

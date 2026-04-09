@@ -30,3 +30,11 @@ export interface addAdminParam{
   memEmail: string;
   memPw: string;
 }
+
+export interface MemberData {
+  memEmail: string;
+  memName: string;
+  memTel: string;
+  memRole: "FARMER" | "USER" | "ADMIN";
+  memJoinData: Date;
+}
