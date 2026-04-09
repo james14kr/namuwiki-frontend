@@ -38,3 +38,4 @@ export interface MemberData {
   memRole: "FARMER" | "USER" | "ADMIN";
   memJoinData: Date;
 }
+

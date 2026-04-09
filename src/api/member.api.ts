@@ -112,7 +112,7 @@ export const selectMemberList = async () => {
  */
 export const postAddAdmin = async (addAdmin: addAdminParam) => {
   try {
-    const response = await api.post("/admin/member/add", addAdmin);
+    const response = await api.post("/members/add-admin", addAdmin);
     return response;
   } catch (e) {
     console.log("관리자 추가 시 오류 발생", e);

@@ -4,16 +4,18 @@ import {
   AppSelect,
   Button,
   Input,
+  Postcode,
   type ItemType,
 } from "@/components";
 import { toastMutation } from "@/lib/toast";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import type { ColDef } from "ag-grid-community";
 import { useGetMemberList, usePostAddAdmin } from "@/queries/member.queries";
 import Modal from "@/components/modal/modal";
 import type { MemberData } from "@/types/memberType";
+import type { PostInfo } from "@/components/postcode/Postcode";
 
 // 사용자 관리 페이지
 const MemberManagement = () => {
@@ -36,11 +38,12 @@ const MemberManagement = () => {
   const [addAdmin, setAddAdmin] = useState({
     memEmail: "",
     memPw: "",
+    memNickname: "",
+    memName: "",
+    memTel: "",
+    memAdd: "",
+    addDetail: "",
   });
-
-  // 날짜 형식 문자열로 변환
-  const date = new Date();
-  const formattedDate = date.toDateString().split("T")[0];
 
   // 사용자 수 카운트 저장할 변수
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
@@ -67,7 +70,7 @@ const MemberManagement = () => {
       // valueFormatter: AgGrid에서 셀에 값을 표시하기 전에 변환해주는 옵션
       valueFormatter: (params) => {
         // 날짜값이 null 이나 undefined면 "-" 표시 => 방어코드, 없으면 undefined 일 때 터질 수 있음
-        if (!params.value) return "-"; 
+        if (!params.value) return "-";
         return new Date(params.value).toLocaleDateString("ko-KR");
       },
     },
@@ -107,6 +110,13 @@ const MemberManagement = () => {
     });
   };
 
+  // 주소 검색
+  const selectAddress = (addrInfo: PostInfo) => {
+    console.log(addrInfo);
+    const updateData = { ...addAdmin, memAdd: addrInfo.fullAddress };
+    setAddAdmin(updateData);
+  };
+
   // 사용자 추가 실행할 함수
   const insertAddAdmin = async () => {
     //mutation실행
@@ -120,10 +130,13 @@ const MemberManagement = () => {
     setAddAdmin({
       memEmail: "",
       memPw: "",
+      memNickname: "",
+      memName: "",
+      memTel: "",
+      memAdd: "",
+      addDetail: "",
     });
   };
-
-  console.log("날짜", data?.[0]);
 
   return (
     <div>
@@ -137,10 +150,42 @@ const MemberManagement = () => {
             placeholder="이메일"
           />
           <Input
+            type="password"
             name="memPw"
             value={addAdmin.memPw}
             onChange={(e) => handleAddAdmin(e)}
             placeholder="비밀번호"
+          />
+          <Input
+            name="memNickname"
+            value={addAdmin.memNickname}
+            onChange={(e) => handleAddAdmin(e)}
+            placeholder="닉네임"
+          />
+          <Input
+            name="memName"
+            value={addAdmin.memName}
+            onChange={(e) => handleAddAdmin(e)}
+            placeholder="이름"
+          />
+          <Input
+            name="memTel"
+            value={addAdmin.memTel}
+            onChange={(e) => handleAddAdmin(e)}
+            placeholder="전화번호"
+          />
+          <Input
+            name="memAdd"
+            value={addAdmin.memAdd}
+            onChange={(e) => handleAddAdmin(e)}
+            placeholder="주소"
+          />
+          <Postcode onAddressSelect={selectAddress} />
+          <Input
+            name="addDetail"
+            value={addAdmin.addDetail}
+            onChange={(e) => handleAddAdmin(e)}
+            placeholder="상세주소"
           />
           <Button onClick={() => insertAddAdmin()}>추가</Button>
         </Modal>
@@ -201,7 +246,10 @@ const MemberManagement = () => {
         <AppPagination
           totalRow={data?.length ?? 0}
           maxRow={PAGE_SIZE}
-          onPageClick={(page) => {setCurrentPage(page + 1); console.log("클릭페이지", page)}}
+          onPageClick={(page) => {
+            setCurrentPage(page + 1);
+            console.log("클릭페이지", page);
+          }}
         />
       </div>
     </div>
