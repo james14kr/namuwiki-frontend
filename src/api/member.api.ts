@@ -62,17 +62,45 @@ export const postLogin = async (loginData: object) => {
 };
 
 /**
- * 
+ *
  * @param authCode 인증번호
- * @returns 
+ * @returns
  */
 export const postAuthCode = async (authCode: object) => {
-  try{
+  try {
     const response = await api.post("/authes/authCode", authCode);
     return response;
-  }catch(e){
+  } catch (e) {
     console.log("인증번호 생성 중 오류 발생", e);
     throw e;
   }
 };
 
+/**
+ * 회원가입 시 인증번호 유효성검사
+ * @returns 
+ */
+export const postCheckFarmerAuth = async (authCode: object) => {
+  try {
+    const response = await api.post("/authes/check-auth", authCode);
+    return response;
+  } catch (e) {
+    console.log("인증번호 유효성 검사 시 오류 발생", e);
+    throw e;
+  }
+};
+
+/**
+ * 사용자추가 버튼 클릭 시 관리자 추가
+ * @param addAdmin 사용자 추가 할 관리자 데이터
+ * @returns 
+ */
+export const postAddAdmin = async (addAdmin: addAdminParam) => {
+  try{
+    const response = await api.post("/admin/member/add", addAdmin);
+    return response
+  }catch(e){
+    console.log("관리자 추가 시 오류 발생", e)
+    throw e
+  }
+}
