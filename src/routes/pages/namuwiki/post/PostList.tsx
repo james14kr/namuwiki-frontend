@@ -222,7 +222,7 @@ const PostList = () => {
                             <img
                               src={imgSrc}
                               className="mb-2 h-32 w-full rounded-md object-cover"
-                              style={{width:"30%", height:"auto"}}
+                              style={{width:"50%", height:"auto"}}
                             />
                           )}
                           <p className="line-clamp-3">{text}</p>
