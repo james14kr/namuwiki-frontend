@@ -52,6 +52,9 @@ const MemberManagement = () => {
 
   const [selectedEmail, setSelectedEmail] = useState("");
 
+  // 변경된 권한 저장할 state 변수
+  const [updateRole, setUpdateRole] = useState({});
+
   // 사용자 수 카운트 저장할 변수
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
   const totalCount = data?.length;
@@ -71,7 +74,7 @@ const MemberManagement = () => {
     height: "100%",
   };
 
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
   // 컬럼 정의
   const columnDefs: ColDef[] = [
@@ -123,7 +126,7 @@ const MemberManagement = () => {
             height: "100%",
           }}
         >
-          <Button>권한 변경</Button>
+          <Button onClick={() => setIsUpdateOpen(true)}>권한 변경</Button>
           {/* <AppAlertDialog
             title="정말 삭제하시겠습니까?"
             description="이 작업은 되돌릴 수 없습니다."
@@ -166,6 +169,14 @@ const MemberManagement = () => {
     });
   };
 
+  // 권한 변경 데이터 변경할 함수
+  const handleUpdateRole = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdateRole({
+      ...updateRole,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   // 주소 검색
   const selectAddress = (addrInfo: PostInfo) => {
     console.log(addrInfo);
@@ -198,9 +209,8 @@ const MemberManagement = () => {
   const deleteMember = async (member: string) => {
     await useDeleteMemberMutate.mutateAsync(member);
     // invalidateQueries : queryKey 캐시 무효화해 다시 불러와! 라는 기능을 가짐
-    queryClient.invalidateQueries({queryKey: ["members"]});
+    queryClient.invalidateQueries({ queryKey: ["members"] });
   };
-
 
   return (
     <div className="min-h-full bg-gray-50 p-6">
@@ -269,6 +279,33 @@ const MemberManagement = () => {
               />
               <div style={{ marginTop: "8px" }}>
                 <Button onClick={() => insertAddAdmin()}>추가</Button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {/* 권한변경 모달 */}
+      {isUpdateOpen && (
+        <Modal onClick={() => setIsUpdateOpen(false)}>
+          <div style={{ width: "320px" }}>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "700",
+                color: "#166534",
+                marginBottom: "20px",
+                paddingBottom: "12px",
+                borderBottom: "2px solid #dcfce7",
+              }}
+            >
+              권한 변경
+            </h3>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              <AppSelect id="admin" items={admin} onValueChange={handleUpdateRole} />
+              <div style={{ marginTop: "8px" }}>
+                <Button onClick={() => {}}>변경 완료</Button>
               </div>
             </div>
           </div>

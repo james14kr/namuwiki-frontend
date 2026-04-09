@@ -121,6 +121,11 @@ export const postAddAdmin = async (addAdmin: addAdminParam) => {
   }
 };
 
+/**
+ * 회원 삭제
+ * @param memEmail 이메일
+ * @returns 
+ */
 export const delMember = async (memEmail: string) => {
   try {
     const response = await api.delete("/members/delete-member", {params : {memEmail}});
@@ -130,3 +135,13 @@ export const delMember = async (memEmail: string) => {
     throw e;
   }
 };
+
+
+export const updateRole = async () => {
+  try{
+    const response = await api.put("/members/update-role", )
+  }catch(e){
+    console.log("권한 변경 api 실행 중 오류 발생", e)
+    throw e
+  }
+}
