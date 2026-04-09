@@ -19,7 +19,7 @@ const UserSidebar = () => {
 
   const token = localStorage.getItem("token");
   const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
-  const followerEmail = decoded.sub ?? "";
+  const followerEmail = decoded?.sub ?? "";
 
   const {data : followList} = useGetFollowList(followerEmail);
   
@@ -41,9 +41,9 @@ const UserSidebar = () => {
       <div className="rounded-md bg-primary-foreground p-4 shadow-md flex flex-col gap-1">
         <span className="font-bold">팔로우 중인 농장</span>
         <div className="mt-4 flex flex-col gap-4">
-          {(followList ?? []).map((item : {farmerEmail : string; memNickname : string}) => (
+          {(followList ?? []).map((item : {farmerEmail : string; farmerNickname : string}) => (
             <div key={item.farmerEmail} className="text-sm">
-              {item.memNickname}농장을 팔로우 중입니다.
+              {item.farmerNickname}님 농장
             </div>
           ))}
         </div>

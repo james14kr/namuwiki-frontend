@@ -17,3 +17,9 @@ export const getFollowList = async (followerEmail : string) => {
   const response = await api.get("/follow", {params : {followerEmail}});
   return response.data;
 }
+
+//팔로우 여부 확인
+export const getCheckFollow = async (data : {followerEmail : string; farmerEmail : string}) => {
+  const response = await api.get("/follow/check", {params : data})
+  return response.data;
+}

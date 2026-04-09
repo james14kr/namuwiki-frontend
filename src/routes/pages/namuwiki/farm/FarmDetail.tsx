@@ -6,8 +6,9 @@ import { ArrowLeft, MapPin, Sprout, User, Phone, Mail } from "lucide-react";
 import { Button } from "@/components";
 import { useQueryClient } from "@tanstack/react-query";
 import { decodeToken } from "@/utils/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
+import { getCheckFollow } from "@/api/follow.api";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
@@ -19,6 +20,12 @@ const FarmDetail = () => {
   const followerEmail = decoded.sub ?? "";
 
   const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    if(!followerEmail || !farm?.farmerEmail) return;
+    getCheckFollow({followerEmail, farmerEmail : farm.farmerEmail}).then(setIsFollowing)
+  }, [followerEmail, farm])
+
   const followMutation = usePostFollow();
   const unfollowMutation = useDeleteFollow();
 
