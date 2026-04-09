@@ -14,6 +14,40 @@ const DeviceRegistration = () => {
    //useQueryClient : 캐시 저장소에 접근하는 훅
   const queryClient = useQueryClient();
 
+    const usePostAuthCodeMutate = usePostAuthCode();
+  // 인증번호 생성 저장 state 변수
+  const [authCode, setAuthCode] = useState({
+    authCode: "",
+    memName: "",
+    memTel: "",
+  });
+
+  const [deviceList, setDeviceList] = useState({
+    memEmail: "",
+    memName: "",
+    memRole: "",
+    memJoinData: "",
+  });
+
+  // input에 입력한 데이터 저장할 함수
+  const handleAuthCode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAuthCode({
+      ...authCode,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // 인증번호 생성 버튼 클릭 시 인증번호 생성 할 함수
+  const postAuthCode = async () => {
+    await toastMutation(
+      usePostAuthCodeMutate.mutateAsync,
+      authCode,
+      "로딩중입니다",
+      "인증번호가 생성되었습니다.",
+      "인증번호 생성에 실패하였습니다."
+    );
+  };
+
   // 한 페이지에 보여줄 행 수
   const PAGE_SIZE = 5;
   // 현재페이지 -> 초기값은 1이니 처음엔 1페이지, 페이지 누를 때 마다 setCurrentPage(page)로 업데이트
@@ -154,19 +188,19 @@ const DeviceRegistration = () => {
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
               <Input
-                name="memEmail"
-                value={addAdmin.memEmail}
-                onChange={(e) => handleAddAdmin(e)}
                 placeholder="농업인 성명"
+                onChange={(e) => handleAuthCode(e)}
+                name="memName"
+                value={authCode.memName}
               />
               <Input
+                placeholder="농업인 연락처"
+                onChange={(e) => handleAuthCode(e)}
                 name="memTel"
-                value={addAdmin.memTel}
-                onChange={(e) => handleAddAdmin(e)}
-                placeholder="전화번호"
+                value={authCode.memTel}
               />
               <div style={{ marginTop: "8px" }}>
-                <Button onClick={() => insertAddAdmin()}>인증번호 발급</Button>
+                <Button onClick={() => postAuthCode()}>인증번호 발급</Button>
               </div>
             </div>
           </div>
