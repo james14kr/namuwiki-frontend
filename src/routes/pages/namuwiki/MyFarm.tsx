@@ -18,9 +18,11 @@ import {
 } from "lucide-react";
 import { uploadImage } from "@/utils/uploadUtils";
 import { isNullOrEmpty } from "@/utils/validate";
+import { getUserEmail } from "@/utils/auth";
 
 const MyFarm = () => {
   const nav = useNavigate();
+  const cruuentUserEmail = getUserEmail();
 
   const [memInfo, setMemInfo] = useState<{
     memNickname?: string;
@@ -31,7 +33,8 @@ const MyFarm = () => {
   }>({});
 
   useEffect(() => {
-    getMemInfo1("test@test.com").then((response: { data: typeof memInfo }) => {
+    
+    getMemInfo1(cruuentUserEmail).then((response: { data: typeof memInfo }) => {
       if (response) setMemInfo(response.data);
     });
   }, []);
