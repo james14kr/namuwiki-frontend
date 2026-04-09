@@ -57,7 +57,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
-import content from "@/components/tiptap-templates/simple/data/content.json";
 import { Button as AppButton } from "@/components/ui/button";
 
 const MainToolbarContent = ({
@@ -180,7 +179,7 @@ export function SimpleEditor({
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content: initialContent ?? content,
+    content: initialContent ?? "",
   });
 
   const onSaveClick = () => {

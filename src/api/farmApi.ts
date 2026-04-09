@@ -10,3 +10,8 @@ export const getFarmList = async () => {
   const response = await api.get("/farm");
   return response.data;
 }
+
+export const getFarmDetail = async (farmId : number) => {
+  const response = await api.get(`/farm/${farmId}`)
+  return response.data;
+}

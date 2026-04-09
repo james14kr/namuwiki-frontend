@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMemInfo1 } from "../../../api/memberApi";
+import { getUserEmail } from "@/utils/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/utils/tw.utils";
@@ -18,28 +18,32 @@ import {
 } from "lucide-react";
 import { uploadImage } from "@/utils/uploadUtils";
 import { isNullOrEmpty } from "@/utils/validate";
+import { memberApi } from "@/api/memberApi";
+import type { MemInfoDTO } from "@/types/memberType";
 
 const MyFarm = () => {
   const nav = useNavigate();
+  const currentUserEmail = getUserEmail();
 
-  const [memInfo, setMemInfo] = useState<{
-    memNickname?: string;
-    memName?: string;
-    memTel?: string;
-    memEmail?: string;
-    memProfileImg?: string;
-  }>({});
+  const [memInfo, setMemInfo] = useState<MemInfoDTO>({} as MemInfoDTO);
+  const [profileImg, setProfileImg] = useState<string>("");
+  const inputRef = useRef(null);
 
-  useEffect(() => {
-    getMemInfo1("test@test.com").then((response: { data: typeof memInfo }) => {
-      if (response) setMemInfo(response.data);
+
+
+  useEffect(()=>{
+    if (!currentUserEmail) return;
+    memberApi.getMemInfo(currentUserEmail).then((data)=>{
+      setMemInfo(data);
+      setProfileImg(data.memProfileImg ?? "");
     });
-  }, []);
+  }, [currentUserEmail]);
+
+
 
   const initial = memInfo.memNickname?.charAt(0)?.toUpperCase() ?? "?";
 
-  const [profileImg, setProfileImg] = useState<string>("");
-  const inputRef = useRef(null);
+
 
   // useRef 변수를 태그에 ref속성에 넣으면 해당 element 값을 가지고 있을 수 있게 됨
   // element에 click이벤트를 강제 호출
@@ -56,7 +60,18 @@ const MyFarm = () => {
     // Presigned URL 방식으로 S3에 이미지 업로드 하는 api
     const publicURL = await uploadImage(file, "my-page");
     setProfileImg(publicURL);
+
+    // DB에 프로필 저장 url
+    if(currentUserEmail){
+      await memberApi.updateProfileImg(currentUserEmail, publicURL);
+      setMemInfo((prev)=>({
+        ...prev
+        , memProfileImg : publicURL
+      }));
+    }
   };
+
+
 
   return (
     <div className="min-h-screen bg-background">

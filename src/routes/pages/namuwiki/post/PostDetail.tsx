@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -241,9 +241,13 @@ const PostDetail = () => {
               {/* 작성자 정보 */}
               <div className="flex items-center gap-3">
                 <Avatar className="h-9 w-9">
-                  <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                    U
-                  </AvatarFallback>
+                  {post.memProfileImg ? (
+                    <AvatarImage src={post.memProfileImg} />
+                  ) : (
+                    <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                      {post.memNickname?.[0] ?? "U"}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">
@@ -341,9 +345,13 @@ const PostDetail = () => {
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start gap-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
-                    {comment.memNickname?.[0] ?? "U"}
-                  </AvatarFallback>
+                  {comment.memProfileImg ? (
+                    <AvatarImage src={comment.memProfileImg} />
+                  ) : (
+                    <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+                      {comment.memNickname?.[0] ?? "U"}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
 
                 <div className="flex flex-1 flex-col gap-1">

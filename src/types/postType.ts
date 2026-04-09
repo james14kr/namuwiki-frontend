@@ -12,6 +12,7 @@ export interface PostResponse {
   updatedAt: string;
   memEmail: string;
   memNickname: string;
+  memProfileImg : string;
 }
 
 export interface PostUpdateRequest {

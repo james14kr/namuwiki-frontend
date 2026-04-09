@@ -4,8 +4,10 @@ import { Sprout, MapPin, Search } from "lucide-react";
 import { Input } from "@/components";
 import { useState } from "react";
 import type { FarmItem } from "@/types/farmType";
+import { useNavigate } from "react-router-dom";
 
 const FarmList = () => {
+  const nav = useNavigate();
   const { data: farms, isLoading } = useGetFarmList();
   const [search, setSearch] = useState("");
 
@@ -54,6 +56,7 @@ const FarmList = () => {
             <Card
               key={farm.farmId}
               className="cursor-pointer transition-shadow hover:shadow-md"
+              onClick={() => nav(`/namu/farm-detail/${farm.farmId}`)}
             >
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-base text-green-700 dark:text-green-400">

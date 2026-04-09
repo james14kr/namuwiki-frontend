@@ -75,13 +75,14 @@ const farmerNavMain = [
     icon: Sprout ,
     items : [
       {
-        title: "나의 농장 목록",
-        url : "#"
-      },
-      {
         title: "농장 등록 하기",
         url : "/namu/farm-register"
       },
+      {
+        title: "나의 농장 목록",
+        url : "#"
+      },
+      
     ]
   }, 
   { 
@@ -119,7 +120,7 @@ const adminNavMain = [
   },
   {
     title : "게시글 관리",
-    url : "/namu/admin/PostManagement",
+    url : "/namu/post-list",
     icon : AppWindow
   }
 ]
