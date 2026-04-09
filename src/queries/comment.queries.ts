@@ -62,5 +62,5 @@ export const useDeleteComment = (postId:number)=>{
     onError:(e)=>{
       console.log(e.message);
     }
-  })
-}
+  });
+};
