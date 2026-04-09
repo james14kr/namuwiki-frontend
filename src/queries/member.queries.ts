@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  delMember,
   postAddAdmin,
   postAuthCode,
   postCheckFarmerAuth,
@@ -9,7 +10,12 @@ import {
   postNickname,
   selectMemberList,
 } from "@/api/member.api";
-import type { addAdminParam, joinData, loginData, MemberData } from "@/types/memberType";
+import type {
+  addAdminParam,
+  joinData,
+  loginData,
+  MemberData,
+} from "@/types/memberType";
 import { queryKeys } from "@/queryKeys";
 
 // export const useGetPosts = () => {
@@ -75,5 +81,12 @@ export const useGetMemberList = () => {
 export const usePostAddAdmin = () => {
   return useMutation({
     mutationFn: (param: addAdminParam) => postAddAdmin(param),
+  });
+};
+
+// 회원 삭제
+export const useDeleteMember = () => {
+  return useMutation({
+    mutationFn: (param: string) => delMember(param),
   });
 };
