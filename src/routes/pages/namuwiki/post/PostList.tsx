@@ -10,6 +10,8 @@ interface PostInfo {
   id: number;
   title: string;
   updatedAt: string;
+  memNickname : string;
+  memProfileImg : string;
 }
 
 const PostList = () => {
@@ -18,10 +20,12 @@ const PostList = () => {
   const result: PostInfo[] = data ?? [];
   const [colDefs] = useState<ColDef<PostInfo>[]>([
     {
-      field: "id",
-      headerName: "id",
+      headerName: "번호",
       width: 80,
-      sortable: true,
+      valueGetter: (params) => {
+        const total = params.api.getDisplayedRowCount();
+        return total - (params.node?.rowIndex ?? 0);
+      },
     },
     {
       field: "title",
@@ -39,11 +43,40 @@ const PostList = () => {
       field: "memNickname",
       headerName: "닉네임",
       flex: 1,
+      cellRenderer: (params: any) => {
+        const profileImg = params.data?.memProfileImg;
+        const nickname = params.data?.memNickname ?? "알수없음";
+        const initial = nickname?.[0] ?? "U";
+        return (
+          <div className="flex items-center gap-2">
+            {profileImg ? (
+              <img src={profileImg} className="h-6 w-6 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                {initial}
+              </div>
+            )}
+            <span>{nickname}</span>
+          </div>
+        );
+      },
     },
     {
       field: "updatedAt",
-      headerName: "updatedAt",
+      headerName: "게시글 등록 날짜 & 시간",
       flex: 1,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        date.setHours(date.getHours() + 9);
+        return date.toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      },
     },
   ]);
   return (

@@ -30,3 +30,14 @@ export interface addAdminParam{
   memEmail: string;
   memPw: string;
 }
+
+export interface MemInfoDTO {
+  memEmail: string;
+  memRole: string;
+  memNickname: string;
+  memName: string;
+  memTel: string;
+  memAdd: string;
+  memJoinDate: string;
+  memProfileImg: string;
+}

@@ -82,3 +82,16 @@ body,
     padding: 1rem 1.5rem 30vh;
   }
 }
+
+.simple-editor-content .tiptap.ProseMirror.simple-editor {
+  flex: 1;
+  padding: 3rem 3rem 10vh;
+  
+  em {
+    font-style: italic;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+}
