@@ -13,6 +13,7 @@ export interface PostResponse {
   memEmail: string;
   memNickname: string;
   memProfileImg : string;
+  viewCount : number;
 }
 
 export interface PostUpdateRequest {
@@ -20,4 +21,9 @@ export interface PostUpdateRequest {
   title: string;
   content: string;
   memEmail: string;
+}
+
+export interface PostLikeResponse {
+  likeCount: number;
+  liked: boolean;
 }

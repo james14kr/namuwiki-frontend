@@ -27,6 +27,8 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { isAdmin, getUserEmail } from "@/utils/auth";
 import { decodeToken } from "@/utils/auth";
 import { useGetComments, useInsertComment, useUpdateComment, useDeleteComment } from "@/queries/comment.queries";
+import { Heart } from "lucide-react";
+import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -98,6 +100,11 @@ const PostDetail = () => {
   const [editCommContent, setEditCommContent] = useState<string>("");
   const updateCommentMutate = useUpdateComment(Number(postId));
   const deleteCommentMutate = useDeleteComment(Number(postId));
+  // 좋아요 관련
+  const currentUserEmail = getUserEmail();
+  const { data: likeStatus } = useGetLikeStatus(Number(postId), currentUserEmail);
+  const toggleLikeMutate = useToggleLike(Number(postId), currentUserEmail);
+
 
   const editor = useEditor({
     editable: false,
@@ -173,8 +180,6 @@ const PostDetail = () => {
   const admin = isAdmin();
 
   // 본인 or 관리자일때 수정 삭제 버튼 표시
-  
-  const currentUserEmail = getUserEmail();
   const canEditDelete = admin || currentUserEmail === post.memEmail;
 
 
@@ -202,7 +207,11 @@ const PostDetail = () => {
 
   };
 
-
+  // 좋아요
+  const onLikeClick = () => {
+    if (!currentUserEmail) return;
+    toggleLikeMutate.mutate({ postId: Number(postId), memEmail: currentUserEmail });
+  };
 
 
 
@@ -233,9 +242,18 @@ const PostDetail = () => {
               <Badge variant="outline">#{post.id}</Badge>
             </div>
 
-            <h1 className="text-2xl font-bold leading-tight tracking-tight md:text-3xl">
-              {post.title}
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold leading-tight tracking-tight md:text-3xl">
+                {post.title}
+              </h1>
+              <button
+                onClick={onLikeClick}
+                className="flex items-center gap-1 text-muted-foreground hover:text-red-500"
+              >
+                <Heart className={`h-5 w-5 ${likeStatus?.liked ? "fill-red-500 text-red-500" : ""}`} />
+                <span className="text-sm">{likeStatus?.likeCount ?? 0}</span>
+              </button>
+            </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* 작성자 정보 */}
@@ -326,6 +344,16 @@ const PostDetail = () => {
         onConfirm={() => onConfirmHandler(post.id)}
       />
 
+      {/* 좋아요 */}
+      <div className="mx-auto max-w-4xl">
+        <button
+          onClick={onLikeClick}
+          className="flex items-center gap-2 text-muted-foreground hover:text-red-500"
+        >
+          <Heart className={`h-5 w-5 ${likeStatus?.liked ? "fill-red-500 text-red-500" : ""}`} />
+          <span className="text-sm">{likeStatus?.likeCount ?? 0}명이 좋아합니다</span>
+        </button>
+      </div>
 
 
       {/* 댓글 */}

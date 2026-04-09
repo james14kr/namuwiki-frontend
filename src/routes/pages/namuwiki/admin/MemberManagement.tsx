@@ -1,4 +1,5 @@
 import {
+  AppAlertDialog,
   AppGrid,
   AppPagination,
   AppSelect,
@@ -8,23 +9,29 @@ import {
   type ItemType,
 } from "@/components";
 import { toastMutation } from "@/lib/toast";
-import React, { useEffect, useState } from "react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import React, { useState } from "react";
 import type { ColDef } from "ag-grid-community";
-import { useGetMemberList, usePostAddAdmin } from "@/queries/member.queries";
+import {
+  useDeleteMember,
+  useGetMemberList,
+  usePostAddAdmin,
+  useUpdateRole,
+} from "@/queries/member.queries";
 import Modal from "@/components/modal/modal";
 import type { MemberData } from "@/types/memberType";
 import type { PostInfo } from "@/components/postcode/Postcode";
+import { useQueryClient } from "@tanstack/react-query";
 
 // 사용자 관리 페이지
 const MemberManagement = () => {
   const usePostAddAdminMutate = usePostAddAdmin();
   const { data, isLoading } = useGetMemberList();
   const memberData = data as MemberData[];
+  const useDeleteMemberMutate = useDeleteMember();
+  const useUpdateRoleMutate = useUpdateRole();
 
-  // 전체 사용자 저장 state 변수
-  const [memberList, setMemberList] = useState<MemberData[]>([]);
+  //useQueryClient : 캐시 저장소에 접근하는 훅
+  const queryClient = useQueryClient();
 
   // 한 페이지에 보여줄 행 수
   const PAGE_SIZE = 5;
@@ -45,6 +52,14 @@ const MemberManagement = () => {
     addDetail: "",
   });
 
+  const [selectedEmail, setSelectedEmail] = useState("");
+
+  // 변경된 권한 저장할 state 변수
+  const [updateRole, setUpdateRole] = useState({
+    memEmail: "",
+    memRole: "",
+  });
+
   // 사용자 수 카운트 저장할 변수
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
   const totalCount = data?.length;
@@ -63,6 +78,8 @@ const MemberManagement = () => {
     alignItems: "center",
     height: "100%",
   };
+
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
   // 컬럼 정의
   const columnDefs: ColDef[] = [
@@ -105,10 +122,41 @@ const MemberManagement = () => {
     {
       headerName: "관리",
       flex: 2,
-      cellRenderer: () => (
-        <div style={{ display: "flex", gap: "6px", alignItems: "center", height: "100%" }}>
-          <Button>권한 변경</Button>
-          <Button>삭제</Button>
+      cellRenderer: (params) => (
+        <div
+          style={{
+            display: "flex",
+            gap: "6px",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Button
+            onClick={() => {
+              setIsUpdateOpen(true);
+              setUpdateRole({
+                ...updateRole,
+                memEmail: params.data.memEmail
+              });
+              console.log("사용자 이메일: ", params.data.memEmail);
+            }}
+          >
+            권한 변경
+          </Button>
+          {/* <AppAlertDialog
+            title="정말 삭제하시겠습니까?"
+            description="이 작업은 되돌릴 수 없습니다."
+            open={isDeleteOpen}
+            onConfirm={() => deleteMember(selectedEmail)}
+          /> */}
+          <Button
+            onClick={() => {
+              // params.data.memEmail: 선택한 데이터의 이메일
+              deleteMember(params.data.memEmail);
+            }}
+          >
+            삭제
+          </Button>
         </div>
       ),
     },
@@ -121,12 +169,16 @@ const MemberManagement = () => {
       title: "선택",
     },
     {
-      value: "admin1",
+      value: "FARMER",
       title: "농장주",
     },
     {
-      value: "admin2",
+      value: "USER",
       title: "일반 유저",
+    },
+    {
+      value: "ADMIN",
+      title: "관리자",
     },
   ];
 
@@ -134,6 +186,14 @@ const MemberManagement = () => {
   const handleAddAdmin = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddAdmin({
       ...addAdmin,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // 권한 변경 데이터 변경할 함수
+  const handleUpdateRole = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdateRole({
+      ...updateRole,
       [e.target.name]: e.target.value,
     });
   };
@@ -166,6 +226,31 @@ const MemberManagement = () => {
     });
   };
 
+  // 삭제버튼 클릭 시 삭제 실행 할 함수
+  const deleteMember = async (member: string) => {
+    await useDeleteMemberMutate.mutateAsync(member);
+    // invalidateQueries : queryKey 캐시 무효화해 다시 불러와! 라는 기능을 가짐
+    queryClient.invalidateQueries({ queryKey: ["members"] });
+  };
+
+  // 권한 변경 모달에서 변경 완료 버튼 클릭 시 변경 실행 할 함수
+  const putMemRole = async () => {
+    console.log("전송할 데이터:", updateRole);
+    await toastMutation(
+      useUpdateRoleMutate.mutateAsync,
+      updateRole,
+      "로딩 중 입니다.",
+      "변경완료 되었습니다.",
+      "변경완료 중 오류가 발생했습니다."
+    );
+
+    // invalidateQueries 사용하면 값이 변할 때 바로 적용되어 화면에 출력됨.
+    queryClient.invalidateQueries({ queryKey: ["members"] });
+
+    // 변경 완료되면 모달 창 닫기
+    setIsUpdateOpen(false);
+  };
+
   return (
     <div className="min-h-full bg-gray-50 p-6">
       {/* 관리자 추가 모달 */}
@@ -184,7 +269,9 @@ const MemberManagement = () => {
             >
               관리자 추가
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
               <Input
                 name="memEmail"
                 value={addAdmin.memEmail}
@@ -236,6 +323,45 @@ const MemberManagement = () => {
           </div>
         </Modal>
       )}
+      {/* 권한변경 모달 */}
+      {isUpdateOpen && (
+        <Modal onClick={() => setIsUpdateOpen(false)}>
+          <div style={{ width: "320px" }}>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "700",
+                color: "#166534",
+                marginBottom: "20px",
+                paddingBottom: "12px",
+                borderBottom: "2px solid #dcfce7",
+              }}
+            >
+              권한 변경
+            </h3>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              <AppSelect
+                id="admin"
+                items={admin}
+                onValueChange={(value) => {
+                  setUpdateRole({ ...updateRole, memRole: value });
+                }}
+              />
+              <div style={{ marginTop: "8px" }}>
+                <Button
+                  onClick={() => {
+                    putMemRole();
+                  }}
+                >
+                  변경 완료
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* 페이지 헤더 */}
       <div className="mb-6">
@@ -248,28 +374,38 @@ const MemberManagement = () => {
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-4 gap-4">
         <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">총 사용자</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            총 사용자
+          </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-800">{totalCount ?? 0}</p>
+            <p className="text-3xl font-bold text-green-800">
+              {totalCount ?? 0}
+            </p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
         <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">일반 사용자</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            일반 사용자
+          </p>
           <div className="flex items-baseline gap-1">
             <p className="text-3xl font-bold text-green-700">{userCount}</p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
         <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">농장주</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            농장주
+          </p>
           <div className="flex items-baseline gap-1">
             <p className="text-3xl font-bold text-green-700">{farmerCount}</p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
         <div className="flex items-center justify-between rounded-xl border border-green-100 bg-white px-5 py-4 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">관리자</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            관리자
+          </p>
           <div className="flex items-baseline gap-1">
             <p className="text-3xl font-bold text-green-700">{adminCount}</p>
             <p className="text-sm text-gray-500">명</p>
@@ -282,7 +418,9 @@ const MemberManagement = () => {
 
       {/* 필터 및 검색 바 */}
       <div className="mb-4 flex items-center gap-3 rounded-xl bg-white px-5 py-4 shadow-sm">
-        <span className="whitespace-nowrap text-sm font-semibold text-gray-600">권한</span>
+        <span className="whitespace-nowrap text-sm font-semibold text-gray-600">
+          권한
+        </span>
         <div className="w-36">
           <AppSelect id="admin" items={admin} />
         </div>
@@ -300,7 +438,10 @@ const MemberManagement = () => {
             로딩 중 입니다.
           </div>
         )}
-        <div className="ag-theme-alpine" style={{ height: "300px", width: "100%" }}>
+        <div
+          className="ag-theme-alpine"
+          style={{ height: "300px", width: "100%" }}
+        >
           <AppGrid
             rowData={paginateData}
             columnDefs={columnDefs}

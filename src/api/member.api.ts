@@ -1,7 +1,8 @@
 // member 관련 api 모음집!
 
-import type { addAdminParam } from "@/types/memberType";
+import type { addAdminParam, MemberData } from "@/types/memberType";
 import { api } from "@/utils";
+import { data } from "react-router-dom";
 
 /**
  *
@@ -93,7 +94,7 @@ export const postCheckFarmerAuth = async (authCode: object) => {
 
 /**
  * 전체 사용자 조회
- * @returns 
+ * @returns
  */
 export const selectMemberList = async () => {
   try {
@@ -116,6 +117,33 @@ export const postAddAdmin = async (addAdmin: addAdminParam) => {
     return response;
   } catch (e) {
     console.log("관리자 추가 시 오류 발생", e);
+    throw e;
+  }
+};
+
+/**
+ * 회원 삭제
+ * @param memEmail 이메일
+ * @returns
+ */
+export const delMember = async (memEmail: string) => {
+  try {
+    const response = await api.delete("/members/delete-member", {
+      params: { memEmail },
+    });
+    return response;
+  } catch (e) {
+    console.log("회원 삭제 api 실행 중 오류 발생", e);
+    throw e;
+  }
+};
+
+export const updateRole = async (updateRole : object) => {
+  try {
+    const response = await api.put("/members/update-role", updateRole);
+    return response;
+  } catch (e) {
+    console.log("권한 변경 api 실행 중 오류 발생", e);
     throw e;
   }
 };
