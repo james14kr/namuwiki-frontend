@@ -16,6 +16,7 @@ interface PostInfo {
   memNickname: string;
   memProfileImg: string;
   content: string;
+  viewCount : number;
 }
 
 const formatDate = (dateStr: string) => {
@@ -100,6 +101,12 @@ const PostList = () => {
           minute: "2-digit",
         });
       },
+    },
+    {
+      field: "viewCount",
+      headerName: "조회수",
+      width: 100,
+      valueFormatter: (params) => `${params.value ?? 0}회`,
     },
   ];
 
@@ -189,6 +196,9 @@ const PostList = () => {
                     <span>{formatDate(post.updatedAt)}</span>
                   </div>
                 </div>
+                <span className="ml-auto text-xs text-muted-foreground">
+                  조회수 {post.viewCount ?? 0}회
+                </span>
               </div>
             </CardHeader>
 

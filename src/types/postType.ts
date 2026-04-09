@@ -13,6 +13,7 @@ export interface PostResponse {
   memEmail: string;
   memNickname: string;
   memProfileImg : string;
+  viewCount : number;
 }
 
 export interface PostUpdateRequest {
