@@ -119,7 +119,7 @@ const adminNavMain = [
   },
   {
     title : "게시글 관리",
-    url : "/namu/admin/PostManagement",
+    url : "/namu/post-list",
     icon : AppWindow
   }
 ]
