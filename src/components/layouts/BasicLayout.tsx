@@ -75,13 +75,14 @@ const farmerNavMain = [
     icon: Sprout ,
     items : [
       {
-        title: "나의 농장 목록",
-        url : "#"
-      },
-      {
         title: "농장 등록 하기",
         url : "/namu/farm-register"
       },
+      {
+        title: "나의 농장 목록",
+        url : "#"
+      },
+      
     ]
   }, 
   { 
