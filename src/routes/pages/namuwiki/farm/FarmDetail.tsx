@@ -9,11 +9,14 @@ import { decodeToken } from "@/utils/auth";
 import { useEffect, useState } from "react";
 import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
+import { useGetCropList } from "@/queries/crop/useGetCropList";
+import type { CropItem } from "@/types/cropType";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
   const navigate = useNavigate();
   const { data: farm, isLoading } = useGetFarmDetail(Number(farmId));
+  const {data : crops} = useGetCropList(Number(farmId));
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
   const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
@@ -141,6 +144,36 @@ const FarmDetail = () => {
         </CardContent>
       </Card>
 
+      {/* 농작물 목록 */}
+      <Card>
+        <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
+          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <Sprout className="h-5 w-5" />
+            판매 농작물
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-5">
+          {(crops ?? []).length === 0 ? (
+            <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {(crops ?? []).map((crop: CropItem) => (
+                <div key={crop.cropId} className="rounded-lg border p-3 text-sm space-y-1">
+                  <p className="font-semibold text-foreground">{crop.cropName}</p>
+                  {crop.cropDesc && (
+                    <p className="text-muted-foreground">{crop.cropDesc}</p>
+                  )}
+                  {crop.cropPrice > 0 && (
+                    <p className="font-medium text-green-600">
+                      {crop.cropPrice.toLocaleString()}원
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
       
     </div>
   );

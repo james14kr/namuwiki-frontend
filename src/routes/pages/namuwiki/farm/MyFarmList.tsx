@@ -48,13 +48,18 @@ const MyFarmList = () => {
             <Card 
               key={farm.farmId} 
               className="cursor-pointer transition-shadow hover:shadow-md"
-              onClick={() => nav(`/namu/farm-detail/${farm.farmId}`)}>
+              onClick={() => nav(`/namu/farm-detail/${farm.farmId}`)}
+              >
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-base text-green-700 dark:text-green-400">
                   <Sprout className="h-4 w-4" />
                   {farm.farmName}
                 </CardTitle>
+                <Button onClick={() => nav(`/namu/crop-register/${farm.farmId}`)}>
+                  농작물 추가
+                </Button>
               </CardHeader>
+
               <CardContent className="space-y-1 text-sm text-muted-foreground">
                 {farm.farmAddr && (
                   <div className="flex items-center gap-1">

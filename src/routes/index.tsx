@@ -72,6 +72,11 @@ const MyFarmListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/MyFarmList")
 )
 
+//농작물 등록 페이지
+const CropRegisterpage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/CropRegister")
+)
+
 //농장주를 팔로우한 팔로워 목록 페이지
 const FollowerListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FollowerList")
@@ -136,6 +141,7 @@ export const router = createBrowserRouter([
               { path: "farm-detail/:farmId", Component: FarmDetailPage},
               { path: "my-farm-list", Component: MyFarmListPage},
               { path: "follower-list", Component: FollowerListPage},
+              { path: "crop-register/:farmId", Component: CropRegisterpage},
 
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
