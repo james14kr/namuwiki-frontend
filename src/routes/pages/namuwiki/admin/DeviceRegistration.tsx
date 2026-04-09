@@ -9,8 +9,8 @@ const DeviceRegistration = () => {
   // 인증번호 생성 저장 state 변수
   const [authCode, setAuthCode] = useState({
     authCode: "",
-    farmerName: "",
-    farmerTel: "",
+    memName: "",
+    memTel: "",
   });
 
   const [deviceReg, setDeviceReg] = useState({
@@ -86,14 +86,14 @@ const DeviceRegistration = () => {
           <Input
             placeholder="농장주 이름"
             onChange={(e) => handleAuthCode(e)}
-            name="farmerName"
-            value={authCode.farmerName}
+            name="memName"
+            value={authCode.memName}
           />
           <Input
             placeholder="농장주 연락처"
             onChange={(e) => handleAuthCode(e)}
-            name="farmerTel"
-            value={authCode.farmerTel}
+            name="memTel"
+            value={authCode.memTel}
           />
         </div>
         <div>
