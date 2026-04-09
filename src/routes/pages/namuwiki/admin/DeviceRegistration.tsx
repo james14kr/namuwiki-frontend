@@ -13,7 +13,7 @@ const DeviceRegistration = () => {
     memTel: "",
   });
 
-  const [deviceReg, setDeviceReg] = useState({
+  const [deviceList, setDeviceList] = useState({
     memEmail: "",
     memName: "",
     memRole: "",

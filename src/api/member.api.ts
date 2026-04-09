@@ -1,5 +1,6 @@
 // member 관련 api 모음집!
 
+import type { addAdminParam } from "@/types/memberType";
 import { api } from "@/utils";
 
 /**
@@ -78,7 +79,7 @@ export const postAuthCode = async (authCode: object) => {
 
 /**
  * 회원가입 시 인증번호 유효성검사
- * @returns 
+ * @returns
  */
 export const postCheckFarmerAuth = async (authCode: object) => {
   try {
@@ -91,16 +92,30 @@ export const postCheckFarmerAuth = async (authCode: object) => {
 };
 
 /**
- * 사용자추가 버튼 클릭 시 관리자 추가
- * @param addAdmin 사용자 추가 할 관리자 데이터
+ * 전체 사용자 조회
  * @returns 
  */
-export const postAddAdmin = async (addAdmin: addAdminParam) => {
-  try{
-    const response = await api.post("/admin/member/add", addAdmin);
-    return response
-  }catch(e){
-    console.log("관리자 추가 시 오류 발생", e)
-    throw e
+export const selectMemberList = async () => {
+  try {
+    const response = await api.get("/members/member-list");
+    return response.data;
+  } catch (e) {
+    console.log("전체 사용자 조회 중 오류 발생", e);
+    throw e;
   }
-}
+};
+
+/**
+ * 사용자추가 버튼 클릭 시 관리자 추가
+ * @param addAdmin 사용자 추가 할 관리자 데이터
+ * @returns
+ */
+export const postAddAdmin = async (addAdmin: addAdminParam) => {
+  try {
+    const response = await api.post("/members/add-admin", addAdmin);
+    return response;
+  } catch (e) {
+    console.log("관리자 추가 시 오류 발생", e);
+    throw e;
+  }
+};
