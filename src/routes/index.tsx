@@ -52,12 +52,19 @@ const Practice = dynamic(
   () => import("../routes/pages/namuwiki/practice/Practice")
 );
 
+//농장주가 농장 등록하는 페이지
 const FarmRegisterPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FarmRegister")
 )
 
+//일반 사용자가 볼 수 있는 농장 목록 페이지
 const FarmListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FarmList")
+)
+
+//일반 사용자가 볼 수 있는 농장 상세 페이지
+const FarmDetailPage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/FarmDetail")
 )
 
 // 관리자 페이지
@@ -116,6 +123,7 @@ export const router = createBrowserRouter([
               { path: "practice",      Component: Practice },
               { path: "farm-register", Component: FarmRegisterPage},
               { path: "farm-list", Component: FarmListPage},
+              { path: "farm-detail/:farmId", Component: FarmDetailPage},
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
               { path: "admin/MemberManagement",   Component: MemberManagement },

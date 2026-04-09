@@ -1,4 +1,3 @@
-import type { StringLiteral } from "typescript";
 
 export interface FarmRegisterData {
   farmerEmail : string;
@@ -14,4 +13,16 @@ export interface FarmItem{
   farmAddr : string;
   farmDesc : string;
   createDate : string;
+}
+
+export interface FarmDetail{
+  farmId : number;
+  farmerEmail : string;
+  farmName : string;
+  farmAddr : string;
+  farmDesc : string;
+  memName : string;
+  memNickname : string;
+  memTel : string;
+  memProfileImg : string;
 }
