@@ -15,3 +15,8 @@ export const getFarmDetail = async (farmId : number) => {
   const response = await api.get(`/farm/${farmId}`)
   return response.data;
 }
+
+export const getMyFarmList = async (farmerEmail : string) => {
+  const response = await api.get("/farm/my", {params : {farmerEmail}});
+  return response.data;
+}
