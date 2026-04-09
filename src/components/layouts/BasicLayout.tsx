@@ -31,14 +31,8 @@ const userNavMain = [
   },
   {
     title : "농장 목록",
-    url : "/namu/farmList",
+    url : "/namu/farm-list",
     icon : Sprout,
-    items : [
-      {
-        title: "팔로우 농장 목록",
-        url : "/namu/fallowFarmList"
-      }
-    ]
   },
 ]
 
@@ -86,7 +80,7 @@ const farmerNavMain = [
       },
       {
         title: "농장 등록 하기",
-        url : "#"
+        url : "/namu/farm-register"
       },
     ]
   }, 
