@@ -22,3 +22,8 @@ export interface PostUpdateRequest {
   content: string;
   memEmail: string;
 }
+
+export interface PostLikeResponse {
+  likeCount: number;
+  liked: boolean;
+}

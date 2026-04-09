@@ -1,4 +1,4 @@
-import type { PostRequest, PostResponse, PostUpdateRequest } from "@/types/postType";
+import { PostLikeResponse, type PostRequest, type PostResponse, type PostUpdateRequest } from "@/types/postType";
 import { api } from "@/utils";
 
 export const postApi = {
@@ -25,4 +25,17 @@ export const postApi = {
     const { data } = await api.put(`/posts/${dto.id}`, dto);
     return data;
   },
+
+  // 좋아요 토글 axios
+  toggleLike: async (postId:number, memEmail:string)=>{
+    const {data} = await api.post(`/likes`, {postId,memEmail});
+    return data;
+  },
+
+  // 좋아요 상태 조회 axios
+  getLikeStatus: async (postId:number, memEmail:string)=>{
+    const {data} = await api.get<PostLikeResponse>(`/likes/${postId}`, {params:{memEmail}});
+    return data;
+  },
+
 };
