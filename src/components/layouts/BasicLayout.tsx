@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import FarmSidebar from "./sidebar/FarmSidebar";
 import UserSidebar from "./sidebar/UserSidebar";
 
-import { Home, Users , AppWindow, UserPlus, Sprout, MonitorCog, User, Settings, Cpu} from "lucide-react";
+import { Home, Users , AppWindow, UserPlus, Sprout, MonitorCog, User, ShieldCheck, Cpu, Settings } from "lucide-react";
 import type { SidebarData } from "@/types/sidebarType";
 import PlantCommunityLogo from "./Logo";
 import ManagerSidebar from "./sidebar/ManagerSidebar";
@@ -115,9 +115,9 @@ const adminNavMain = [
     icon : User
   },
   {
-    title : "기기 관리",
+    title : "농장주 인증번호 생성",
     url : "/namu/admin/DeviceRegistration",
-    icon : Settings 
+    icon : ShieldCheck 
   },
   {
     title : "게시글 관리",
@@ -125,15 +125,23 @@ const adminNavMain = [
     icon : AppWindow
   },
   {
-    title : "기기 등록",
-    url : "/namu/admin/device-create",
-    icon : Cpu
+    title : "기기 관리",
+    url : "#",
+    icon : Settings ,
+    items : [
+      {
+        title : "기기 등록",
+        url : "/namu/admin/device-create",
+        icon : Cpu
+      },
+      {
+        title : "기기 목록",
+        url : "/namu/admin/device-list",
+        icon : Cpu
+      }
+    ]
   },
-  {
-    title : "기기 목록",
-    url : "/namu/admin/device-list",
-    icon : Cpu
-  }
+  
 ]
 
 const BasicLayout = () => {
