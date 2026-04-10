@@ -143,31 +143,24 @@ const FarmDetail = () => {
       {/* 농장 정보 */}
       <Card>
         <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
-          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <Sprout className="h-5 w-5" />
-            {farm.farmName}
+          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400 justify-between">
+            <div className="flex items-center">
+              <Sprout className="h-5 w-5" />
+              {farm.farmName}
+            </div>
+            {/* 농장주 본인일 때만 삭제 버튼 표시 */}
+            <div>
+              {followerEmail === farm.farmerEmail &&(
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                >
+                  농장 삭제
+                </Button>
+              )}
+            </div>
           </CardTitle>
-          {/* 농장주 본인일 때만 삭제 버튼 표시 */}
-          {followerEmail === farm.farmerEmail &&(
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleDelete}
-            >
-              농장 삭제
-            </Button>
-            
-          )}
-
-          {followerEmail === farm.farmerEmail && (
-            <Button onClick={(e) => {
-            e.stopPropagation(); //부모 Card로 이벤트 전파 차단
-            nav(`/namu/crop-register/${farm.farmId}`)
-            }}
-            >
-              농작물 추가
-            </Button>
-          )}
         </CardHeader>
         <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
           {farm.farmAddr && (
@@ -184,7 +177,19 @@ const FarmDetail = () => {
 
       {/* 농작물 목록 */}
       {/* 제목은 Card 밖으로 */}
-      <h2 className="text-lg font-bold text-green-700">판매 농작물</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-green-700">등록된 농작물</h2>
+          {followerEmail === farm.farmerEmail &&(
+            <Button 
+              size="sm"
+              onClick={(e) => {e.stopPropagation(); //부모 Card로 이벤트 전파차단
+              nav(`/namu/crop-register/${farm.farmId}`)
+              }}
+            >
+              농작물 추가
+            </Button>
+          )}
+      </div>
 
       {/* 농작물 하나당 Card 하나 */}
       <div className="flex flex-col gap-3">
