@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { ArrowLeft, Cpu } from "lucide-react";
 import { usePostDeviceRegister } from "@/queries/device/usePostDeviceRegister";
-import { useGetCropList } from "@/queries/crop/useGetCropList";
+import { useGetMyCropList } from "@/queries/crop/useGetMyCropList";
 import { decodeToken } from "@/utils/auth";
 import type { CropItem } from "@/types/cropType";
 
@@ -24,7 +24,7 @@ const DeviceRegister = () => {
   });
 
   // 농장주의 모든 농작물 목록 조회 (농장 ID 없이 이메일 기반으로 조회 필요)
-  const { data: crops } = useGetCropList(0); // ← 백엔드 API 수정 필요 (아래 참고)
+  const { data: crops } = useGetMyCropList(farmerEmail);
 
   const handleSubmit = () => {
     if (!form.deviceId || !form.cropId) {

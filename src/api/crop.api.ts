@@ -16,3 +16,9 @@ export const deleteCrop = async (cropId : number) => {
   const response = await api.delete(`/crop/${cropId}`);
   return response.data;
 }
+
+//농장주 이메일로 본인의 전체 농작물 조회
+export const getMyCropList = async (farmerEmail : string) => {
+  const response = await api.get("/crop/my", {params : {farmerEmail}})
+  return response.data;
+}
