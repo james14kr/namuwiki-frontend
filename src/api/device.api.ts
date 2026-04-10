@@ -14,7 +14,7 @@ export const getAllDevices = async () => {
 }
 
 //농장주: 기기 등록 (기기 -> 농작물 연결)
-export const postDeviceRegister = async (data : DeviceRegisterData){
+export const postDeviceRegister = async (data : DeviceRegisterData) => {
   const response = await api.post("/device/register", data);
   return response.data;
 }
