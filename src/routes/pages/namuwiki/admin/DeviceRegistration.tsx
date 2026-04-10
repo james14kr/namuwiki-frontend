@@ -1,32 +1,24 @@
 import { AppGrid, AppPagination, Button, Input } from "@/components";
 import Modal from "@/components/modal/modal";
 import { toastMutation } from "@/lib/toast";
-import { useDeleteMember, useGetMemberList, useUpdateRole } from "@/queries/member.queries";
+import { useGetFarmerList } from "@/queries/admin.queries";
+import { usePostAuthCode } from "@/queries/member.queries";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 // 농장주 기기등록 페이지 //
 const DeviceRegistration = () => {
-  const { data, isLoading } = useGetMemberList();
-  const memberData = data as MemberData[];
-  const useDeleteMemberMutate = useDeleteMember();
-  const useUpdateRoleMutate = useUpdateRole();
+  const { data, isLoading } = useGetFarmerList();
+  const usePostAuthCodeMutate = usePostAuthCode();
    //useQueryClient : 캐시 저장소에 접근하는 훅
   const queryClient = useQueryClient();
 
-    const usePostAuthCodeMutate = usePostAuthCode();
+
   // 인증번호 생성 저장 state 변수
   const [authCode, setAuthCode] = useState({
     authCode: "",
     memName: "",
     memTel: "",
-  });
-
-  const [deviceList, setDeviceList] = useState({
-    memEmail: "",
-    memName: "",
-    memRole: "",
-    memJoinData: "",
   });
 
   // input에 입력한 데이터 저장할 함수
@@ -46,6 +38,12 @@ const DeviceRegistration = () => {
       "인증번호가 생성되었습니다.",
       "인증번호 생성에 실패하였습니다."
     );
+
+    // invalidateQueries : queryKey 캐시 무효화해 다시 불러와! 라는 기능을 가짐
+    queryClient.invalidateQueries({ queryKey: ["members"] });
+
+    // 변경 완료되면 모달 창 닫기
+    setIsOpen(false);
   };
 
   // 한 페이지에 보여줄 행 수
@@ -56,31 +54,12 @@ const DeviceRegistration = () => {
   // 모달 열 변수
   const [isOpen, setIsOpen] = useState(false);
 
-  // 사용자 추가 데이터 저장할 state 변수
-  const [addAdmin, setAddAdmin] = useState({
-    memEmail: "",
-    memPw: "",
-    memNickname: "",
-    memName: "",
-    memTel: "",
-    memAdd: "",
-    addDetail: "",
-  });
-
-  const [selectedEmail, setSelectedEmail] = useState("");
-
-  // 변경된 권한 저장할 state 변수
-  const [updateRole, setUpdateRole] = useState({
-    memEmail: "",
-    memRole: "",
-  });
-
   // 사용자 수 카운트 저장할 변수
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
-  /* const totalCount = data?.length;
+  const totalCount = data?.length;
   const farmerCount = data?.filter((m) => m.memRole === "FARMER").length ?? 0;
   const userCount = data?.filter((m) => m.memRole === "USER").length ?? 0;
-  const adminCount = data?.filter((m) => m.memRole === "ADMIN").length ?? 0; */
+  const adminCount = data?.filter((m) => m.memRole === "ADMIN").length ?? 0; 
 
   // 현재 페이지 데이터만 잘라서 저장한 변수 생성
   // (시작 인덱스부터 끝 인덱스 직전까지 잘라내기), slice(위치기준으로 자르기)
@@ -93,11 +72,6 @@ const DeviceRegistration = () => {
     alignItems: "center",
     height: "100%",
   };
-
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-
-  // 선택한 권한이 저장되는 state 변수
-  const [selectedRole, setSelectedRole] = useState<string>("");
 
   // 컬럼 정의
   const columnDefs: ColDef[] = [
@@ -132,39 +106,6 @@ const DeviceRegistration = () => {
       cellStyle: centeredCellStyle,
     },
   ];
-
-  // 사용자 추가 실행할 함수
-  const insertAddAdmin = async () => {
-    //mutation실행
-    await toastMutation(
-      usePostAddAdminMutate.mutateAsync,
-      addAdmin,
-      "로딩중입니다.",
-      "관리자가 추가되었습니다.",
-      "관리자추가 중 오류가 발생했습니다."
-    );
-    setAddAdmin({
-      memEmail: "",
-      memPw: "",
-      memNickname: "",
-      memName: "",
-      memTel: "",
-      memAdd: "",
-      addDetail: "",
-    });
-  };
-
-  // 삭제버튼 클릭 시 삭제 실행 할 함수
-  const deleteMember = async (member: string) => {
-    await useDeleteMemberMutate.mutateAsync(member);
-    // invalidateQueries : queryKey 캐시 무효화해 다시 불러와! 라는 기능을 가짐
-    queryClient.invalidateQueries({ queryKey: ["members"] });
-
-    // 변경 완료되면 모달 창 닫기
-    setIsUpdateOpen(false);
-  };
-
-
 
   return (
     <div className="min-h-full bg-gray-50 p-6">
@@ -223,7 +164,7 @@ const DeviceRegistration = () => {
           </p>
           <div className="flex items-baseline gap-1">
             <p className="text-3xl font-bold text-green-800">
-              {/* {totalCount ?? 0} */}
+              {totalCount ?? 0}
             </p>
             <p className="text-sm text-gray-500">건</p>
           </div>
@@ -233,7 +174,7 @@ const DeviceRegistration = () => {
             이번 달 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{/* {userCount} */}</p>
+            <p className="text-3xl font-bold text-green-700">{userCount}</p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -242,7 +183,7 @@ const DeviceRegistration = () => {
             최근 7일 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{/* {farmerCount} */}</p>
+            <p className="text-3xl font-bold text-green-700">{farmerCount}</p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -251,7 +192,7 @@ const DeviceRegistration = () => {
             미등록 농장주
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{/* {adminCount} */}</p>
+            <p className="text-3xl font-bold text-green-700">{adminCount}</p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
