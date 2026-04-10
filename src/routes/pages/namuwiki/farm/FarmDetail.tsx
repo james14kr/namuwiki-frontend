@@ -74,7 +74,8 @@ const FarmDetail = () => {
       </Button>
 
       {/* 농장주 프로필 */}
-      <Card>
+      {followerEmail !== farm.farmerEmail && (
+        <Card>
         <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
           <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
             <User className="h-5 w-5" />
@@ -121,7 +122,7 @@ const FarmDetail = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card>)}
 
       {/* 농장 정보 */}
       <Card>
