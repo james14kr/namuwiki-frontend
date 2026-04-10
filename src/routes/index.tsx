@@ -82,6 +82,11 @@ const FollowerListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FollowerList")
 )
 
+//농장주가 기기 등록하는 페이지
+const DeviceRegisterPage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/DeviceRegister")
+)
+
 // 관리자 페이지
 const DeviceRegistration = dynamic(
   () => import("./pages/namuwiki/admin/DeviceRegistration")
@@ -155,7 +160,7 @@ export const router = createBrowserRouter([
               { path: "admin/PostManagement",     Component: PostManagement },
               { path: "admin/device-create",     Component: AdminDeviceCreatePage },
               { path: "admin/device-list",     Component: AdminDeviceListPage },
-              { path: "device-register",     Component: AdminDeviceCreatePage },
+              { path: "device-register",     Component: DeviceRegisterPage },
             ],
           },
         ],

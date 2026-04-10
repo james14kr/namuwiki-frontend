@@ -96,7 +96,8 @@ const farmerNavMain = [
       },
       {
         title: "기기 등록 하기",
-        url : "#"
+        url : "/namu/device-register",
+        icon : Cpu
       },
     ]
   },               
