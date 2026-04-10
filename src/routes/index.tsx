@@ -92,6 +92,12 @@ const MemberManagement = dynamic(
 const PostManagement = dynamic(
   () => import("./pages/namuwiki/admin/PostManagement")
 );
+const AdminDeviceCreatePage = dynamic(
+  () => import("./pages/namuwiki/admin/AdminDeviceCreate")
+)
+const AdminDeviceListPage = dynamic(
+  () => import("./pages/namuwiki/admin/AdminDeviceList")
+)
 
 
 export const router = createBrowserRouter([
@@ -147,6 +153,9 @@ export const router = createBrowserRouter([
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
               { path: "admin/MemberManagement",   Component: MemberManagement },
               { path: "admin/PostManagement",     Component: PostManagement },
+              { path: "admin/device-create",     Component: AdminDeviceCreatePage },
+              { path: "admin/device-list",     Component: AdminDeviceListPage },
+              { path: "device-register",     Component: AdminDeviceCreatePage },
             ],
           },
         ],

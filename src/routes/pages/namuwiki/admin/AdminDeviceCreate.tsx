@@ -1,6 +1,6 @@
 import { Button, Input } from '@/components';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePostDevice } from '@/queries/farm/usePostDevice';
+import { usePostDevice } from '@/queries/device/usePostDevice';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Cpu } from 'lucide-react';
 import React, { useState } from 'react'
