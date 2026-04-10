@@ -172,35 +172,33 @@ const FarmDetail = () => {
       </Card>
 
       {/* 농작물 목록 */}
-      <Card>
-        <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
-          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <Sprout className="h-5 w-5" />
-            판매 농작물
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-5">
-          {(crops ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {(crops ?? []).map((crop: CropItem) => (
-                <div key={crop.cropId} className="rounded-lg border p-3 text-sm space-y-1">
-                  <p className="font-semibold text-foreground">{crop.cropName}</p>
-                  {crop.cropDesc && (
-                    <p className="text-muted-foreground">{crop.cropDesc}</p>
-                  )}
-                  {crop.cropPrice > 0 && (
-                    <p className="font-medium text-green-600">
-                      {crop.cropPrice.toLocaleString()}원
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* 제목은 Card 밖으로 */}
+      <h2 className="text-lg font-bold text-green-700">판매 농작물</h2>
+
+      {/* 농작물 하나당 Card 하나 */}
+      <div className="flex flex-col gap-3">
+        {(crops ?? []).length === 0 ? (
+          // 농작물이 없을 때 안내 메시지
+          <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
+        ) : (
+          (crops ?? []).map((crop: CropItem) => (
+            <Card key={crop.cropId}>
+              <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
+                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                  {crop.cropName}
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">{crop.cropDesc}</p>
+                <p className="font-semibold text-green-600">
+                  {crop.cropPrice.toLocaleString()}원
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+
       
     </div>
   );
