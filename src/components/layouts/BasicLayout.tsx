@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import FarmSidebar from "./sidebar/FarmSidebar";
 import UserSidebar from "./sidebar/UserSidebar";
 
-import { Home, SquareTerminal, ActivitySquareIcon, Users , AppWindow, UserPlus, Sprout, MonitorCog, User, Settings} from "lucide-react";
+import { Home, Users , AppWindow, UserPlus, Sprout, MonitorCog, User, Settings} from "lucide-react";
 import type { SidebarData } from "@/types/sidebarType";
 import PlantCommunityLogo from "./Logo";
 import ManagerSidebar from "./sidebar/ManagerSidebar";
