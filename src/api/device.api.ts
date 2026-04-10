@@ -1,0 +1,20 @@
+import type { DeviceRegisterData } from "@/types/deviceType";
+import { api } from "@/utils"
+
+//관리자: 기기 ID 생성
+export const postCreateDevice = async (deviceId : number) => {
+  const response = await api.post(`/device/admin?deviceId=${deviceId}`);
+  return response.data;
+}
+
+//관리자 : 전체 기기 목록 조회
+export const getAllDevices = async () => {
+  const response = await api.get("/device/admin");
+  return response.data;
+}
+
+//농장주: 기기 등록 (기기 -> 농작물 연결)
+export const postDeviceRegister = async (data : DeviceRegisterData){
+  const response = await api.post("/device/register", data);
+  return response.data;
+}

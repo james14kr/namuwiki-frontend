@@ -1,6 +1,5 @@
 import type { CropRegisterData } from "@/types/cropType";
 import { api } from "@/utils";
-import { data } from "react-router-dom";
 
 export const postCropRegister = async (data: CropRegisterData) => {
   const response = await api.post("/crop", data);
