@@ -12,6 +12,7 @@ import { getCheckFollow } from "@/api/follow.api";
 import { useGetCropList } from "@/queries/crop/useGetCropList";
 import type { CropItem } from "@/types/cropType";
 import { useDeleteFarm } from "@/queries/farm/useDeleteFarm";
+import { useDeleteCrop } from "@/queries/farm/useDeleteCrop";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
@@ -19,6 +20,7 @@ const FarmDetail = () => {
   const { data: farm, isLoading } = useGetFarmDetail(Number(farmId));
   const {data : crops} = useGetCropList(Number(farmId));
   const {mutate : deleteMutate} = useDeleteFarm();
+  const {mutate : deleteCropMutate} = useDeleteCrop(Number(farmId));
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
   const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
@@ -200,9 +202,23 @@ const FarmDetail = () => {
           (crops ?? []).map((crop: CropItem) => (
             <Card key={crop.cropId}>
               <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
-                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400 justify-between">
                   {crop.cropName}
-                  </CardTitle>
+                  {followerEmail === farm.farmerEmail && (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      // 삭제 전 확인 다이얼로그
+                      if (window.confirm(`"${crop.cropName}"을 삭제하시겠습니까?`)) {
+                        deleteCropMutate(crop.cropId);
+                      }
+                    }}
+                    >
+                      삭제
+                    </Button>
+                  )}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
                 <p className="text-sm text-muted-foreground">{crop.cropDesc}</p>
