@@ -2,7 +2,7 @@ import type { DeviceRegisterData } from "@/types/deviceType";
 import { api } from "@/utils"
 
 //관리자: 기기 ID 생성
-export const postCreateDevice = async (deviceId : number) => {
+export const postCreateDevice = async (deviceId : string) => {
   const response = await api.post(`/device/admin?deviceId=${deviceId}`);
   return response.data;
 }
