@@ -1,4 +1,4 @@
-import { getFarmList } from '@/api/farmApi'
+import { getFarmList } from '@/api/farm.api'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 

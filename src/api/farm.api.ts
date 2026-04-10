@@ -20,3 +20,10 @@ export const getMyFarmList = async (farmerEmail : string) => {
   const response = await api.get("/farm/my", {params : {farmerEmail}});
   return response.data;
 }
+
+//농장 삭제 API 호출
+//farmId에 해당하는 농장과 소속 농장물을 모두 삭제
+export const deleteFarm = async (farmId : number) => {
+  const response = await api.delete(`/farm/${farmId}`);
+  return response.data;
+}
