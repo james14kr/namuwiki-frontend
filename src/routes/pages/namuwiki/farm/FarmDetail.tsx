@@ -52,10 +52,10 @@ const FarmDetail = () => {
         "농장을 삭제하면 등록된 농작물도 모두 삭제됩니다.\n정말 삭제하시겠습니까?"
       )
     ){
-      deleteMutate(Number(farmId)), {
+      deleteMutate(Number(farmId), {
         //삭제 성공 시 나의 농장 목록 페이지로 이동
         onSuccess: () => nav("/namu/my-farm-list")
-      }
+      })
     }
   }
 
@@ -97,17 +97,6 @@ const FarmDetail = () => {
             <User className="h-5 w-5" />
             {farm.farmName}
           </CardTitle>
-
-          {/* 농장주 본인일 때만 삭제 버튼 표시 */}
-          {followerEmail === farm.farmerEmail &&(
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleDelete}
-            >
-              농장 삭제
-            </Button>
-          )}
         </CardHeader>
         <CardContent className="pt-5">
           <div className="flex items-center justify-between">
@@ -158,6 +147,16 @@ const FarmDetail = () => {
             <Sprout className="h-5 w-5" />
             {farm.farmName}
           </CardTitle>
+          {/* 농장주 본인일 때만 삭제 버튼 표시 */}
+          {followerEmail === farm.farmerEmail &&(
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+            >
+              농장 삭제
+            </Button>
+          )}
         </CardHeader>
         <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
           {farm.farmAddr && (

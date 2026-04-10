@@ -55,7 +55,11 @@ const MyFarmList = () => {
                   <Sprout className="h-4 w-4" />
                   {farm.farmName}
                 </CardTitle>
-                <Button onClick={() => nav(`/namu/crop-register/${farm.farmId}`)}>
+                <Button onClick={(e) => {
+                  e.stopPropagation(); //부모 Card로 이벤트 전파 차단
+                  nav(`/namu/crop-register/${farm.farmId}`)
+                  }}
+                >
                   농작물 추가
                 </Button>
               </CardHeader>
