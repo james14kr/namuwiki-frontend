@@ -11,12 +11,14 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { useGetCropList } from "@/queries/crop/useGetCropList";
 import type { CropItem } from "@/types/cropType";
+import { useDeleteFarm } from "@/queries/farm/useDeleteFarm";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
-  const navigate = useNavigate();
+  const nav = useNavigate();
   const { data: farm, isLoading } = useGetFarmDetail(Number(farmId));
   const {data : crops} = useGetCropList(Number(farmId));
+  const {mutate : deleteMutate} = useDeleteFarm();
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
   const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
@@ -43,6 +45,20 @@ const FarmDetail = () => {
     queryClient.invalidateQueries({queryKey : ["followList"]});
   }
 
+  const handleDelete = () => {
+    //삭제 전 확인 다이얼로그 표시
+    if(
+      window.confirm(
+        "농장을 삭제하면 등록된 농작물도 모두 삭제됩니다.\n정말 삭제하시겠습니까?"
+      )
+    ){
+      deleteMutate(Number(farmId)), {
+        //삭제 성공 시 나의 농장 목록 페이지로 이동
+        onSuccess: () => nav("/namu/my-farm-list")
+      }
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex h-60 items-center justify-center text-muted-foreground">
@@ -66,7 +82,7 @@ const FarmDetail = () => {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => navigate(-1)}
+        onClick={() => nav(-1)}
         className="gap-1 text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -79,8 +95,19 @@ const FarmDetail = () => {
         <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
           <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
             <User className="h-5 w-5" />
-            농장주 프로필
+            {farm.farmName}
           </CardTitle>
+
+          {/* 농장주 본인일 때만 삭제 버튼 표시 */}
+          {followerEmail === farm.farmerEmail &&(
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+            >
+              농장 삭제
+            </Button>
+          )}
         </CardHeader>
         <CardContent className="pt-5">
           <div className="flex items-center justify-between">
