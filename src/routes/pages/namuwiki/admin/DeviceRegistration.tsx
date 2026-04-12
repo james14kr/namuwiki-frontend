@@ -13,13 +13,37 @@ const DeviceRegistration = () => {
    //useQueryClient : 캐시 저장소에 접근하는 훅
   const queryClient = useQueryClient();
 
-
+  
   // 인증번호 생성 저장 state 변수
   const [authCode, setAuthCode] = useState({
     authCode: "",
     memName: "",
     memTel: "",
   });
+  
+  // 날짜 변수
+  const today = new Date();
+
+  // 이번달 발급 : 이번달 1일 이후에 등록된 것
+  // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
+  const thisMonthCount = data?.filter((m) => {
+    const joinDate = new Date(m.memJoinDate);
+    return (
+      joinDate.getFullYear() === today.getFullYear() && 
+      joinDate.getMonth() === today.getMonth()
+    );
+  }).length ?? 0;
+
+  // 최근 7일 발급
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(today.getDate() - 7);
+  const recentSevenCount = data?.filter((m) => {
+    return new Date(m.memJoinDate) >= sevenDaysAgo;
+  }).length ?? 0;
+
+  // 미등록 농장주: authCode는 있지만 회원가입을 하지 않은 농장주
+  const unregisteredFarmerCount = data?.filter(() => {}).length ?? 0;
+
 
   // input에 입력한 데이터 저장할 함수
   const handleAuthCode = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,11 +79,7 @@ const DeviceRegistration = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // 사용자 수 카운트 저장할 변수
-  // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
   const totalCount = data?.length;
-  const farmerCount = data?.filter((m) => m.memRole === "FARMER").length ?? 0;
-  const userCount = data?.filter((m) => m.memRole === "USER").length ?? 0;
-  const adminCount = data?.filter((m) => m.memRole === "ADMIN").length ?? 0; 
 
   // 현재 페이지 데이터만 잘라서 저장한 변수 생성
   // (시작 인덱스부터 끝 인덱스 직전까지 잘라내기), slice(위치기준으로 자르기)
@@ -174,7 +194,7 @@ const DeviceRegistration = () => {
             이번 달 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{userCount}</p>
+            <p className="text-3xl font-bold text-green-700">{thisMonthCount}</p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -183,7 +203,7 @@ const DeviceRegistration = () => {
             최근 7일 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{farmerCount}</p>
+            <p className="text-3xl font-bold text-green-700">{recentSevenCount}</p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -192,7 +212,7 @@ const DeviceRegistration = () => {
             미등록 농장주
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{adminCount}</p>
+            <p className="text-3xl font-bold text-green-700">{unregisteredFarmerCount}</p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
