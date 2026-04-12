@@ -41,6 +41,11 @@ const MemberManagement = () => {
   // 모달 열 변수
   const [isOpen, setIsOpen] = useState(false);
 
+  // 삭제버튼 실행 상태 저장할 state 변수
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  // 삭제 선택 된 이메일 저장할 state 변수
+  const [selectedEmail, setSelectedEmail] = useState<string>("");
+
   // 사용자 추가 데이터 저장할 state 변수
   const [addAdmin, setAddAdmin] = useState({
     memEmail: "",
@@ -52,7 +57,6 @@ const MemberManagement = () => {
     addDetail: "",
   });
 
-  const [selectedEmail, setSelectedEmail] = useState("");
 
   // 변경된 권한 저장할 state 변수
   const [updateRole, setUpdateRole] = useState({
@@ -146,18 +150,19 @@ const MemberManagement = () => {
           >
             권한 변경
           </Button>
-          {/* <AppAlertDialog
-            title="정말 삭제하시겠습니까?"
-            description="이 작업은 되돌릴 수 없습니다."
-            open={isDeleteOpen}
-            onConfirm={() => deleteMember(selectedEmail)}
-          /> */}
           <Button
             onClick={() => {
               // params.data.memEmail: 선택한 데이터의 이메일
               deleteMember(params.data.memEmail);
             }}
-          >
+            >
+            {/* <AppAlertDialog
+              title="정말 삭제하시겠습니까?"
+              description="이 작업은 되돌릴 수 없습니다."
+              variant= "destructive"
+              open={isDeleteOpen}
+              onConfirm={() => deleteMember(selectedEmail)}
+            /> */}
             삭제
           </Button>
         </div>
