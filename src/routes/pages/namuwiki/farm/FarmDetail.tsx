@@ -9,11 +9,18 @@ import { decodeToken } from "@/utils/auth";
 import { useEffect, useState } from "react";
 import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
+import { useGetCropList } from "@/queries/crop/useGetCropList";
+import type { CropItem } from "@/types/cropType";
+import { useDeleteFarm } from "@/queries/farm/useDeleteFarm";
+import { useDeleteCrop } from "@/queries/farm/useDeleteCrop";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
-  const navigate = useNavigate();
+  const nav = useNavigate();
   const { data: farm, isLoading } = useGetFarmDetail(Number(farmId));
+  const {data : crops} = useGetCropList(Number(farmId));
+  const {mutate : deleteMutate} = useDeleteFarm();
+  const {mutate : deleteCropMutate} = useDeleteCrop(Number(farmId));
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
   const decoded = token ? decodeToken(token.replace("Bearer ", "")) : null;
@@ -40,6 +47,20 @@ const FarmDetail = () => {
     queryClient.invalidateQueries({queryKey : ["followList"]});
   }
 
+  const handleDelete = () => {
+    //삭제 전 확인 다이얼로그 표시
+    if(
+      window.confirm(
+        "농장을 삭제하면 등록된 농작물도 모두 삭제됩니다.\n정말 삭제하시겠습니까?"
+      )
+    ){
+      deleteMutate(Number(farmId), {
+        //삭제 성공 시 나의 농장 목록 페이지로 이동
+        onSuccess: () => nav("/namu/my-farm-list")
+      })
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex h-60 items-center justify-center text-muted-foreground">
@@ -63,7 +84,7 @@ const FarmDetail = () => {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => navigate(-1)}
+        onClick={() => nav(-1)}
         className="gap-1 text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -71,11 +92,12 @@ const FarmDetail = () => {
       </Button>
 
       {/* 농장주 프로필 */}
-      <Card>
+      {followerEmail !== farm.farmerEmail && (
+        <Card>
         <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
           <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
             <User className="h-5 w-5" />
-            농장주 프로필
+            {farm.farmName}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-5">
@@ -118,14 +140,28 @@ const FarmDetail = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card>)}
 
       {/* 농장 정보 */}
       <Card>
         <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
-          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <Sprout className="h-5 w-5" />
-            {farm.farmName}
+          <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400 justify-between">
+            <div className="flex items-center">
+              <Sprout className="h-5 w-5" />
+              {farm.farmName}
+            </div>
+            {/* 농장주 본인일 때만 삭제 버튼 표시 */}
+            <div>
+              {followerEmail === farm.farmerEmail &&(
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                >
+                  농장 삭제
+                </Button>
+              )}
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
@@ -140,6 +176,60 @@ const FarmDetail = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* 농작물 목록 */}
+      {/* 제목은 Card 밖으로 */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-green-700">등록된 농작물</h2>
+          {followerEmail === farm.farmerEmail &&(
+            <Button 
+              size="sm"
+              onClick={(e) => {e.stopPropagation(); //부모 Card로 이벤트 전파차단
+              nav(`/namu/crop-register/${farm.farmId}`)
+              }}
+            >
+              농작물 추가
+            </Button>
+          )}
+      </div>
+
+      {/* 농작물 하나당 Card 하나 */}
+      <div className="flex flex-col gap-3">
+        {(crops ?? []).length === 0 ? (
+          // 농작물이 없을 때 안내 메시지
+          <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
+        ) : (
+          (crops ?? []).map((crop: CropItem) => (
+            <Card key={crop.cropId}>
+              <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
+                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400 justify-between">
+                  {crop.cropName}
+                  {followerEmail === farm.farmerEmail && (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      // 삭제 전 확인 다이얼로그
+                      if (window.confirm(`"${crop.cropName}"을 삭제하시겠습니까?`)) {
+                        deleteCropMutate(crop.cropId);
+                      }
+                    }}
+                    >
+                      삭제
+                    </Button>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">{crop.cropDesc}</p>
+                <p className="font-semibold text-green-600">
+                  {crop.cropPrice.toLocaleString()}원
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
 
       
     </div>

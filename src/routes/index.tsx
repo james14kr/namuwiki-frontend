@@ -72,9 +72,19 @@ const MyFarmListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/MyFarmList")
 )
 
+//농작물 등록 페이지
+const CropRegisterpage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/CropRegister")
+)
+
 //농장주를 팔로우한 팔로워 목록 페이지
 const FollowerListPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/FollowerList")
+)
+
+//농장주가 기기 등록하는 페이지
+const DeviceRegisterPage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/DeviceRegister")
 )
 
 // 관리자 페이지
@@ -87,6 +97,12 @@ const MemberManagement = dynamic(
 const PostManagement = dynamic(
   () => import("./pages/namuwiki/admin/PostManagement")
 );
+const AdminDeviceCreatePage = dynamic(
+  () => import("./pages/namuwiki/admin/AdminDeviceCreate")
+)
+const AdminDeviceListPage = dynamic(
+  () => import("./pages/namuwiki/admin/AdminDeviceList")
+)
 
 
 export const router = createBrowserRouter([
@@ -136,11 +152,15 @@ export const router = createBrowserRouter([
               { path: "farm-detail/:farmId", Component: FarmDetailPage},
               { path: "my-farm-list", Component: MyFarmListPage},
               { path: "follower-list", Component: FollowerListPage},
+              { path: "crop-register/:farmId", Component: CropRegisterpage},
 
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
               { path: "admin/MemberManagement",   Component: MemberManagement },
               { path: "admin/PostManagement",     Component: PostManagement },
+              { path: "admin/device-create",     Component: AdminDeviceCreatePage },
+              { path: "admin/device-list",     Component: AdminDeviceListPage },
+              { path: "device-register",     Component: DeviceRegisterPage },
             ],
           },
         ],

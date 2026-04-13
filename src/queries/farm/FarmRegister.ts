@@ -1,4 +1,4 @@
-import { postFarmRegister } from "@/api/farmApi"
+import { postFarmRegister } from "@/api/farm.api"
 import type { FarmRegisterData } from "@/types/farmType"
 import { useMutation } from "@tanstack/react-query"
 

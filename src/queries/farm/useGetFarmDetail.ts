@@ -1,4 +1,4 @@
-import { getFarmDetail } from "@/api/farmApi"
+import { getFarmDetail } from "@/api/farm.api"
 import { useQuery } from "@tanstack/react-query"
 
 export const useGetFarmDetail = (farmId : number) => {
