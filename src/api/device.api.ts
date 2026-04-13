@@ -18,3 +18,9 @@ export const postDeviceRegister = async (data : DeviceRegisterData) => {
   const response = await api.post("/device/register", data);
   return response.data;
 }
+
+//농장주: 나의 기기 목록 조회
+export const getMyDevices = async (farmerEmail : string) => {
+  const response = await api.get(`/device/my?farmerEmail=${farmerEmail}`);
+  return response.data;
+}

@@ -86,13 +86,13 @@ const farmerNavMain = [
     ]
   }, 
   { 
-    title: "기기 등록", 
+    title: "기기 관리", 
     url: "#", 
     icon: MonitorCog ,
     items : [
       {
         title: "나의 기기 목록",
-        url : "#"
+        url : "/namu/my-device-list"
       },
       {
         title: "기기 등록 하기",
