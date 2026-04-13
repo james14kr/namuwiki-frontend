@@ -27,7 +27,7 @@ const DeviceRegistration = () => {
   // 이번달 발급 : 이번달 1일 이후에 등록된 것
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
   const thisMonthCount = data?.filter((m) => {
-    const joinDate = new Date(m.memJoinDate);
+    const joinDate = new Date(m.createTime);
     return (
       joinDate.getFullYear() === today.getFullYear() && 
       joinDate.getMonth() === today.getMonth()
@@ -38,7 +38,7 @@ const DeviceRegistration = () => {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(today.getDate() - 7);
   const recentSevenCount = data?.filter((m) => {
-    return new Date(m.memJoinDate) >= sevenDaysAgo;
+    return new Date(m.createTime) >= sevenDaysAgo;
   }).length ?? 0;
 
   // 미등록 농장주: authCode는 있지만 회원가입을 하지 않은 농장주
@@ -108,7 +108,7 @@ const DeviceRegistration = () => {
       cellStyle: centeredCellStyle,
     },
     {
-      field: "memJoinDate",
+      field: "createTime",
       headerName: "등록 날짜",
       flex: 3,
       cellStyle: centeredCellStyle,
@@ -127,6 +127,7 @@ const DeviceRegistration = () => {
     },
   ];
 
+  console.log(data);
   return (
     <div className="min-h-full bg-gray-50 p-6">
       {/* 인증번호 발급 모달 */}
