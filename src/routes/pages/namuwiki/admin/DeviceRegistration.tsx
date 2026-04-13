@@ -1,4 +1,4 @@
-import { AppGrid, AppPagination, Button, Input } from "@/components";
+import { AppGrid, AppPagination, Button, DatePicker, Input } from "@/components";
 import Modal from "@/components/modal/modal";
 import { toastMutation } from "@/lib/toast";
 import { useGetFarmerList } from "@/queries/admin.queries";
@@ -231,7 +231,7 @@ const DeviceRegistration = () => {
           <Input placeholder="전화번호 입력" name="memTel" />
         </div>
         <div className="flex-1">
-          <Input placeholder="날짜 선택" name="" />
+          <DatePicker id="datepicker-default" placeholder="날짜를 선택하세요."/>
         </div>
         <Button onClick={() => {}}>검색</Button>
         <Button onClick={() => setIsOpen(true)}>인증번호 발급</Button>
