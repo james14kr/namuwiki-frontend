@@ -1,9 +1,92 @@
 import { useGetMyDevices } from "@/queries/device/useGetMyDevices";
+import { useUnlinkDevice } from "@/queries/device/useUnlinkDevice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components";
 import { Cpu, Sprout, CheckCircle2, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { decodeToken } from "@/utils/auth";
 import type { DeviceItem } from "@/types/deviceType";
+
+// 훅은 map 안에서 쓸 수 없어서 별도 컴포넌트로 분리
+const DeviceItemCard = ({ device, farmerEmail }: { device: DeviceItem; farmerEmail: string }) => {
+  const { mutate: unlink } = useUnlinkDevice(device.cropId ?? 0);
+
+  const handleUnlink = () => {
+    if (window.confirm(`"${device.cropName}" 에서 기기 연결을 해제하시겠습니까?`)) {
+      unlink();
+    }
+  };
+
+  return (
+    <Card className="transition-shadow hover:shadow-md">
+      <CardHeader className="pb-2 border-b bg-green-50 dark:bg-green-950/20">
+        <CardTitle className="flex items-center justify-between text-base">
+          {/* 기기 ID */}
+          <span className="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <Cpu className="h-4 w-4" />
+            {device.deviceId}
+          </span>
+          {/* 연결 상태 뱃지 */}
+          {device.isActive === 1 ? (
+            <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              연결됨
+            </Badge>
+          ) : (
+            <Badge variant="secondary">
+              <XCircle className="h-3 w-3 mr-1" />
+              미연결
+            </Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-2 pt-4 text-sm text-muted-foreground">
+        {/* 연결된 농작물 */}
+        <div className="flex items-center gap-2">
+          <Sprout className="h-3.5 w-3.5 shrink-0 text-green-600" />
+          <span>
+            농작물:{" "}
+            <span className="text-foreground font-medium">
+              {device.cropName ?? "미연결"}
+            </span>
+          </span>
+        </div>
+
+        {/* 연결된 농장 */}
+        {device.farmName && (
+          <div className="flex items-center gap-2">
+            <span className="ml-[22px]">
+              농장:{" "}
+              <span className="text-foreground font-medium">
+                {device.farmName}
+              </span>
+            </span>
+          </div>
+        )}
+
+        {/* 등록일 */}
+        {device.registeredAt && (
+          <p className="text-xs ml-[22px]">
+            등록일: {new Date(device.registeredAt).toLocaleDateString("ko-KR")}
+          </p>
+        )}
+
+        {/* 연결된 기기만 해제 버튼 표시 */}
+        {device.isActive === 1 && device.cropId && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full border-red-300 text-red-500 hover:bg-red-50"
+            onClick={handleUnlink}
+          >
+            기기 연결 해제
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
 
 const MyDeviceList = () => {
   // 로그인한 농장주 이메일 추출
@@ -37,61 +120,11 @@ const MyDeviceList = () => {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {(devices ?? []).map((device: DeviceItem) => (
-            <Card key={device.deviceId} className="transition-shadow hover:shadow-md">
-              <CardHeader className="pb-2 border-b bg-green-50 dark:bg-green-950/20">
-                <CardTitle className="flex items-center justify-between text-base">
-                  {/* 기기 ID */}
-                  <span className="flex items-center gap-2 text-green-700 dark:text-green-400">
-                    <Cpu className="h-4 w-4" />
-                    {device.deviceId}
-                  </span>
-                  {/* 연결 상태 뱃지 */}
-                  {device.isActive === 1 ? (
-                    <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30">
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      연결됨
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      <XCircle className="h-3 w-3 mr-1" />
-                      미연결
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-
-              <CardContent className="space-y-2 pt-4 text-sm text-muted-foreground">
-                {/* 연결된 농작물 */}
-                <div className="flex items-center gap-2">
-                  <Sprout className="h-3.5 w-3.5 shrink-0 text-green-600" />
-                  <span>
-                    농작물:{" "}
-                    <span className="text-foreground font-medium">
-                      {device.cropName ?? "미연결"}
-                    </span>
-                  </span>
-                </div>
-
-                {/* 연결된 농장 */}
-                {device.farmName && (
-                  <div className="flex items-center gap-2">
-                    <span className="ml-[22px]">
-                      농장:{" "}
-                      <span className="text-foreground font-medium">
-                        {device.farmName}
-                      </span>
-                    </span>
-                  </div>
-                )}
-
-                {/* 등록일 */}
-                {device.registeredAt && (
-                  <p className="text-xs ml-[22px]">
-                    등록일: {new Date(device.registeredAt).toLocaleDateString("ko-KR")}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+            <DeviceItemCard
+              key={device.deviceId}
+              device={device}
+              farmerEmail={farmerEmail}
+            />
           ))}
         </div>
       )}

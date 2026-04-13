@@ -24,3 +24,9 @@ export const getMyDevices = async (farmerEmail : string) => {
   const response = await api.get(`/device/my?farmerEmail=${farmerEmail}`);
   return response.data;
 }
+
+//농장주: 기기 연결 해제
+export const unlinkDevice = async(cropId : number) => {
+  const response = await api.patch(`/device/unlink`, null, {params: {cropId}})
+  return response.data;
+}
