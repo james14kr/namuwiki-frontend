@@ -87,6 +87,11 @@ const DeviceRegisterPage = dynamic(
   () => import("../routes/pages/namuwiki/farm/DeviceRegister")
 )
 
+//농장주가 등록한 기기 목록 페이지
+const MyDeviceListPage = dynamic(
+  () => import("../routes/pages/namuwiki/farm/MyDeviceList")
+)
+
 // 관리자 페이지
 const DeviceRegistration = dynamic(
   () => import("./pages/namuwiki/admin/DeviceRegistration")
@@ -153,6 +158,7 @@ export const router = createBrowserRouter([
               { path: "my-farm-list", Component: MyFarmListPage},
               { path: "follower-list", Component: FollowerListPage},
               { path: "crop-register/:farmId", Component: CropRegisterpage},
+              { path: "my-device-list", Component: MyDeviceListPage},
 
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },
