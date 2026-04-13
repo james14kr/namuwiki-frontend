@@ -13,3 +13,17 @@ export const selectFarmerList = async () => {
     throw e;
   }
 };
+
+/**
+ * 미등록 농장주count 조회
+ * @returns 
+ */
+export const selectUnregFarmerCount = async () => {
+  try {
+    const response = await api.get("/authes/un-reg");
+    return response.data;
+  } catch (e) {
+    console.log("미등록 농장주 조회 중 오류 발생", e);
+    throw e;
+  }
+};

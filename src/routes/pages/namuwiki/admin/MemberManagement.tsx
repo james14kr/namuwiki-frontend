@@ -57,7 +57,6 @@ const MemberManagement = () => {
     addDetail: "",
   });
 
-
   // 변경된 권한 저장할 state 변수
   const [updateRole, setUpdateRole] = useState({
     memEmail: "",
@@ -71,10 +70,22 @@ const MemberManagement = () => {
   const userCount = data?.filter((m) => m.memRole === "USER").length ?? 0;
   const adminCount = data?.filter((m) => m.memRole === "ADMIN").length ?? 0;
 
+  // 선택한 권한이 저장되는 state 변수
+  const [selectedRole, setSelectedRole] = useState<string>("");
+
+  // selectedRole이 없거나 "admin0"이면 전체, 아니면 필터링
+  const filteredData =
+    selectedRole && selectedRole !== "admin0"
+      ? data?.filter((m) => m.memRole === selectedRole)
+      : data;
+
   // 현재 페이지 데이터만 잘라서 저장한 변수 생성
   // (시작 인덱스부터 끝 인덱스 직전까지 잘라내기), slice(위치기준으로 자르기)
   const paginateData =
-    data?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE) ?? [];
+    filteredData?.slice(
+      (currentPage - 1) * PAGE_SIZE,
+      currentPage * PAGE_SIZE
+    ) ?? [];
 
   // 공통 셀 스타일 (버튼과 높이 맞춤)
   const centeredCellStyle = {
@@ -84,9 +95,6 @@ const MemberManagement = () => {
   };
 
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-
-  // 선택한 권한이 저장되는 state 변수
-  const [selectedRole, setSelectedRole] = useState<string>("");
 
   // 컬럼 정의
   const columnDefs: ColDef[] = [
@@ -143,7 +151,7 @@ const MemberManagement = () => {
               setIsUpdateOpen(true);
               setUpdateRole({
                 ...updateRole,
-                memEmail: params.data.memEmail
+                memEmail: params.data.memEmail,
               });
               console.log("사용자 이메일: ", params.data.memEmail);
             }}
@@ -155,7 +163,7 @@ const MemberManagement = () => {
               // params.data.memEmail: 선택한 데이터의 이메일
               deleteMember(params.data.memEmail);
             }}
-            >
+          >
             {/* <AppAlertDialog
               title="정말 삭제하시겠습니까?"
               description="이 작업은 되돌릴 수 없습니다."
@@ -430,9 +438,16 @@ const MemberManagement = () => {
           권한
         </span>
         <div className="w-36">
-            <AppSelect id="admin" items={admin} onValueChange={(value) => setSelectedRole(value)}/>
-          {data ?.map((member, i) => {
-             return <div key={i}>{member.name}</div>;
+          <AppSelect
+            id="admin"
+            items={admin}
+            onValueChange={(value) => {
+              setSelectedRole(value);
+              setCurrentPage(1);
+            }}
+          />
+          {data?.map((member, i) => {
+            return <div key={i}>{member.name}</div>;
           })}
         </div>
         <div className="flex-1">
@@ -462,11 +477,10 @@ const MemberManagement = () => {
         </div>
         <div className="border-t border-gray-100 px-4 py-3">
           <AppPagination
-            totalRow={data?.length ?? 0}
+            totalRow={filteredData?.length ?? 0}
             maxRow={PAGE_SIZE}
             onPageClick={(page) => {
               setCurrentPage(page + 1);
-              console.log("클릭페이지", page);
             }}
           />
         </div>

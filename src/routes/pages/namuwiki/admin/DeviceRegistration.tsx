@@ -1,7 +1,13 @@
-import { AppGrid, AppPagination, Button, Input } from "@/components";
+import {
+  AppGrid,
+  AppPagination,
+  Button,
+  DatePicker,
+  Input,
+} from "@/components";
 import Modal from "@/components/modal/modal";
 import { toastMutation } from "@/lib/toast";
-import { useGetFarmerList } from "@/queries/admin.queries";
+import { useGetFarmerList, useSelectUnregFarmerCount } from "@/queries/admin.queries";
 import { usePostAuthCode } from "@/queries/member.queries";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -10,40 +16,54 @@ import React, { useState } from "react";
 const DeviceRegistration = () => {
   const { data, isLoading } = useGetFarmerList();
   const usePostAuthCodeMutate = usePostAuthCode();
-   //useQueryClient : 캐시 저장소에 접근하는 훅
+  //useQueryClient : 캐시 저장소에 접근하는 훅
   const queryClient = useQueryClient();
+  const {data: unregFarmerCount} = useSelectUnregFarmerCount();
 
-  
   // 인증번호 생성 저장 state 변수
   const [authCode, setAuthCode] = useState({
     authCode: "",
     memName: "",
     memTel: "",
   });
-  
+
+  //선택한 날짜가 저장 될 state 변수
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+  // 선택한 날짜 필터링한 데이터 담을 변수
+  const filteredData = selectedDate
+    ? data?.filter((m) => {
+        return (
+          new Date(m.createTime).toLocaleDateString("ko-KR") ===
+          selectedDate.toLocaleDateString("ko-KR")
+        );
+      })
+    : data;
+
   // 날짜 변수
   const today = new Date();
 
   // 이번달 발급 : 이번달 1일 이후에 등록된 것
   // ?? 0 : null 병합 연산자 => 왼쪽 값이 null 또는 undefined일 경우에만 오른쪽 값인 0을 반환
-  const thisMonthCount = data?.filter((m) => {
-    const joinDate = new Date(m.createTime);
-    return (
-      joinDate.getFullYear() === today.getFullYear() && 
-      joinDate.getMonth() === today.getMonth()
-    );
-  }).length ?? 0;
+  const thisMonthCount =
+    data?.filter((m) => {
+      const joinDate = new Date(m.createTime);
+      return (
+        joinDate.getFullYear() === today.getFullYear() &&
+        joinDate.getMonth() === today.getMonth()
+      );
+    }).length ?? 0;
 
   // 최근 7일 발급
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(today.getDate() - 7);
-  const recentSevenCount = data?.filter((m) => {
-    return new Date(m.createTime) >= sevenDaysAgo;
-  }).length ?? 0;
+  const recentSevenCount =
+    data?.filter((m) => {
+      return new Date(m.createTime) >= sevenDaysAgo;
+    }).length ?? 0;
 
   // 미등록 농장주: authCode는 있지만 회원가입을 하지 않은 농장주
   const unregisteredFarmerCount = data?.filter(() => {}).length ?? 0;
-
 
   // input에 입력한 데이터 저장할 함수
   const handleAuthCode = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +104,10 @@ const DeviceRegistration = () => {
   // 현재 페이지 데이터만 잘라서 저장한 변수 생성
   // (시작 인덱스부터 끝 인덱스 직전까지 잘라내기), slice(위치기준으로 자르기)
   const paginateData =
-    data?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE) ?? [];
+    filteredData?.slice(
+      (currentPage - 1) * PAGE_SIZE,
+      currentPage * PAGE_SIZE
+    ) ?? [];
 
   // 공통 셀 스타일 (버튼과 높이 맞춤)
   const centeredCellStyle = {
@@ -128,6 +151,7 @@ const DeviceRegistration = () => {
   ];
 
   console.log(data);
+
   return (
     <div className="min-h-full bg-gray-50 p-6">
       {/* 인증번호 발급 모달 */}
@@ -195,7 +219,9 @@ const DeviceRegistration = () => {
             이번 달 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{thisMonthCount}</p>
+            <p className="text-3xl font-bold text-green-700">
+              {thisMonthCount}
+            </p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -204,7 +230,9 @@ const DeviceRegistration = () => {
             최근 7일 발급
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{recentSevenCount}</p>
+            <p className="text-3xl font-bold text-green-700">
+              {recentSevenCount}
+            </p>
             <p className="text-sm text-gray-500">건</p>
           </div>
         </div>
@@ -213,7 +241,9 @@ const DeviceRegistration = () => {
             미등록 농장주
           </p>
           <div className="flex items-baseline gap-1">
-            <p className="text-3xl font-bold text-green-700">{unregisteredFarmerCount}</p>
+            <p className="text-3xl font-bold text-green-700">
+              {unregFarmerCount}
+            </p>
             <p className="text-sm text-gray-500">명</p>
           </div>
         </div>
@@ -231,7 +261,11 @@ const DeviceRegistration = () => {
           <Input placeholder="전화번호 입력" name="memTel" />
         </div>
         <div className="flex-1">
-          <Input placeholder="날짜 선택" name="" />
+          <DatePicker
+            id="datepicker-default"
+            placeholder="날짜를 선택하세요."
+            onChange={(date) => setSelectedDate(date)}
+          />
         </div>
         <Button onClick={() => {}}>검색</Button>
         <Button onClick={() => setIsOpen(true)}>인증번호 발급</Button>
@@ -257,7 +291,7 @@ const DeviceRegistration = () => {
         </div>
         <div className="border-t border-gray-100 px-4 py-3">
           <AppPagination
-            totalRow={data?.length ?? 0}
+            totalRow={filteredData?.length ?? 0}
             maxRow={PAGE_SIZE}
             onPageClick={(page) => {
               setCurrentPage(page + 1);
