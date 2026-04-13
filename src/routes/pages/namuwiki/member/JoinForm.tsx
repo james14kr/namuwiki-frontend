@@ -203,6 +203,7 @@ const JoinForm = ({ successJoin }: JoinFormProps) => {
 
   // 버튼 누르면 joinData 전체 유효성 검사 실행 + 회원가입 등록
   const validate = async () => {
+
     // 전체 유효성 검사 실행 결과 저장
 
     // 만약 유효성검사 결과가 실패라면

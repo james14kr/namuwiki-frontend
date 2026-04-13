@@ -439,7 +439,7 @@ const MemberManagement = () => {
           <Input placeholder="이메일 또는 이름 입력" name="farmerName" />
         </div>
         <Button onClick={() => {}}>검색</Button>
-        <Button onClick={() => setIsOpen(true)}>사용자 추가</Button>
+        <Button onClick={() => setIsOpen(true)}>관리자 추가</Button>
       </div>
 
       {/* 데이터 그리드 */}
