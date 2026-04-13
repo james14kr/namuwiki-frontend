@@ -13,6 +13,7 @@ import { useGetCropList } from "@/queries/crop/useGetCropList";
 import type { CropItem } from "@/types/cropType";
 import { useDeleteFarm } from "@/queries/farm/useDeleteFarm";
 import { useDeleteCrop } from "@/queries/farm/useDeleteCrop";
+import CropCard from "@/components/namuwiki/CropCard";
 
 const FarmDetail = () => {
   const { farmId } = useParams();
@@ -200,33 +201,16 @@ const FarmDetail = () => {
           <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
         ) : (
           (crops ?? []).map((crop: CropItem) => (
-            <Card key={crop.cropId}>
-              <CardHeader className="border-b bg-green-50 dark:bg-green-950/20">
-                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400 justify-between">
-                  {crop.cropName}
-                  {followerEmail === farm.farmerEmail && (
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => {
-                      // 삭제 전 확인 다이얼로그
-                      if (window.confirm(`"${crop.cropName}"을 삭제하시겠습니까?`)) {
-                        deleteCropMutate(crop.cropId);
-                      }
-                    }}
-                    >
-                      삭제
-                    </Button>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 pt-5 text-sm text-muted-foreground">
-                <p className="text-sm text-muted-foreground">{crop.cropDesc}</p>
-                <p className="font-semibold text-green-600">
-                  {crop.cropPrice.toLocaleString()}원
-                </p>
-              </CardContent>
-            </Card>
+            <CropCard
+              key={crop.cropId}
+              crop={crop}
+              isFarmOwner={followerEmail === farm.farmerEmail}
+              onDelete={(cropId, cropName) => {
+                if(window.confirm(`"${cropName}"을(를) 삭제하시겠습니까?`)){
+                  deleteCropMutate(cropId);
+                }
+              }}
+            />
           ))
         )}
       </div>

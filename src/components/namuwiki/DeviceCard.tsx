@@ -3,10 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/utils/tw.utils";
 import type { SensorActuatorData } from "@/types/namuType";
-import { Outline } from "../ui/badge.stories";
 
 // createDate(ISO 문자열)를 현재 시각 기준 상대 시간으로 변환
 const formatDate = (dateStr: string) => {
+  if(!dateStr) return "정보 없음";
   const normalized = dateStr.endsWith("Z") || dateStr.includes("+")
     ? dateStr
     : dateStr + "Z";
@@ -65,7 +65,7 @@ const DeviceCard = ({ data }: { data: SensorActuatorData }) => {
             {/* 디바이스 ID 첫 글자를 아바타로 표시 */}
             <Avatar className="size-9">
               <AvatarFallback className="bg-emerald-700 text-sm font-semibold text-white">
-                {data.deviceId.charAt(0).toUpperCase()}
+                {data.deviceId?.charAt(0)?.toUpperCase() ?? '?'}
               </AvatarFallback>
             </Avatar>
             <div>
