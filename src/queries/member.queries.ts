@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   delMember,
+  fetchMembers,
   postAddAdmin,
   postAuthCode,
   postCheckFarmerAuth,
@@ -96,5 +97,13 @@ export const useDeleteMember = () => {
 export const useUpdateRole = () => {
   return useMutation({
     mutationFn: (param: object) => updateRole(param),
+  });
+};
+
+// 선택한 권한 데이터 조회
+export const useFetchMembers = () => {
+  return useQuery({
+    queryKey: ["members", selectedRole],
+    queryFn: () => fetchMembers(selectedRole || undefined),
   });
 };

@@ -41,6 +41,11 @@ const MemberManagement = () => {
   // 모달 열 변수
   const [isOpen, setIsOpen] = useState(false);
 
+  // 삭제버튼 실행 상태 저장할 state 변수
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  // 삭제 선택 된 이메일 저장할 state 변수
+  const [selectedEmail, setSelectedEmail] = useState<string>("");
+
   // 사용자 추가 데이터 저장할 state 변수
   const [addAdmin, setAddAdmin] = useState({
     memEmail: "",
@@ -52,7 +57,6 @@ const MemberManagement = () => {
     addDetail: "",
   });
 
-  const [selectedEmail, setSelectedEmail] = useState("");
 
   // 변경된 권한 저장할 state 변수
   const [updateRole, setUpdateRole] = useState({
@@ -80,6 +84,9 @@ const MemberManagement = () => {
   };
 
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+
+  // 선택한 권한이 저장되는 state 변수
+  const [selectedRole, setSelectedRole] = useState<string>("");
 
   // 컬럼 정의
   const columnDefs: ColDef[] = [
@@ -143,18 +150,19 @@ const MemberManagement = () => {
           >
             권한 변경
           </Button>
-          {/* <AppAlertDialog
-            title="정말 삭제하시겠습니까?"
-            description="이 작업은 되돌릴 수 없습니다."
-            open={isDeleteOpen}
-            onConfirm={() => deleteMember(selectedEmail)}
-          /> */}
           <Button
             onClick={() => {
               // params.data.memEmail: 선택한 데이터의 이메일
               deleteMember(params.data.memEmail);
             }}
-          >
+            >
+            {/* <AppAlertDialog
+              title="정말 삭제하시겠습니까?"
+              description="이 작업은 되돌릴 수 없습니다."
+              variant= "destructive"
+              open={isDeleteOpen}
+              onConfirm={() => deleteMember(selectedEmail)}
+            /> */}
             삭제
           </Button>
         </div>
@@ -422,13 +430,16 @@ const MemberManagement = () => {
           권한
         </span>
         <div className="w-36">
-          <AppSelect id="admin" items={admin} />
+            <AppSelect id="admin" items={admin} onValueChange={(value) => setSelectedRole(value)}/>
+          {data ?.map((member, i) => {
+             return <div key={i}>{member.name}</div>;
+          })}
         </div>
         <div className="flex-1">
           <Input placeholder="이메일 또는 이름 입력" name="farmerName" />
         </div>
         <Button onClick={() => {}}>검색</Button>
-        <Button onClick={() => setIsOpen(true)}>사용자 추가</Button>
+        <Button onClick={() => setIsOpen(true)}>관리자 추가</Button>
       </div>
 
       {/* 데이터 그리드 */}

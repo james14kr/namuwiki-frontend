@@ -138,12 +138,32 @@ export const delMember = async (memEmail: string) => {
   }
 };
 
+/**
+ * 권한 수정
+ * @param updateRole 변경된 권한데이터
+ * @returns 
+ */
 export const updateRole = async (updateRole : object) => {
   try {
     const response = await api.put("/members/update-role", updateRole);
     return response;
   } catch (e) {
     console.log("권한 변경 api 실행 중 오류 발생", e);
+    throw e;
+  }
+};
+
+/**
+ * 선택한 권한 정보 조회
+ * @param memRole 선택한 권한 데이터
+ * @returns 
+ */
+export const fetchMembers = async (memRole : string) => {
+  try{
+    const params = memRole ? {memRole} : {};
+    return api.get("/members/admin", {params});
+  }catch(e){
+    console.log("선택한 권한에 맞는 데이터 조회 중 오류 발생", e);
     throw e;
   }
 };
