@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Heart, MessageCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "./ui/badge";
+import { Secondary } from "./ui/badge.stories";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -48,10 +50,13 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
             </AvatarFallback>
           )}
         </Avatar>
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">
-            {post.memNickname ?? "알수없음"}
-          </span>
+        <div className="">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-medium">
+              {post.memNickname ?? "알수없음"}
+            </span>
+            {post.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
+          </div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Calendar className="h-3 w-3" />
             <span>{formatDate(post.updatedAt)}</span>

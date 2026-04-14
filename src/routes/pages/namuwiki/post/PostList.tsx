@@ -23,6 +23,7 @@ export interface PostInfo {
   content: string;
   viewCount : number;
   commentCount: number;
+  memRole : string;
 }
 
 const formatDate = (dateStr: string) => {

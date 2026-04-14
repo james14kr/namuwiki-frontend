@@ -15,6 +15,7 @@ export interface PostResponse {
   memProfileImg : string;
   viewCount : number;
   commentCount : number;
+  memRole : string;
 }
 
 export interface PostUpdateRequest {
