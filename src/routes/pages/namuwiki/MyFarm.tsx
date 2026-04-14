@@ -166,7 +166,7 @@ const MyFarm = () => {
             <ActionRow
               icon={<Activity className="size-4 text-muted-foreground" />}
               label="내 활동 기록"
-              disabled
+              onClick={()=>nav("/namu/my-activity")}
             />
             <ActionRow
               icon={<LayoutDashboard className="size-4 text-green-600" />}
