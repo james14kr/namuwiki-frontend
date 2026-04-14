@@ -12,7 +12,7 @@ import { usePostAuthCode } from "@/queries/member.queries";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-// 농장주 기기등록 페이지 //
+// 농장주 인증번호 관리 페이지 //
 const DeviceRegistration = () => {
   const { data, isLoading } = useGetFarmerList();
   const usePostAuthCodeMutate = usePostAuthCode();
@@ -197,7 +197,12 @@ const DeviceRegistration = () => {
                 value={authCode.memTel}
               />
               <div style={{ marginTop: "8px" }}>
-                <Button onClick={() => postAuthCode()}>인증번호 발급</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => postAuthCode()}
+                >
+                  인증번호 발급
+                </Button>
               </div>
             </div>
           </div>
@@ -264,22 +269,30 @@ const DeviceRegistration = () => {
       <div className="mb-5 border-t border-gray-200" />
 
       {/* 필터 및 검색 바 */}
-      <div className="mb-4 flex items-center gap-3 rounded-xl bg-white px-5 py-4 shadow-sm">
-        <div className="flex-1">
+      <div className="mb-4 flex items-end gap-3 rounded-xl bg-white px-5 py-4 shadow-sm">
+        <div className="flex flex-1 flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">이름</label>
           <Input placeholder="이름 입력" name="memName" />
         </div>
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">전화번호</label>
           <Input placeholder="전화번호 입력" name="memTel" />
         </div>
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col gap-1">
+          <label className="text-xs font-medium text-gray-500">날짜</label>
           <DatePicker
             id="datepicker-default"
             placeholder="날짜를 선택하세요."
             onChange={(date) => setSelectedDate(date)}
           />
         </div>
-        <Button onClick={() => {}}>검색</Button>
-        <Button onClick={() => setIsOpen(true)}>인증번호 발급</Button>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-medium text-transparent select-none">ㅤ</span>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => {}}>검색</Button>
+            <Button onClick={() => setIsOpen(true)}>인증번호 발급</Button>
+          </div>
+        </div>
       </div>
 
       {/* 데이터 그리드 */}
