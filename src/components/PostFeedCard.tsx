@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { PostInfo } from "@/routes/pages/namuwiki/post/PostList";
 import { getUserEmail } from "@/utils/auth";
 import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Heart, MessageCircle } from "lucide-react";
+import { Calendar, Heart, MessageCircle, UserCheck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "./ui/badge";
 import { Secondary } from "./ui/badge.stories";
+import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
+import { getCheckFollow } from "@/api/follow.api";
+import { Button } from "./ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -26,6 +30,29 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
   const currentUserEmail = getUserEmail();
   const { data: likeStatus } = useGetLikeStatus(post.id, currentUserEmail);
   const toggleLikeMutate = useToggleLike(post.id, currentUserEmail);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const followMutation = usePostFollow();
+  const unfollowMutation = useDeleteFollow();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if(!currentUserEmail || !post.memEmail) return;
+    if(currentUserEmail === post.memEmail) return;
+    getCheckFollow({followerEmail: currentUserEmail, farmerEmail : post.memEmail}).then(setIsFollowing);
+  }, [currentUserEmail, post.memEmail])
+
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if(!currentUserEmail) return;
+    if(isFollowing) {
+      await unfollowMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail: post.memEmail});
+      setIsFollowing(false);
+    }else{
+      await followMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail: post.memEmail});
+      setIsFollowing(true);
+    }
+    queryClient.invalidateQueries({queryKey: ["followList"]});
+  }
 
   const onLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 카드 클릭 이벤트 막기
@@ -40,30 +67,59 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
   >
     {/* 작성자 정보 */}
     <CardHeader className="pb-3">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-9 w-9">
-          {post.memProfileImg ? (
-            <AvatarImage src={post.memProfileImg} />
-          ) : (
-            <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-              {post.memNickname?.[0] ?? "U"}
-            </AvatarFallback>
-          )}
-        </Avatar>
-        <div className="">
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm font-medium">
-              {post.memNickname ?? "알수없음"}
-            </span>
-            {post.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
-          </div>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3" />
-            <span>{formatDate(post.updatedAt)}</span>
+      <div className="flex items-start justify-between">
+
+        {/* 왼쪽: 작성자 정보 */}
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9">
+            {post.memProfileImg ? (
+              <AvatarImage src={post.memProfileImg} />
+            ) : (
+              <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                {post.memNickname?.[0] ?? "U"}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-medium">
+                {post.memNickname ?? "알수없음"}
+              </span>
+              {post.memRole === "FARMER"
+                ? <Badge variant="success">농장주</Badge>
+                : post.memRole === "ADMIN"
+                ? <Badge variant="danger">관리자</Badge>
+                : <Badge variant="secondary">일반 회원</Badge>}
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3" />
+              <span>{formatDate(post.updatedAt)}</span>
+            </div>
           </div>
         </div>
+
+        {/* 오른쪽 상단: 팔로우 버튼 */}
+        {currentUserEmail && currentUserEmail !== post.memEmail && post.memRole !== "ADMIN" &&(
+          <Button
+            onClick={handleFollow}
+            size="sm"
+            variant="outline"
+            className={`rounded-full text-sx border-none ${
+              isFollowing
+                ? "border-green-600 text-green-600 hover:bg-green-50"
+                : "text-muted-foreground hover:border-green-600 hover:text-green-600"
+            }`}
+          >
+            {isFollowing
+              ? <><UserCheck className="h-3 w-3 mr-1" />팔로잉</>
+              : <><UserCheck className="h-3 w-3 mr-1" />팔로우</>
+            }
+          </Button>
+        )}
+
       </div>
     </CardHeader>
+
 
     {/* 이미지 (있을 때만) */}
     {(() => {
