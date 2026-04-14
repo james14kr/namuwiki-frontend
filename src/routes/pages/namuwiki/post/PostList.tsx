@@ -25,6 +25,7 @@ export interface PostInfo {
   viewCount : number;
   commentCount: number;
   memRole : string;
+  memEmail : string;
 }
 
 const formatDate = (dateStr: string) => {
