@@ -13,4 +13,5 @@ export interface CommentResponse{
   createdAt: string;
   updatedAt: string;
   memProfileImg : string;
+  memRole : string;
 }

@@ -13,11 +13,18 @@ import PlantCommunityLogo from "./Logo";
 import ManagerSidebar from "./sidebar/ManagerSidebar";
 
 const userNavMain = [
-  {title: "홈", url : "/namu/post-list", icon: Home},
+  {title: "홈", url : "/namu/post-feed", icon: Home},
   { 
     title: "게시판", 
-    url: "/namu/post-list", 
-    icon: AppWindow},
+    url: "/namu/post-feed", 
+    icon: AppWindow,
+    items : [
+      {
+        title: "게시판 목록",
+        url : "/namu/post-list"
+      }
+    ]
+  },
   {
     title : "마이페이지",
     url : "/namu/my_farm",
@@ -39,12 +46,12 @@ const userNavMain = [
 const farmerNavMain = [
   { 
     title: "홈", 
-    url: "/namu/post-list", 
+    url: "/namu/post-feed", 
     icon: Home 
   },
   { 
     title: "게시판", 
-    url: "/namu/post-list", 
+    url: "/namu/post-feed", 
     icon: AppWindow,
     items : [
       {
