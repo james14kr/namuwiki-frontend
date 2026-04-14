@@ -388,6 +388,7 @@ const PostDetail = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{comment.memNickname}</span>
+                      {comment.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
                       {/* 댓글 등록 날짜 + 시간 */}
                       <span className="text-xs text-muted-foreground">
                         {comment.createdAt !== comment.updatedAt ? (
