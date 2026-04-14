@@ -148,6 +148,17 @@ const DeviceRegistration = () => {
       flex: 2,
       cellStyle: centeredCellStyle,
     },
+    {
+      field: "isUsed",
+      headerName: "상태",
+      flex: 2,
+      cellStyle: centeredCellStyle,
+      cellRenderer: (params: { value: string }) => {
+        return params.value === "Y"
+          ? `<span style="color: #16a34a; font-weight: 600;">등록완료</span>`
+          : `<span style="color: #dc2626; font-weight: 600;">미등록</span>`;
+      },
+    },
   ];
 
   console.log(data);
