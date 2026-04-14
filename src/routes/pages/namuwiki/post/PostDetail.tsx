@@ -268,10 +268,12 @@ const PostDetail = () => {
                   )}
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {/* 닉네임 표시*/}
-                    {post.memNickname ?? "알수없음"}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium">
+                      {post.memNickname ?? "알수없음"}
+                    </span>
+                    {post.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
+                  </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     <span>{formatDate(post.createdAt)}</span>
