@@ -44,6 +44,9 @@ const PostEditPage = dynamic(
 const PostListPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostList")
 );
+const PostFeedPage = dynamic(
+  () => import("../routes/pages/namuwiki/post/PostFeed")
+)
 const PostDetailPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostDetail")
 );
@@ -149,6 +152,7 @@ export const router = createBrowserRouter([
               { path: "post-register", Component: PostRegisterPage },
               { path: "post-edit/:postId", Component: PostEditPage },
               { path: "post-list",     Component: PostListPage },
+              { path: "post-feed",     Component: PostFeedPage },
               { path: "post-list/:postId", Component: PostDetailPage },
               { path: "kjk",           Component: KjkPage },
               { path: "practice",      Component: Practice },

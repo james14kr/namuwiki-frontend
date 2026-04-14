@@ -173,19 +173,6 @@ const PostList = () => {
           </div>
         </div>
       </div>
-
-      {/* 피드 목록 */}
-      <div className="mx-auto max-w-2xl space-y-4">
-        {result.map((post) => (
-          <PostFeedCard
-            key={post.id}
-            post={post}
-            onClick={() => nav(`/namu/post-list/${post.id}`)}
-          />
-          
-
-        ))}
-      </div>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const LoginForm = () => {
           }
 
           // 로그인 성공 시 메인페이지로 이동
-          nav("/namu/post-list");
+          nav("/namu/post-feed");
         }
         return "로그인 성공했습니다.";
       },
