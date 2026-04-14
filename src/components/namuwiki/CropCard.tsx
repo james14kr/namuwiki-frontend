@@ -32,7 +32,14 @@ const CropCard = ({ crop, isFarmOwner, onDelete }: CropCardProps) => {
             <Button
               size="sm"
               variant="destructive"
-              onClick={() => onDelete(crop.cropId, crop.cropName)}
+              onClick={() => {
+                if(sensorData){
+                  window.alert(`${sensorData.deviceId}기기가 연결되어 있습니다.\n먼저 기기 연결을 해제한 후 삭제 해주세요.`)
+                  return;
+                }
+                onDelete(crop.cropId, crop.cropName);
+              }}
+              
             >
               삭제
             </Button>
