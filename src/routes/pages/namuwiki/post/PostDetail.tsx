@@ -345,7 +345,7 @@ const PostDetail = () => {
       />
 
       {/* 좋아요 */}
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-4xl mt-2">
         <button
           onClick={onLikeClick}
           className="flex items-center gap-2 text-muted-foreground hover:text-red-500"
@@ -358,7 +358,7 @@ const PostDetail = () => {
 
       {/* 댓글 */}
       
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden mt-4">
         <CardHeader className="pb-4">
           <h2 className="text-base font-semibold">
             댓글 {comments?.length ?? 0}개
