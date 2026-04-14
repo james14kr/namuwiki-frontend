@@ -87,6 +87,8 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
               </span>
               {post.memRole === "FARMER"
                 ? <Badge variant="success">농장주</Badge>
+                : post.memRole === "ADMIN"
+                ? <Badge variant="danger">관리자</Badge>
                 : <Badge variant="secondary">일반 회원</Badge>}
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -97,7 +99,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
         </div>
 
         {/* 오른쪽 상단: 팔로우 버튼 */}
-        {currentUserEmail && currentUserEmail !== post.memEmail && (
+        {currentUserEmail && currentUserEmail !== post.memEmail && post.memRole !== "ADMIN" &&(
           <Button
             onClick={handleFollow}
             size="sm"
