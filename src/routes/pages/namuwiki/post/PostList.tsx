@@ -12,6 +12,7 @@ import { Heart, MessageCircle } from "lucide-react";
 import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
 import { getUserEmail } from "@/utils/auth";
 import PostFeedCard from "@/components/PostFeedCard";
+import { Badge } from "@/components/ui/badge";
 
 
 export interface PostInfo {
@@ -23,6 +24,8 @@ export interface PostInfo {
   content: string;
   viewCount : number;
   commentCount: number;
+  memRole : string;
+  memEmail : string;
 }
 
 const formatDate = (dateStr: string) => {
@@ -68,6 +71,18 @@ const PostList = () => {
         }
         nav(`/namu/post-list/${e.data.id}`);
       },
+    },
+    {
+      field: "memRole",
+      headerName: "권한",
+      flex: 1,
+      cellRenderer: (params: any) => {
+        return (
+          <div>
+            {params.data?.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반회원</Badge>)}
+          </div>
+        )
+      }
     },
     {
       field: "memNickname",
@@ -132,7 +147,7 @@ const PostList = () => {
         </div>
         <div className="flex flex-col">
           <GridCard<PostInfo>
-            title="등록된 판매정보 목록"
+            title="등록된 게시판 목록"
             count={result.length}
             rowData={pagedResult}
             columnDefs={colDefs}
@@ -172,19 +187,6 @@ const PostList = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* 피드 목록 */}
-      <div className="mx-auto max-w-2xl space-y-4">
-        {result.map((post) => (
-          <PostFeedCard
-            key={post.id}
-            post={post}
-            onClick={() => nav(`/namu/post-list/${post.id}`)}
-          />
-          
-
-        ))}
       </div>
     </div>
   );

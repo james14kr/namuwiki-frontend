@@ -20,7 +20,7 @@ import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
-import { ArrowLeft, Calendar, Clock, Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Edit, Trash2, UserCheck } from "lucide-react";
 import { postApi } from "@/api/post.api";
 import { errorToast, successToast } from "@/lib/toast";
 import { AlertDialog } from "@/components/ui/alert-dialog";
@@ -29,6 +29,10 @@ import { decodeToken } from "@/utils/auth";
 import { useGetComments, useInsertComment, useUpdateComment, useDeleteComment } from "@/queries/comment.queries";
 import { Heart } from "lucide-react";
 import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
+import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
+import { useQueryClient } from "@tanstack/react-query";
+import { getCheckFollow } from "@/api/follow.api";
+import { tr } from "date-fns/locale";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -137,6 +141,31 @@ const PostDetail = () => {
     }
   }, [editor, post?.content]);
 
+   //팔로우 버튼 추가
+  const [isFollowing, setIsFollowing] = useState(false);
+  const followMutation = usePostFollow();
+  const unfollowMutation = useDeleteFollow();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if(!currentUserEmail || !post?.memEmail) return;
+    if(currentUserEmail === post?.memEmail) return;
+    if(post?.memRole === "ADMIN") return;
+    getCheckFollow({followerEmail: currentUserEmail, farmerEmail : post.memEmail}).then(setIsFollowing);
+  }, [currentUserEmail, post?.memEmail, post?.memRole]);
+
+  const handleFollow = async () => {
+    if(!currentUserEmail || !post) return;
+    if(isFollowing) {
+      await unfollowMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail: post.memEmail});
+      setIsFollowing(false);
+    }else{
+      await followMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail : post.memEmail})
+      setIsFollowing(true);
+    }
+    queryClient.invalidateQueries({queryKey : ["followList"]});
+  }
+
   if (isLoading) return <PostDetailSkeleton />;
 
   if (!post) {
@@ -213,15 +242,6 @@ const PostDetail = () => {
     toggleLikeMutate.mutate({ postId: Number(postId), memEmail: currentUserEmail });
   };
 
-
-
-
-
-
-
-
-
-
   return (
     <>
       <div className="mx-auto max-w-4xl space-y-6">
@@ -268,10 +288,16 @@ const PostDetail = () => {
                   )}
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {/* 닉네임 표시*/}
-                    {post.memNickname ?? "알수없음"}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium">
+                      {post.memNickname ?? "알수없음"}
+                    </span>
+                    {post.memRole === "FARMER" 
+                    ? (<Badge variant="success">농장주</Badge>) 
+                    : post.memRole === "ADMIN"
+                    ? <Badge variant="danger">관리자</Badge>
+                    : (<Badge variant="secondary">일반 회원</Badge>)}
+                  </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     <span>{formatDate(post.createdAt)}</span>
@@ -282,8 +308,25 @@ const PostDetail = () => {
                 </div>
               </div>
 
+              {/* 팔로우 버튼 */}
+              {currentUserEmail && currentUserEmail !== post.memEmail && post.memRole !== "ADMIN" && (
+                <Button
+                  onClick={handleFollow}
+                  size="sm"
+                  variant="outline"
+                  className={`rounded-full ${
+                    isFollowing
+                      ? "border-green-600 text-green-600 hover:bg-green-50"
+                      : "text-muted-foreground hover:border-green-600 hover:text-green-600"
+                  }`}
+                >
+                  <UserCheck className="h-3.5 w-3.5 mr-1" />
+                  {isFollowing ? "팔로잉" : "팔로우"}
+                </Button>
+              )}
+
+
               {/* 액션 버튼 */}
-              
               {canEditDelete
               &&
               (
@@ -345,7 +388,7 @@ const PostDetail = () => {
       />
 
       {/* 좋아요 */}
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-4xl mt-2">
         <button
           onClick={onLikeClick}
           className="flex items-center gap-2 text-muted-foreground hover:text-red-500"
@@ -358,7 +401,7 @@ const PostDetail = () => {
 
       {/* 댓글 */}
       
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden mt-4">
         <CardHeader className="pb-4">
           <h2 className="text-base font-semibold">
             댓글 {comments?.length ?? 0}개
@@ -386,6 +429,7 @@ const PostDetail = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{comment.memNickname}</span>
+                      {comment.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
                       {/* 댓글 등록 날짜 + 시간 */}
                       <span className="text-xs text-muted-foreground">
                         {comment.createdAt !== comment.updatedAt ? (
