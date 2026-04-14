@@ -12,6 +12,7 @@ import { Heart, MessageCircle } from "lucide-react";
 import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
 import { getUserEmail } from "@/utils/auth";
 import PostFeedCard from "@/components/PostFeedCard";
+import { Badge } from "@/components/ui/badge";
 
 
 export interface PostInfo {
@@ -69,6 +70,18 @@ const PostList = () => {
         }
         nav(`/namu/post-list/${e.data.id}`);
       },
+    },
+    {
+      field: "memRole",
+      headerName: "권한",
+      flex: 1,
+      cellRenderer: (params: any) => {
+        return (
+          <div>
+            {params.data?.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반회원</Badge>)}
+          </div>
+        )
+      }
     },
     {
       field: "memNickname",
