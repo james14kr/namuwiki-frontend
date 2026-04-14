@@ -132,7 +132,7 @@ const PostList = () => {
         </div>
         <div className="flex flex-col">
           <GridCard<PostInfo>
-            title="등록된 판매정보 목록"
+            title="등록된 게시판 목록"
             count={result.length}
             rowData={pagedResult}
             columnDefs={colDefs}
