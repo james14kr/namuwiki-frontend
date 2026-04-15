@@ -39,7 +39,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
     if(!currentUserEmail || !post.memEmail) return;
     if(currentUserEmail === post.memEmail) return;
     getCheckFollow({followerEmail: currentUserEmail, farmerEmail : post.memEmail}).then(setIsFollowing);
-  }, [currentUserEmail, post.memEmail])
+  }, [currentUserEmail, post.memEmail]);
 
   const handleFollow = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -52,7 +52,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
       setIsFollowing(true);
     }
     queryClient.invalidateQueries({queryKey: ["followList"]});
-  }
+  };
 
   const onLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 카드 클릭 이벤트 막기

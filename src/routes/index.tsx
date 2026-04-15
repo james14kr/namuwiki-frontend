@@ -3,6 +3,8 @@ import RouteError from "./pages/RouteError";
 import { dynamic } from "@/utils/dynamic";
 import ProtectedRoute from "./ProtectedRoute";
 import LoginLayout from "@/components/layouts/LoginLayout";
+import DmHome from "./pages/namuwiki/dm/DmHome";
+import DmChat from "./pages/namuwiki/dm/DmChat";
 
 // lazy pages
 // Code Splitting
@@ -46,7 +48,7 @@ const PostListPage = dynamic(
 );
 const PostFeedPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostFeed")
-)
+);
 const PostDetailPage = dynamic(
   () => import("../routes/pages/namuwiki/post/PostDetail")
 );
@@ -54,6 +56,15 @@ const KjkPage = dynamic(() => import("../routes/pages/namuwiki/kjk/Kjk"));
 const Practice = dynamic(
   () => import("../routes/pages/namuwiki/practice/Practice")
 );
+
+// // DM 홈
+// const DmHomePage = dynamic(
+//   () => import("../routes/pages/namuwiki/dm/DmHome")
+// );
+// // DM 채팅목록
+// const DmChatPage = dynamic(
+//   () => import("../routes/pages/namuwiki/dm/DmChat")
+// );
 
 //농장주가 농장 등록하는 페이지
 const FarmRegisterPage = dynamic(
@@ -168,6 +179,8 @@ export const router = createBrowserRouter([
               { path: "crop-register/:farmId", Component: CropRegisterpage},
               { path: "my-device-list", Component: MyDeviceListPage},
               { path: "my-activity", Component: MyActivityPage },
+              { path: "dm", Component: DmHome },
+              { path: "dm/:roomId", Component: DmChat },
 
               // 관리자 페이지
               { path: "admin/DeviceRegistration", Component: DeviceRegistration },

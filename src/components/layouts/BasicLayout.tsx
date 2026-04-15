@@ -41,6 +41,11 @@ const userNavMain = [
     url : "/namu/farm-list",
     icon : Sprout,
   },
+  {
+    title : "DM",
+    url : "/namu/dm",
+    icon : Sprout,
+  },
 ]
 
 const farmerNavMain = [
@@ -107,6 +112,11 @@ const farmerNavMain = [
         icon : Cpu
       },
     ]
+  },
+  {
+    title : "DM",
+    url : "/namu/dm",
+    icon : Sprout,
   },               
 ];
 
@@ -148,8 +158,13 @@ const adminNavMain = [
       }
     ]
   },
+  {
+    title : "DM",
+    url : "/namu/dm",
+    icon : Sprout,
+  },
   
-]
+];
 
 const BasicLayout = () => {
   const role = localStorage.getItem("role");

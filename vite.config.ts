@@ -5,6 +5,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    global: "globalThis",  // ← 추가
+  },
   plugins: [react(), tsconfigPaths()],
   resolve: {
     alias: {
