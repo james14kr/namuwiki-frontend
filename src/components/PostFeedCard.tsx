@@ -12,6 +12,8 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { toastMutation } from "@/lib/toast";
+import {toast} from "sonner";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -43,15 +45,22 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
 
   const handleFollow = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    toast.dismiss();
     if(!currentUserEmail) return;
+    
     if(isFollowing) {
-      await unfollowMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail: post.memEmail});
-      setIsFollowing(false);
+      const {error} = await toastMutation(unfollowMutation.mutateAsync, {followerEmail: currentUserEmail, farmerEmail: post.memEmail}, "언팔로우 중...", `${post.memNickname}님을 언팔로우했습니다.`, "언팔로우에 실패했습니다.")
+      if(!error){
+        setIsFollowing(false);
+        queryClient.invalidateQueries({queryKey: ["followList"]});
+      }
     }else{
-      await followMutation.mutateAsync({followerEmail: currentUserEmail, farmerEmail: post.memEmail});
-      setIsFollowing(true);
+      const {error} = await toastMutation(followMutation.mutateAsync, {followerEmail: currentUserEmail, farmerEmail: post.memEmail}, "팔로우 중...", `${post.memNickname}님을 팔로우했습니다.`, "팔로우에 실패했습니다.")
+      if(!error){
+        setIsFollowing(true);
+        queryClient.invalidateQueries({queryKey: ["followList"]});
+      }
     }
-    queryClient.invalidateQueries({queryKey: ["followList"]});
   }
 
   const onLikeClick = (e: React.MouseEvent) => {
@@ -109,6 +118,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
                 ? "border-green-600 text-green-600 hover:bg-green-50"
                 : "text-muted-foreground hover:border-green-600 hover:text-green-600"
             }`}
+            disabled={followMutation.isPending || unfollowMutation.isPending}
           >
             {isFollowing
               ? <><UserCheck className="h-3 w-3 mr-1" />팔로잉</>
