@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  type TooltipProps,
 } from "recharts";
 import type { SensorHistory } from "@/types/namuType";
 
@@ -25,7 +24,15 @@ const TABS: { key: MetricKey; label: string; unit: string; color: string; gradie
 
 const formatTime = (dateStr: string) => dateStr.slice(11, 16);
 
-const CustomTooltip = ({ active, payload, label, unit }: TooltipProps<number, string> & { unit: string }) => {
+interface TooltipEntry { value?: string | number | readonly (string | number)[] }
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: readonly TooltipEntry[];
+  label?: string | number;
+  unit: string;
+}
+
+const CustomTooltip = ({ active, payload, label, unit }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-lg border bg-white px-3 py-2 shadow-md text-xs">
