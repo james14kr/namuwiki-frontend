@@ -158,21 +158,23 @@ const MemberManagement = () => {
           >
             권한 변경
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               // params.data.memEmail: 선택한 데이터의 이메일
-              deleteMember(params.data.memEmail);
+              setSelectedEmail(params.data.memEmail);
+              setIsDeleteOpen(true);
             }}
           >
-            {/* <AppAlertDialog
-              title="정말 삭제하시겠습니까?"
-              description="이 작업은 되돌릴 수 없습니다."
-              variant= "destructive"
-              open={isDeleteOpen}
-              onConfirm={() => deleteMember(selectedEmail)}
-            /> */}
             삭제
           </Button>
+          <AppAlertDialog
+            title="정말 삭제하시겠습니까?"
+            description="이 작업은 되돌릴 수 없습니다."
+            variant= "destructive"
+            open={isDeleteOpen}
+            onOpenChange={setIsDeleteOpen}
+            onConfirm={() => deleteMember(selectedEmail)}
+          /> */}
         </div>
       ),
     },
@@ -333,7 +335,13 @@ const MemberManagement = () => {
                 placeholder="상세주소"
               />
               <div style={{ marginTop: "8px" }}>
-                <Button onClick={() => insertAddAdmin()}>추가</Button>
+                <Button
+                  variant="success"
+                  className="w-full"
+                  onClick={() => insertAddAdmin()}
+                >
+                  추가
+                </Button>
               </div>
             </div>
           </div>
@@ -367,6 +375,8 @@ const MemberManagement = () => {
               />
               <div style={{ marginTop: "8px" }}>
                 <Button
+                  variant="success"
+                  className="w-full"
                   onClick={() => {
                     putMemRole();
                   }}

@@ -44,7 +44,7 @@ const DatePicker = ({
   };
 
   return (
-    <Field className="mx-auto w-60 gap-0">
+    <Field className="w-full gap-0">
       {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
       <Popover>
         <PopoverTrigger asChild>
