@@ -6,7 +6,7 @@ import { ArrowLeft, MapPin, Sprout, User, Phone, Mail } from "lucide-react";
 import { Button } from "@/components";
 import { useQueryClient } from "@tanstack/react-query";
 import { decodeToken } from "@/utils/auth";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { useGetCropList } from "@/queries/crop/useGetCropList";
@@ -14,6 +14,8 @@ import type { CropItem } from "@/types/cropType";
 import { useDeleteFarm } from "@/queries/farm/useDeleteFarm";
 import { useDeleteCrop } from "@/queries/farm/useDeleteCrop";
 import CropCard from "@/components/namuwiki/CropCard";
+import { toastMutation } from "@/lib/toast";
+import {toast} from "sonner"
 
 const FarmDetail = () => {
   const { farmId } = useParams();
@@ -37,15 +39,34 @@ const FarmDetail = () => {
   const followMutation = usePostFollow();
   const unfollowMutation = useDeleteFollow();
 
-  const handleFollow = async () => {
-    if(isFollowing){
-      await unfollowMutation.mutateAsync({followerEmail, farmerEmail : farm.farmerEmail});
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.dismiss();
+    if (isFollowing) {
+    const { error } = await toastMutation(
+      unfollowMutation.mutateAsync,
+      { followerEmail, farmerEmail: farm.farmerEmail },
+      "언팔로우 중...",
+      `${farm.memNickname}님을 언팔로우했습니다.`,
+      "언팔로우에 실패했습니다."
+    );
+    if (!error) {
       setIsFollowing(false);
-    }else{
-      await followMutation.mutateAsync({followerEmail, farmerEmail : farm.farmerEmail});
-      setIsFollowing(true);
+      queryClient.invalidateQueries({ queryKey: ["followList"] });
     }
-    queryClient.invalidateQueries({queryKey : ["followList"]});
+  } else {
+    const { error } = await toastMutation(
+      followMutation.mutateAsync,
+      { followerEmail, farmerEmail: farm.farmerEmail },
+      "팔로우 중...",
+      `${farm.memNickname}님을 팔로우했습니다.`,
+      "팔로우에 실패했습니다."
+    );
+    if (!error) {
+      setIsFollowing(true);
+      queryClient.invalidateQueries({ queryKey: ["followList"] });
+    }
+  }
   }
 
   const handleDelete = () => {
@@ -81,7 +102,7 @@ const FarmDetail = () => {
   const initial = farm.memNickname?.charAt(0)?.toUpperCase() ?? "?";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 pb-10">
+    <div className="mx-auto max-w-5xl space-y-6 pb-10">
       <Button
         variant="ghost"
         size="sm"
@@ -124,7 +145,7 @@ const FarmDetail = () => {
                 : "w-32 bg-green-600 hover:bg-green-700 text-white"
               }
               onClick={handleFollow}
-              disabled={followerEmail === farm.farmerEmail} // 본인 농장은 팔로우 불가
+              disabled={followerEmail === farm.farmerEmail || followMutation.isPending || unfollowMutation.isPending} // 본인 농장은 팔로우 불가
             >
               {isFollowing ? "팔로우 취소" : "팔로우"}
             </Button>
@@ -195,7 +216,7 @@ const FarmDetail = () => {
       </div>
 
       {/* 농작물 하나당 Card 하나 */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {(crops ?? []).length === 0 ? (
           // 농작물이 없을 때 안내 메시지
           <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>
