@@ -113,32 +113,13 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
                   ? "border-green-600 text-green-600 hover:bg-green-50"
                   : "text-muted-foreground hover:border-green-600 hover:text-green-600"
               }`}
+              disabled={followMutation.isPending || unfollowMutation.isPending}
             >
               <UserCheck className="h-3 w-3 mr-1" />
               {isFollowing ? "팔로잉" : "팔로우"}
             </Button>
           )}
         </div>
-
-        {/* 오른쪽 상단: 팔로우 버튼 */}
-        {currentUserEmail && currentUserEmail !== post.memEmail && post.memRole !== "ADMIN" &&(
-          <Button
-            onClick={handleFollow}
-            size="sm"
-            variant="outline"
-            className={`rounded-full text-sx border-none ${
-              isFollowing
-                ? "border-green-600 text-green-600 hover:bg-green-50"
-                : "text-muted-foreground hover:border-green-600 hover:text-green-600"
-            }`}
-            disabled={followMutation.isPending || unfollowMutation.isPending}
-          >
-            {isFollowing
-              ? <><UserCheck className="h-3 w-3 mr-1" />팔로잉</>
-              : <><UserCheck className="h-3 w-3 mr-1" />팔로우</>
-            }
-          </Button>
-        )}
         {/* 제목 - 프로필 아래 */}
         <h2 
           className="pt-6 font-bold text-3xl"
