@@ -4,7 +4,6 @@ import { useGetSensorData } from "@/queries/sensor/useGetSensorData";
 import DeviceCard from "./DeviceCard";
 import type { CropItem } from "@/types/cropType";
 import { useUnlinkDevice } from "@/queries/device/useUnlinkDevice";
-import { useGetSensorHistory } from "@/queries/sensor/useGetSensorHistory";
 import SensorChart from "./SensorChart";
 import type { SensorActuatorData } from "@/types/namuType";
 
@@ -33,8 +32,6 @@ const CropCard = ({ crop, isFarmOwner, onDelete }: CropCardProps) => {
   // 이 crop에 연결된 기기의 최신 센서 데이터 (5초마다 자동 갱신)
   const { data: sensorData } = useGetSensorData(crop.cropId);
   const { mutate: unlink} = useUnlinkDevice(crop.cropId);
-
-  const {data: SensorHistory} = useGetSensorHistory(crop.cropId);
 
   const handleUnlink = () => {
     if(window.confirm("기기 연결을 해제하시겠습니까?")){
@@ -124,7 +121,7 @@ const CropCard = ({ crop, isFarmOwner, onDelete }: CropCardProps) => {
                 <DeviceCard data={sensorData} />
               </div>
               <div className="min-w-0 flex-1">
-                <SensorChart data={SensorHistory ?? []}/>
+                <SensorChart cropId={crop.cropId}/>
               </div>
             </div>
             {isFarmOwner && (

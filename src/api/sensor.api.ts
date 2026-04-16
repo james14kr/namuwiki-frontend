@@ -8,7 +8,7 @@ export const getSensorDataByCropId = async (cropId : number): Promise<SensorActu
   return response.status === 204 ? null : response.data;
 }
 
-export const getSensorHistory = async (cropId: number, limit = 20): Promise<SensorHistory[]> => {
-  const response = await api.get(`/sensorActuator/history/crop`, {params: {cropId, limit}});
+export const getSensorHistory = async (cropId: number, limit = 20, startDate?: string): Promise<SensorHistory[]> => {
+  const response = await api.get(`/sensorActuator/history/crop`, {params: {cropId, limit, ...(startDate && {startDate})}});
   return response.data;
 }
