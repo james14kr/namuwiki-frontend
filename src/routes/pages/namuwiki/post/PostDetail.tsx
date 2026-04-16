@@ -33,6 +33,7 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { useQueryClient } from "@tanstack/react-query";
 import { getCheckFollow } from "@/api/follow.api";
 import { tr } from "date-fns/locale";
+import DmButton from "@/components/DmButton";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -278,20 +279,25 @@ const PostDetail = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* 작성자 정보 */}
               <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  {post.memProfileImg ? (
-                    <AvatarImage src={post.memProfileImg} />
-                  ) : (
-                    <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                      {post.memNickname?.[0] ?? "U"}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
+                <DmButton targetEmail={post.memEmail}>
+                  <Avatar className="h-9 w-9">
+                    {post.memProfileImg ? (
+                      <AvatarImage src={post.memProfileImg} />
+                    ) : (
+                      <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                        {post.memNickname?.[0] ?? "U"}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+
+                </DmButton>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-medium">
-                      {post.memNickname ?? "알수없음"}
-                    </span>
+                    <DmButton targetEmail={post.memEmail}>
+                      <span className="text-sm font-medium">
+                        {post.memNickname ?? "알수없음"}
+                      </span>
+                    </DmButton>
                     {post.memRole === "FARMER" 
                     ? (<Badge variant="success">농장주</Badge>) 
                     : post.memRole === "ADMIN"
@@ -415,20 +421,28 @@ const PostDetail = () => {
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start gap-3">
-                <Avatar className="h-8 w-8">
-                  {comment.memProfileImg ? (
-                    <AvatarImage src={comment.memProfileImg} />
-                  ) : (
-                    <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
-                      {comment.memNickname?.[0] ?? "U"}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
+                <DmButton targetEmail={post.memEmail}>
+                  <Avatar className="h-8 w-8">
+                    {comment.memProfileImg ? (
+                      <AvatarImage src={comment.memProfileImg} />
+                    ) : (
+                      <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+                        {comment.memNickname?.[0] ?? "U"}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+
+                </DmButton>
 
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{comment.memNickname}</span>
+                      <DmButton targetEmail={post.memEmail}>
+                        <span className="text-sm font-medium">
+                          {comment.memNickname}
+                        </span>
+
+                      </DmButton>
                       {comment.memRole === "FARMER" ? (<Badge variant="success">농장주</Badge>) : (<Badge variant="secondary">일반 회원</Badge>)}
                       {/* 댓글 등록 날짜 + 시간 */}
                       <span className="text-xs text-muted-foreground">

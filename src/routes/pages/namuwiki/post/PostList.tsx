@@ -13,6 +13,7 @@ import { useGetLikeStatus, useToggleLike } from "@/queries/post.queries";
 import { getUserEmail } from "@/utils/auth";
 import PostFeedCard from "@/components/PostFeedCard";
 import { Badge } from "@/components/ui/badge";
+import DmButton from "@/components/DmButton";
 
 
 export interface PostInfo {
@@ -93,16 +94,19 @@ const PostList = () => {
         const nickname = params.data?.memNickname ?? "알수없음";
         const initial = nickname?.[0] ?? "U";
         return (
-          <div className="flex items-center gap-2">
-            {profileImg ? (
-              <img src={profileImg} className="h-6 w-6 rounded-full object-cover" />
-            ) : (
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
-                {initial}
-              </div>
-            )}
-            <span>{nickname}</span>
-          </div>
+          <DmButton targetEmail={params.data?.memEmail ?? ""}>
+            <div className="flex items-center gap-2">
+              {profileImg ? (
+                <img src={profileImg} className="h-6 w-6 rounded-full object-cover" />
+              ) : (
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                  {initial}
+                </div>
+              )}
+              <span>{nickname}</span>
+            </div>
+
+          </DmButton>
         );
       },
     },
@@ -188,6 +192,7 @@ const PostList = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

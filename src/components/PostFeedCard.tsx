@@ -12,6 +12,7 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import DmButton from "./DmButton";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -71,6 +72,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
 
         {/* 왼쪽: 작성자 정보 */}
         <div className="flex items-center gap-3">
+        <DmButton targetEmail={post.memEmail}>
           <Avatar className="h-9 w-9">
             {post.memProfileImg ? (
               <AvatarImage src={post.memProfileImg} />
@@ -80,11 +82,16 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
               </AvatarFallback>
             )}
           </Avatar>
+
+        </DmButton>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-medium">
-                {post.memNickname ?? "알수없음"}
-              </span>
+              <DmButton targetEmail={post.memEmail}>
+                <span className="text-sm font-medium">
+                  {post.memNickname ?? "알수없음"}
+                </span>
+
+              </DmButton>
               {post.memRole === "FARMER"
                 ? <Badge variant="success">농장주</Badge>
                 : post.memRole === "ADMIN"
