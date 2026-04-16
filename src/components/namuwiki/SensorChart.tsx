@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   AreaChart,
   Area,
@@ -64,7 +64,7 @@ const SensorChart = ({ cropId }: { cropId: number }) => {
 
   const period    = PERIODS.find((p) => p.key === activePeriod)!;
   const tab       = TABS.find((t) => t.key === activeTab)!;
-  const startDate = getStartDate(period.days);
+  const startDate = useMemo(() => getStartDate(period.days), [activePeriod]);
 
   const { data: rawData, isLoading } = useGetSensorHistory(cropId, 5000, startDate);
 
