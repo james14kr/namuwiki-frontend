@@ -12,12 +12,9 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
 import DmButton from "./DmButton";
-=======
 import { toastMutation } from "@/lib/toast";
-import {toast} from "sonner";
->>>>>>> dev
+import { toast } from "sonner";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -31,8 +28,13 @@ const formatDate = (dateStr: string) => {
   });
 };
 
-
-const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }) => {
+const PostFeedCard = ({
+  post,
+  onClick,
+}: {
+  post: PostInfo;
+  onClick: () => void;
+}) => {
   const currentUserEmail = getUserEmail();
   const { data: likeStatus } = useGetLikeStatus(post.id, currentUserEmail);
   const toggleLikeMutate = useToggleLike(post.id, currentUserEmail);
@@ -42,30 +44,45 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if(!currentUserEmail || !post.memEmail) return;
-    if(currentUserEmail === post.memEmail) return;
-    getCheckFollow({followerEmail: currentUserEmail, farmerEmail : post.memEmail}).then(setIsFollowing);
+    if (!currentUserEmail || !post.memEmail) return;
+    if (currentUserEmail === post.memEmail) return;
+    getCheckFollow({
+      followerEmail: currentUserEmail,
+      farmerEmail: post.memEmail,
+    }).then(setIsFollowing);
   }, [currentUserEmail, post.memEmail]);
 
   const handleFollow = async (e: React.MouseEvent) => {
     e.stopPropagation();
     toast.dismiss();
-    if(!currentUserEmail) return;
-    
-    if(isFollowing) {
-      const {error} = await toastMutation(unfollowMutation.mutateAsync, {followerEmail: currentUserEmail, farmerEmail: post.memEmail}, "언팔로우 중...", `${post.memNickname}님을 언팔로우했습니다.`, "언팔로우에 실패했습니다.")
-      if(!error){
+    if (!currentUserEmail) return;
+
+    if (isFollowing) {
+      const { error } = await toastMutation(
+        unfollowMutation.mutateAsync,
+        { followerEmail: currentUserEmail, farmerEmail: post.memEmail },
+        "언팔로우 중...",
+        `${post.memNickname}님을 언팔로우했습니다.`,
+        "언팔로우에 실패했습니다."
+      );
+      if (!error) {
         setIsFollowing(false);
-        queryClient.invalidateQueries({queryKey: ["followList"]});
+        queryClient.invalidateQueries({ queryKey: ["followList"] });
       }
-    }else{
-      const {error} = await toastMutation(followMutation.mutateAsync, {followerEmail: currentUserEmail, farmerEmail: post.memEmail}, "팔로우 중...", `${post.memNickname}님을 팔로우했습니다.`, "팔로우에 실패했습니다.")
-      if(!error){
+    } else {
+      const { error } = await toastMutation(
+        followMutation.mutateAsync,
+        { followerEmail: currentUserEmail, farmerEmail: post.memEmail },
+        "팔로우 중...",
+        `${post.memNickname}님을 팔로우했습니다.`,
+        "팔로우에 실패했습니다."
+      );
+      if (!error) {
         setIsFollowing(true);
-        queryClient.invalidateQueries({queryKey: ["followList"]});
+        queryClient.invalidateQueries({ queryKey: ["followList"] });
       }
     }
-  }
+  };
 
   const onLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 카드 클릭 이벤트 막기
@@ -75,7 +92,7 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
 
   return (
     <Card
-      className="w-[100%] mx-auto cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
+      className="mx-auto w-[100%] cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
       onClick={onClick}
     >
       {/* 상단: 프로필 + 팔로우 */}
@@ -92,20 +109,21 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
                   </AvatarFallback>
                 )}
               </Avatar>
-
             </DmButton>
             <div>
               <div className="flex items-center gap-1.5">
                 <DmButton targetEmail={post.memEmail}>
-                  <span 
-                    className="text-sm font-medium"
-                  >{post.memNickname ?? "알수없음"}</span>
+                  <span className="text-sm font-medium">
+                    {post.memNickname ?? "알수없음"}
+                  </span>
                 </DmButton>
-                {post.memRole === "FARMER"
-                  ? <Badge variant="success">농장주</Badge>
-                  : post.memRole === "ADMIN"
-                  ? <Badge variant="danger">관리자</Badge>
-                  : <Badge variant="secondary">일반 회원</Badge>}
+                {post.memRole === "FARMER" ? (
+                  <Badge variant="success">농장주</Badge>
+                ) : post.memRole === "ADMIN" ? (
+                  <Badge variant="danger">관리자</Badge>
+                ) : (
+                  <Badge variant="secondary">일반 회원</Badge>
+                )}
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3" />
@@ -114,27 +132,29 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
             </div>
           </div>
 
-          {currentUserEmail && currentUserEmail !== post.memEmail && post.memRole !== "ADMIN" && (
-            <Button
-              onClick={handleFollow}
-              size="sm"
-              variant="outline"
-              className={`rounded-full text-xs border-none ${
-                isFollowing
-                  ? "border-green-600 text-green-600 hover:bg-green-50"
-                  : "text-muted-foreground hover:border-green-600 hover:text-green-600"
-              }`}
-              disabled={followMutation.isPending || unfollowMutation.isPending}
-            >
-              <UserCheck className="h-3 w-3 mr-1" />
-              {isFollowing ? "팔로잉" : "팔로우"}
-            </Button>
-          )}
+          {currentUserEmail &&
+            currentUserEmail !== post.memEmail &&
+            post.memRole !== "ADMIN" && (
+              <Button
+                onClick={handleFollow}
+                size="sm"
+                variant="outline"
+                className={`rounded-full border-none text-xs ${
+                  isFollowing
+                    ? "border-green-600 text-green-600 hover:bg-green-50"
+                    : "text-muted-foreground hover:border-green-600 hover:text-green-600"
+                }`}
+                disabled={
+                  followMutation.isPending || unfollowMutation.isPending
+                }
+              >
+                <UserCheck className="mr-1 h-3 w-3" />
+                {isFollowing ? "팔로잉" : "팔로우"}
+              </Button>
+            )}
         </div>
         {/* 제목 - 프로필 아래 */}
-        <h2 
-          className="pt-6 font-bold text-3xl"
-        >{post.title}</h2>
+        <h2 className="pt-6 text-3xl font-bold">{post.title}</h2>
         <Separator className="mt-2" />
       </CardHeader>
 
@@ -149,7 +169,8 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
           );
           const imgSrc =
             firstImage?.attrs?.src ??
-            firstImage?.content?.find((c: any) => c.type === "image")?.attrs?.src;
+            firstImage?.content?.find((c: any) => c.type === "image")?.attrs
+              ?.src;
           if (!imgSrc) return null;
           return (
             <img
@@ -158,19 +179,28 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
               style={{ maxHeight: "300px" }}
             />
           );
-        } catch { return null; }
+        } catch {
+          return null;
+        }
       })()}
 
       <CardContent className="pt-3">
         {/* 본문 미리보기 */}
-        <p className="line-clamp-2 text-sm text-muted-foreground">{(() => {
-          try {
-            const json = JSON.parse(post.content ?? "");
-            return json.content
-              ?.flatMap((node: any) => node.content?.map((c: any) => c.text ?? "") ?? [])
-              .join(" ");
-          } catch { return post.content; }
-        })()}</p>
+        <p className="line-clamp-2 text-sm text-muted-foreground">
+          {(() => {
+            try {
+              const json = JSON.parse(post.content ?? "");
+              return json.content
+                ?.flatMap(
+                  (node: any) =>
+                    node.content?.map((c: any) => c.text ?? "") ?? []
+                )
+                .join(" ");
+            } catch {
+              return post.content;
+            }
+          })()}
+        </p>
 
         {/* 좋아요 & 댓글 & 조회수 */}
         <div className="mt-3 flex items-center justify-between border-t pt-3">
@@ -179,7 +209,9 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
               onClick={onLikeClick}
               className="flex items-center gap-1 text-sm text-muted-foreground hover:text-red-500"
             >
-              <Heart className={`h-4 w-4 ${likeStatus?.liked ? "fill-red-500 text-red-500" : ""}`} />
+              <Heart
+                className={`h-4 w-4 ${likeStatus?.liked ? "fill-red-500 text-red-500" : ""}`}
+              />
               <span>{likeStatus?.likeCount ?? 0}</span>
             </button>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -187,12 +219,13 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
               <span>{post.commentCount ?? 0}</span>
             </div>
           </div>
-          <span className="text-xs text-muted-foreground">조회 {post.viewCount ?? 0}</span>
+          <span className="text-xs text-muted-foreground">
+            조회 {post.viewCount ?? 0}
+          </span>
         </div>
       </CardContent>
     </Card>
   );
-
 };
 
 export default PostFeedCard;
