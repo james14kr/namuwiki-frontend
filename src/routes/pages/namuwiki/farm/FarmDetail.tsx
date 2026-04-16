@@ -102,7 +102,7 @@ const FarmDetail = () => {
   const initial = farm.memNickname?.charAt(0)?.toUpperCase() ?? "?";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 pb-10">
+    <div className="mx-auto max-w-5xl space-y-6 pb-10">
       <Button
         variant="ghost"
         size="sm"
@@ -216,7 +216,7 @@ const FarmDetail = () => {
       </div>
 
       {/* 농작물 하나당 Card 하나 */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {(crops ?? []).length === 0 ? (
           // 농작물이 없을 때 안내 메시지
           <p className="text-sm text-muted-foreground">등록된 농작물이 없습니다.</p>

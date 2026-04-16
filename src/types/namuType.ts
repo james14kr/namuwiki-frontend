@@ -58,3 +58,11 @@ export interface FeedPost {
   comments: number;
   category: FeedCategory;
 }
+
+export interface SensorHistory{
+  createDate: string;
+  tempC: number;
+  humidity: number;
+  soilMoistureValue : number;
+  ldrValue: number;
+}
