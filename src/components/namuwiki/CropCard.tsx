@@ -9,15 +9,17 @@ import SensorChart from "./SensorChart";
 import type { SensorActuatorData } from "@/types/namuType";
 
 const METRICS = [
-  { label: "온도",     configured: (d: SensorActuatorData) => d.tempMax > 0, check: (d: SensorActuatorData) => d.tempC >= d.tempMin && d.tempC <= d.tempMax },
-  { label: "토양수분", configured: (d: SensorActuatorData) => d.soilMax > 0, check: (d: SensorActuatorData) => d.soilMoistureValue >= d.soilMin && d.soilMoistureValue <= d.soilMax },
-  { label: "조도",     configured: (d: SensorActuatorData) => d.luxMax > 0,  check: (d: SensorActuatorData) => d.ldrValue >= d.luxMin && d.ldrValue <= d.luxMax },
+  { label: "온도",     unit: "°C", configured: (d: SensorActuatorData) => d.tempMax > 0, check: (d: SensorActuatorData) => d.tempC >= d.tempMin && d.tempC <= d.tempMax, current: (d: SensorActuatorData) => d.tempC,              min: (d: SensorActuatorData) => d.tempMin, max: (d: SensorActuatorData) => d.tempMax },
+  { label: "토양수분", unit: "",    configured: (d: SensorActuatorData) => d.soilMax > 0, check: (d: SensorActuatorData) => d.soilMoistureValue >= d.soilMin && d.soilMoistureValue <= d.soilMax, current: (d: SensorActuatorData) => d.soilMoistureValue, min: (d: SensorActuatorData) => d.soilMin, max: (d: SensorActuatorData) => d.soilMax },
+  { label: "조도",     unit: "",    configured: (d: SensorActuatorData) => d.luxMax > 0,  check: (d: SensorActuatorData) => d.ldrValue >= d.luxMin && d.ldrValue <= d.luxMax,                   current: (d: SensorActuatorData) => d.ldrValue,          min: (d: SensorActuatorData) => d.luxMin,  max: (d: SensorActuatorData) => d.luxMax },
 ];
 
 function getCropHealth(data: SensorActuatorData) {
   const active = METRICS.filter((m) => m.configured(data));
   if (active.length === 0) return null;
-  const failed = active.filter((m) => !m.check(data)).map((m) => m.label);
+  const failed = active
+    .filter((m) => !m.check(data))
+    .map((m) => ({ label: m.label, unit: m.unit, current: m.current(data), min: m.min(data), max: m.max(data) }));
   return { isHealthy: failed.length === 0, failed };
 }
 
@@ -92,9 +94,13 @@ const CropCard = ({ crop, isFarmOwner, onDelete }: CropCardProps) => {
                     <span>⚠️</span>
                     <span>주의가 필요해요</span>
                   </p>
-                  <p className="mt-0.5 text-xs text-amber-600 dark:text-amber-500">
-                    {health.failed.join(", ")} 범위를 벗어났습니다
-                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {health.failed.map((f) => (
+                      <li key={f.label} className="text-xs text-amber-600 dark:text-amber-500">
+                        {f.label}: 현재 {f.current}{f.unit} (기준 {f.min}{f.unit} ~ {f.max}{f.unit})
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })()}
