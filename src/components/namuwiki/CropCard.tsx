@@ -83,26 +83,41 @@ const CropCard = ({ crop, isFarmOwner, onDelete }: CropCardProps) => {
             {(() => {
               const health = getCropHealth(sensorData);
               if (!health) return null;
+
+              // 농장주: 상세 경고 표시
+              if (isFarmOwner) {
+                return health.isHealthy ? (
+                  <div className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-2 text-xs font-medium text-green-700 dark:bg-green-950/30 dark:text-green-400">
+                    <span>🌱</span>
+                    <span>잘 자라고 있어요</span>
+                  </div>
+                ) : (
+                  <div className="rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-950/30">
+                    <p className="flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                      <span>⚠️</span>
+                      <span>주의가 필요해요</span>
+                    </p>
+                    <ul className="mt-1 space-y-0.5">
+                      {health.failed.map((f) => (
+                        <li key={f.label} className="text-xs text-amber-600 dark:text-amber-500">
+                          {f.label}: 현재 {f.current}{f.unit} (기준 {f.min}{f.unit} ~ {f.max}{f.unit})
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              }
+
+              // 일반 사용자: 건강하게 자라고 있을 때만 신뢰 배지 표시
               return health.isHealthy ? (
-                <div className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-2 text-xs font-medium text-green-700 dark:bg-green-950/30 dark:text-green-400">
-                  <span>🌱</span>
-                  <span>잘 자라고 있어요</span>
+                <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 dark:border-green-800 dark:bg-green-950/30">
+                  <span className="text-base">✅</span>
+                  <div>
+                    <p className="text-xs font-semibold text-green-700 dark:text-green-400">IoT 인증 농산물</p>
+                    <p className="text-xs text-green-600 dark:text-green-500">실시간 센서 데이터로 최적 환경에서 재배 중입니다</p>
+                  </div>
                 </div>
-              ) : (
-                <div className="rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-950/30">
-                  <p className="flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
-                    <span>⚠️</span>
-                    <span>주의가 필요해요</span>
-                  </p>
-                  <ul className="mt-1 space-y-0.5">
-                    {health.failed.map((f) => (
-                      <li key={f.label} className="text-xs text-amber-600 dark:text-amber-500">
-                        {f.label}: 현재 {f.current}{f.unit} (기준 {f.min}{f.unit} ~ {f.max}{f.unit})
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
+              ) : null;
             })()}
             <div className="flex items-center gap-3">
               <div className="shrink-0">
