@@ -12,12 +12,9 @@ import { useDeleteFollow, usePostFollow } from "@/queries/follow.queries";
 import { getCheckFollow } from "@/api/follow.api";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
 import DmButton from "./DmButton";
-=======
 import { toastMutation } from "@/lib/toast";
 import {toast} from "sonner";
->>>>>>> dev
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
