@@ -155,8 +155,8 @@ const DeviceRegistration = () => {
       cellStyle: centeredCellStyle,
       cellRenderer: (params: { value: string }) => {
         return params.value === "Y"
-          ? `<span style="color: #16a34a; font-weight: 600;">등록완료</span>`
-          : `<span style="color: #dc2626; font-weight: 600;">미등록</span>`;
+          ? (<span style={{color: "#16a34a", fontWeight: 600}}>등록완료</span>)
+          : (<span style={{color: "#dc2626", fontWeight: 600}}>미등록</span>);
       },
     },
   ];
