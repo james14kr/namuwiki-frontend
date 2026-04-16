@@ -62,28 +62,7 @@ const DmChat = () => {
     });
   },[roomId, currentUserEmail]);
 
-  // WebSocket 연결
-  useEffect(()=>{
-    if(!roomId || !currentUserEmail) return;
 
-    const client = new Client({
-      webSocketFactory : () => new SockJS("http://localhost:8080/api/ws"),
-      onConnect : ()=>{
-        // 채팅방 구독
-        client.subscribe(`/sub/dm/room/${roomId}`,(message)=>{
-          const newMessage : ChatMessageDTO = JSON.parse(message.body);
-          setMessages((prev)=>[...prev, newMessage]);
-        });
-      },
-    });
-    client.activate();
-    stompClient.current = client;
-
-    // 컴포넌트 언마운트 시 연결 해제
-    return () => {
-      client.deactivate();
-    };
-  },[roomId, currentUserEmail]);
 
 
   // 메세지 보낸때마다 스크롤 내리기
@@ -115,8 +94,36 @@ const DmChat = () => {
     }
   };
 
+// WebSocket 연결
+  useEffect(() => {
+  if (!roomId || !currentUserEmail) return;
 
+  const client = new Client({
+    webSocketFactory: () => new SockJS("http://localhost:8080/api/ws"),
+    onConnect: () => {
+      console.log("WebSocket 연결 성공!");
+      // 채팅방 구독
+      client.subscribe(`/sub/dm/room/${roomId}`, (message) => {
+        console.log("메시지 수신:", message.body);
+        const newMessage: ChatMessageDTO = JSON.parse(message.body);
+        setMessages((prev) => [...prev, newMessage]);
+      });
+    },
+    onDisconnect: () => {
+      console.log("WebSocket 연결 해제!");
+    },
+    onStompError: (frame) => {
+      console.log("STOMP 오류:", frame);
+    },
+  });
 
+  client.activate();
+  stompClient.current = client;
+// 컴포넌트 언마운트 시 연결 해제
+  return () => {
+    client.deactivate();
+  };
+}, [roomId, currentUserEmail]);
 
 
 
