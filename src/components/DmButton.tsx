@@ -51,7 +51,7 @@ const DmButton = ({targetEmail, children}:DmButtonProps) => {
         
         {tooltipPos && (
         <div
-          className="fixed z-[9999] bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap cursor-pointer hover:bg-gray-700"
+          
           style={{ left: tooltipPos.x, top: tooltipPos.y }}
           onClick={onDmClick}
         >
