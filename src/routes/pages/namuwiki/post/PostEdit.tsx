@@ -43,7 +43,7 @@ const PostEdit = () => {
       , "수정되었습니다."
       , "수정에 실패하였습니다."
       ,{
-        onSuccess: () => navigate("/namu/post-list"),
+        onSuccess: () => navigate("/namu/post-feed"),
       }
     );
   };
