@@ -22,6 +22,7 @@ export interface ChatMessageDTO {
   roomId: number;
   senderEmail: string;
   senderNickname: string;
+  senderProfileImg: string;
   content: string;
   createdAt: string;
   isRead: boolean;

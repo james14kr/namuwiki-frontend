@@ -421,7 +421,7 @@ const PostDetail = () => {
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start gap-3">
-                <DmButton targetEmail={post.memEmail}>
+                <DmButton targetEmail={comment.memEmail}>
                   <Avatar className="h-8 w-8">
                     {comment.memProfileImg ? (
                       <AvatarImage src={comment.memProfileImg} />
@@ -437,7 +437,7 @@ const PostDetail = () => {
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <DmButton targetEmail={post.memEmail}>
+                      <DmButton targetEmail={comment.memEmail}>
                         <span className="text-sm font-medium">
                           {comment.memNickname}
                         </span>

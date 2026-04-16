@@ -64,13 +64,13 @@ const DmHome = () => {
 
 
   return (
-    <div>
-      <h1>
-        <MessageCircle /> DM목록
+    <div className="mx-auto max-w-3xl px-t py-6 space-y-3">
+      <h1 className="text-lg font-bold flex items-center gap-1 mb-6">
+        <MessageCircle  className="text-primary"/> DM목록
       </h1>
       
       {rooms.length === 0 ? (
-        <p>
+        <p  className="text-center text-sm text-muted-foreground py-10">
           대화 내역이 없습니다.
         </p>
 
@@ -82,27 +82,35 @@ const DmHome = () => {
               key={room.id}
               onClick={()=>nav(`/namu/dm/${room.id}`)}
             >
-              <CardContent>
-                <Avatar>
-                  {opponent.profileImg ? (
-                    <AvatarImage src={opponent.profileImg}/>
-                  ) : (
-                    <AvatarFallback>
-                      {opponent.nickname?.[0]??"U"}
-                    </AvatarFallback>
-
-                  )}
-                </Avatar>
-                <div>
+              <CardContent className="py-4 cursor-pointer hover:bg-accent transition-colors">
+                <div className="flex items-center gap-3 ">
+                  <Avatar className="h-12 w-12 shrink-0">
+                    {opponent.profileImg ? (
+                      <AvatarImage src={opponent.profileImg}/>
+                    ) : (
+                      <AvatarFallback  className="font-bold">
+                        {opponent.nickname?.[0]??"U"}
+                      </AvatarFallback>
+  
+                    )}
+                  </Avatar>
                   <div>
-                    <span>{opponent.nickname}</span>
-                    <span>{formatDate(room.createdAt)}</span>
+                    <div>
+                      <span
+                        className="font-bold text-lg"
+                      >{opponent.nickname}</span>
+                      <span
+                        className="text-sm"
+                      >{formatDate(room.createdAt)}</span>
+                    </div>
                   </div>
-                  <p>{room.lastMessage ?? "대화를 시작해보세요"}</p>
                 </div>
+                  <p
+                    className="text-lg mt-4"
+                  >{room.lastMessage ?? "대화를 시작해보세요"}</p>
                 {room.unreadCount > 0 && (
-                  <span>
-                    {room.unreadCount}
+                  <span className="text-sm ">
+                    {room.unreadCount}개의 읽지 않은 메세지가 있습니다.
                   </span>
                 )}
                 

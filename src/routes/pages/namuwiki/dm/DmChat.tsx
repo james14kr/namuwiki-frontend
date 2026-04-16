@@ -33,11 +33,26 @@ const DmChat = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const stompClient = useRef<Client | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [opponentNickname, setOpponentNickname] = useState<string>("");
 
   // 메세지 목록 하단으로 스크롤
   const scrollToBottom = ()=>{
     messagesEndRef.current?.scrollIntoView({behavior : "smooth"});
   };
+
+  // 누구와의 채팅방인지
+  useEffect(() => {
+  if (!roomId || !currentUserEmail) return;
+  dmApi.getMyRooms(currentUserEmail).then((rooms) => {
+    const room = rooms.find((r) => r.id === Number(roomId));
+    if (!room) return;
+    // 내가 sender면 상대는 receiver, 반대도 마찬가지
+    const nickname = room.senderEmail === currentUserEmail
+      ? room.receiverNickname
+      : room.senderNickname;
+    setOpponentNickname(nickname);
+  });
+}, [roomId, currentUserEmail]);
 
   // 기존 메세지 불러오기
   useEffect(()=>{
@@ -85,6 +100,7 @@ const DmChat = () => {
         roomId : Number(roomId),
         senderEmail : currentUserEmail,
         content : inputValue,
+        createdAt : new Date().toISOString(),
       }),
     });
     setInputValue("");
@@ -106,70 +122,97 @@ const DmChat = () => {
 
   return (
     <>
-      {/* 헤더 */}
       <div>
         <Button
           onClick={()=>nav("/namu/dm")}
         >
-          <ArrowLeft />
+          <ArrowLeft/> 채팅방으로 이동
         </Button>
-        <span>채팅방</span>
-        
-      </div>
 
-      {/* 메세지 목록 */}
-      <div>
-        {messages.map((msg) => {
-          const isMine = msg.senderEmail === currentUserEmail;
-          return (
-            <div key={msg.id} style={{ display: "flex", flexDirection: isMine ? "row-reverse" : "row" }}>
-              {!isMine && (
-                <Avatar>
-                  <AvatarFallback>
-                    {msg.senderNickname?.[0] ?? "U"}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div>
-                {!isMine && <span>{msg.senderNickname}</span>}
-                <div>{msg.content}</div>
-                <span>{formatTime(msg.createdAt)}</span>
+      </div>
+      <div className="flex flex-col max-w-2xl mx-auto">
+        {/* 헤더 */}
+        <div className="text-center py-3 mb-3 border-b">
+          <span
+            className="text-2xl font-bold"
+          >{opponentNickname} 님과의 채팅방</span>
+          
+        </div>
+  
+        {/* 메세지 목록 */}
+        <div className="flex-1 overflow-y-auto px-4 space-y-3 bg-primary/5 ">
+          {messages.map((msg, index) => {
+            const isMine = msg.senderEmail === currentUserEmail;
+            
+            const prevMsg = messages[index - 1];
+            const showTime = !prevMsg || 
+              formatTime(prevMsg.createdAt) !== formatTime(msg.createdAt);
+  
+            return (
+              <div
+                key={msg.id}
+                className={`flex items-end gap-2 ${isMine ? "flex-row-reverse" : "flex-row"}`}
+              >
+                {!isMine && (
+                  <Avatar className="h-11 w-11">
+                    {msg.senderProfileImg ? (
+                      <AvatarImage src={msg.senderProfileImg} />
+                    ) : (
+                      <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                        {msg.senderNickname?.[0] ?? "U"}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                )}
+                <div className={`flex flex-col max-w-[65%] ${isMine ? "items-end" : "items-start"}`}>
+                  {showTime && (
+                    <span className="text-xs text-muted-foreground">{formatTime(msg.createdAt)}</span>
+                  )}
+                  <div className={`px-3 py-2 rounded-2xl text-sm break-words ${
+                    isMine
+                      ? "bg-primary/10 border border-primary/30 rounded-br-sm"
+                      : "bg-muted rounded-bl-sm border-border"
+                  }`}>
+                    {msg.content}
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+  
+  
+        {/* 메세지 입력 */}
+        <div className="flex items-center gap-3 px-4 py-4 mt-3 border-t bg-background">
+          <Input 
+            
+            value={inputValue}
+            onChange={(e)=>setInputValue(e.target.value)}
+            onKeyDown={onKeyDown}
+            placeholder="메세지를 입력하세요"
+  
+          />
+          <Button
+            onClick={sendMessage}
+          >
+            <Send />
+          </Button>
+        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
       </div>
-
-
-      {/* 메세지 입력 */}
-      <div>
-        <Input 
-          value={inputValue}
-          onChange={(e)=>setInputValue(e.target.value)}
-          onKeyDown={onKeyDown}
-          placeholder="메세지를 입력하세요"
-
-        />
-        <Button
-          onClick={sendMessage}
-        >
-          <Send />
-        </Button>
-      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </>
   );
 };

@@ -70,18 +70,25 @@ const PostFeedCard = ({ post, onClick }: { post: PostInfo; onClick: () => void }
       <CardHeader className="pb-2 pt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9">
-              {post.memProfileImg ? (
-                <AvatarImage src={post.memProfileImg} />
-              ) : (
-                <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                  {post.memNickname?.[0] ?? "U"}
-                </AvatarFallback>
-              )}
-            </Avatar>
+            <DmButton targetEmail={post.memEmail}>
+              <Avatar className="h-9 w-9">
+                {post.memProfileImg ? (
+                  <AvatarImage src={post.memProfileImg} />
+                ) : (
+                  <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                    {post.memNickname?.[0] ?? "U"}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+
+            </DmButton>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-medium">{post.memNickname ?? "알수없음"}</span>
+                <DmButton targetEmail={post.memEmail}>
+                  <span 
+                    className="text-sm font-medium"
+                  >{post.memNickname ?? "알수없음"}</span>
+                </DmButton>
                 {post.memRole === "FARMER"
                   ? <Badge variant="success">농장주</Badge>
                   : post.memRole === "ADMIN"
