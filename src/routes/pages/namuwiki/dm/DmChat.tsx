@@ -106,7 +106,11 @@ const DmChat = () => {
       client.subscribe(`/sub/dm/room/${roomId}`, (message) => {
         console.log("메시지 수신:", message.body);
         const newMessage: ChatMessageDTO = JSON.parse(message.body);
-        setMessages((prev) => [...prev, newMessage]);
+        console.log("현재 messages 길이:", messages.length);
+        setMessages((prev) => {
+          console.log("prev 길이:", prev.length);
+          return [...prev, newMessage];
+        });
       });
     },
     onDisconnect: () => {
@@ -123,7 +127,7 @@ const DmChat = () => {
   return () => {
     client.deactivate();
   };
-}, [roomId, currentUserEmail]);
+}, [roomId]);
 
 
 
