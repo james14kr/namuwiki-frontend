@@ -13,18 +13,18 @@ import PlantCommunityLogo from "./Logo";
 import ManagerSidebar from "./sidebar/ManagerSidebar";
 
 const userNavMain = [
-  {title: "홈", url : "/namu/post-feed", icon: Home},
-  { 
-    title: "게시판", 
-    url: "/namu/post-feed", 
-    icon: AppWindow,
-    items : [
-      {
-        title: "게시판 목록",
-        url : "/namu/post-list"
-      }
-    ]
-  },
+  {title: "피드", url : "/namu/post-feed", icon: Home},
+  // { 
+  //   title: "게시판", 
+  //   url: "/namu/post-feed", 
+  //   icon: AppWindow,
+  //   items : [
+  //     {
+  //       title: "게시판 목록",
+  //       url : "/namu/post-list"
+  //     }
+  //   ]
+  // },
   {
     title : "마이페이지",
     url : "/namu/my_farm",
@@ -50,21 +50,21 @@ const userNavMain = [
 
 const farmerNavMain = [
   { 
-    title: "홈", 
+    title: "피드", 
     url: "/namu/post-feed", 
     icon: Home 
   },
-  { 
-    title: "게시판", 
-    url: "/namu/post-feed", 
-    icon: AppWindow,
-    items : [
-      {
-        title: "게시판 목록",
-        url : "/namu/post-list"
-      }
-    ]
-  },
+  // { 
+  //   title: "게시판", 
+  //   url: "/namu/post-feed", 
+  //   icon: AppWindow,
+  //   items : [
+  //     {
+  //       title: "게시판 목록",
+  //       url : "/namu/post-list"
+  //     }
+  //   ]
+  // },
   { 
     title: "마이페이지", 
     url: "/namu/my-farm", 

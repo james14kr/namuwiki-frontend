@@ -198,7 +198,7 @@ const PostDetail = () => {
     deletePostMutate.mutate(id, {
       onSuccess: () => {
         successToast("삭제에 성공하였습니다.");
-        navigate("/namu/post-list");
+        navigate("/namu/post-feed");
       },
       onError: () => {
         errorToast("삭제에 실패하였습니다.");
