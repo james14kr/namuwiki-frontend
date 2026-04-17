@@ -99,26 +99,22 @@ const DmChat = () => {
   if (!roomId || !currentUserEmail) return;
 
   const client = new Client({
-    webSocketFactory: () => new SockJS("http://localhost:8080/api/ws"),
+    webSocketFactory: () => new SockJS("http://192.168.30.109:8080/api/ws"),
     onConnect: () => {
       console.log("WebSocket 연결 성공!");
       // 채팅방 구독
+      console.log("WebSocket 연결 성공!");
       client.subscribe(`/sub/dm/room/${roomId}`, (message) => {
         console.log("메시지 수신:", message.body);
         const newMessage: ChatMessageDTO = JSON.parse(message.body);
-        console.log("현재 messages 길이:", messages.length);
-        setMessages((prev) => {
-          console.log("prev 길이:", prev.length);
-          return [...prev, newMessage];
-        });
+        // prev 방식으로 최신 상태 참조
+        setMessages(prev => [...prev, newMessage]);
       });
     },
     onDisconnect: () => {
       console.log("WebSocket 연결 해제!");
     },
-    onStompError: (frame) => {
-      console.log("STOMP 오류:", frame);
-    },
+    
   });
 
   client.activate();
