@@ -18,7 +18,7 @@ import {
   useUpdateRole,
 } from "@/queries/member.queries";
 import Modal from "@/components/modal/modal";
-import type { MemberData } from "@/types/memberType";
+import type { MemberData, MemInfoDTO } from "@/types/memberType";
 import type { PostInfo } from "@/components/postcode/Postcode";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -73,11 +73,22 @@ const MemberManagement = () => {
   // 선택한 권한이 저장되는 state 변수
   const [selectedRole, setSelectedRole] = useState<string>("");
 
-  // selectedRole이 없거나 "admin0"이면 전체, 아니면 필터링
-  const filteredData =
-    selectedRole && selectedRole !== "admin0"
-      ? data?.filter((m) => m.memRole === selectedRole)
-      : data;
+  // 검색할 키워드 데이터 저장할 state 변수
+  const [search, setSearch] = useState("");
+
+  // 권한필터 : selectedRole이 없거나 "admin0"이면 전체, 아니면 필터링
+  const filteredData = (data ?? []).filter((member: MemberData) => {
+    // 권한 필터
+    const roleMatch =
+      !selectedRole || selectedRole === "admin0"
+        ? true
+        : member.memRole === selectedRole;
+
+    // 검색 필터
+    const searchMatch = !search ? true : member.memEmail.includes(search) || member.memName.includes(search);
+
+    return roleMatch && searchMatch;
+  });
 
   // 현재 페이지 데이터만 잘라서 저장한 변수 생성
   // (시작 인덱스부터 끝 인덱스 직전까지 잘라내기), slice(위치기준으로 자르기)
@@ -461,7 +472,11 @@ const MemberManagement = () => {
           })}
         </div>
         <div className="flex-1">
-          <Input placeholder="이메일 또는 이름 입력" name="farmerName" />
+          <Input
+            placeholder="이메일 또는 이름 입력"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
         <Button onClick={() => {}}>검색</Button>
         <Button onClick={() => setIsOpen(true)}>관리자 추가</Button>
