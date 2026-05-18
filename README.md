@@ -49,6 +49,58 @@ NamuWiki Farm 프로젝트의 **웹 프론트엔드**입니다.
 
 <br/>
 
+## 🎬 웹 시연
+
+> GIF 파일을 `assets/gifs/` 폴더에 추가한 뒤 아래 경로를 연결해주세요.
+
+### 🔐 로그인 · 회원가입
+
+| 로그인 | 회원가입 |
+|:------:|:-------:|
+| <img src="./assets/gifs/login.gif" width="400"/> | <img src="./assets/gifs/signup.gif" width="400"/> |
+
+### 📋 SNS 피드 · 게시글
+
+| 홈 피드 | 게시글 작성 (Tiptap 에디터) |
+|:-------:|:--------------------------:|
+| <img src="./assets/gifs/main-feed.gif" width="400"/> | <img src="./assets/gifs/post-write.gif" width="400"/> |
+
+| 댓글 · 좋아요 | 팔로우 · 팔로워 |
+|:------------:|:--------------:|
+| <img src="./assets/gifs/comment-like.gif" width="400"/> | <img src="./assets/gifs/follow.gif" width="400"/> |
+
+### 🌾 농장 · 기기 관리
+
+| 농장 등록 | 기기 등록 |
+|:--------:|:--------:|
+| <img src="./assets/gifs/farm-register.gif" width="400"/> | <img src="./assets/gifs/device-register.gif" width="400"/> |
+
+### 🤖 IoT 대시보드 · 기기 제어
+
+| 센서 데이터 차트 | 수동 / 자동 기기 제어 |
+|:--------------:|:-------------------:|
+| <img src="./assets/gifs/dashboard.gif" width="400"/> | <img src="./assets/gifs/device-control.gif" width="400"/> |
+
+### 💬 실시간 DM 채팅
+
+| DM 채팅 |
+|:-------:|
+| <img src="./assets/gifs/dm-chat.gif" width="400"/> |
+
+### 🌐 다국어 · 테마
+
+| 다국어 전환 (ko / en) | 테마 전환 (다크 · 라이트 · 그린) |
+|:--------------------:|:-------------------------------:|
+| <img src="./assets/gifs/i18n.gif" width="400"/> | <img src="./assets/gifs/theme.gif" width="400"/> |
+
+### 🗂 관리자 대시보드
+
+| 회원 관리 | 기기 관리 |
+|:--------:|:--------:|
+| <img src="./assets/gifs/admin-member.gif" width="400"/> | <img src="./assets/gifs/admin-device.gif" width="400"/> |
+
+<br/>
+
 ## 🛠 기술 스택
 
 | 분류 | 기술 |
