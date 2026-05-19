@@ -51,8 +51,6 @@ NamuWiki Farm 프로젝트의 **웹 프론트엔드**입니다.
 
 ## 🎬 웹 시연
 
-> GIF 파일을 `assets/gifs/` 폴더에 추가한 뒤 아래 경로를 연결해주세요.
-
 ### 🔐 로그인 · 회원가입
 
 | 로그인 | 회원가입 |
@@ -61,7 +59,7 @@ NamuWiki Farm 프로젝트의 **웹 프론트엔드**입니다.
 
 ### 📋 SNS 피드 · 게시글
 
-| 홈 피드 | 게시글 작성 (Tiptap 에디터) |
+| 홈 피드 | 게시글 작성|
 |:-------:|:--------------------------:|
 | <img src="./assets/gifs/homeFeedGIF.gif" width="400"/> | <img src="./assets/gifs/registerPostGIF.gif" width="400"/> |
 
@@ -75,7 +73,7 @@ NamuWiki Farm 프로젝트의 **웹 프론트엔드**입니다.
 |:--------:|:--------:|
 | <img src="./assets/gifs/registerFarmGIF.gif" width="400"/> | <img src="./assets/gifs/registerIotGIF.gif" width="400"/> |
 
-### 🤖 IoT 대시보드 · 기기 제어
+### 🤖 IoT 대시보드
 
 | 센서 데이터 차트 |
 |:--------------:|
@@ -87,7 +85,7 @@ NamuWiki Farm 프로젝트의 **웹 프론트엔드**입니다.
 |:-------:|
 | <img src="./assets/gifs/dmGIF.gif" width="400"/> |
 
-### 🌐 다국어 · 테마
+### 🌐 테마
 
 | 테마 전환 (다크 · 라이트 · 그린) |
 |:-------------------------------:|
