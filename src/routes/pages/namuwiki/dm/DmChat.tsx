@@ -99,7 +99,7 @@ const DmChat = () => {
   if (!roomId || !currentUserEmail) return;
 
   const client = new Client({
-    webSocketFactory: () => new SockJS("http://192.168.30.109:8080/api/ws"),
+    webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_BASE_URL}/api/ws`),
     onConnect: () => {
       console.log("WebSocket 연결 성공!");
       // 채팅방 구독
